@@ -5,16 +5,18 @@ import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
 
 export const useGetUser = () => {
-  const {token} = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [attempt, setAttempt] = useState<number>(3); // refetch attempts
   const { logout } = useLogout();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        setLoading(true);
-        const res = await fetch(`${AUTH_SERVER_URL}/get_user_info`, {
+        console.log("fetching user info");
+
+        let res = await fetch(`${AUTH_SERVER_URL}/get_user_info`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -23,7 +25,17 @@ export const useGetUser = () => {
         });
 
         if (!res.ok) {
-          throw new Error('server error');
+          if (attempt === 0) {
+            throw new Error('server error');
+          }
+          res = await fetch(`${AUTH_SERVER_URL}/get_user_info`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "token": token }),
+          });
+          setAttempt(attempt - 1);
         }
 
         const data = await res.json();
@@ -47,7 +59,7 @@ export const useGetUser = () => {
     };
 
     fetchUser();
-  }, [token]);
+  }, []);
 
   return { user, loading };
 };

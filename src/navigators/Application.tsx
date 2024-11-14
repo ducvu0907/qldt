@@ -6,6 +6,8 @@ import Signup from '../screens/auth/Signup';
 import { AuthContext } from '../contexts/AuthContext';
 import { useContext } from 'react';
 import Home from '../screens/home/Home';
+import Setting from '../screens/home/Setting';
+import ChangePassword from '../screens/home/ChangePassword';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +25,8 @@ const ApplicationNavigator = () => {
             </> :
             <>
               <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen name="Setting" component={Setting} />
+              <Stack.Screen name="ChangePassword" component={ChangePassword} />
             </>
           }
         </Stack.Navigator>

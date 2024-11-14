@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView, ActivityIndicator } from 'react-native';
 import Logo from "../../components/Logo";
 import { useContext, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -22,6 +22,7 @@ const Login = () => {
     password: "",
     deviceId: 1,
   });
+  const [loading, setLoading] = useState<boolean>(false);
   const navigation = useNavigation<any>();
 
   const handleChangeInput = (field: keyof LoginRequest, value: any) => {
@@ -36,6 +37,7 @@ const Login = () => {
       if (!validateLoginInputs(formData)) {
         return;
       }
+      setLoading(true);
 
       const requestData: any = {
         "email": formData.email,
@@ -66,6 +68,8 @@ const Login = () => {
         type: "error",
         text1: error.message,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -110,8 +114,9 @@ const Login = () => {
               <TouchableOpacity
                 className="bg-white w-2/5 py-4 rounded-full items-center mb-5"
                 onPress={handleLogin}
+                disabled={loading}
               >
-                <Text className="text-red-500 text-3xl font-bold">Login</Text>
+                {!loading ? <Text className="text-red-500 text-3xl font-bold">Login</Text> : <ActivityIndicator />}
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center" onPress={() => navigation.navigate("Signup")}>

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import DropDownPicker from "react-native-dropdown-picker";
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { AUTH_SERVER_URL } from '../../types';
 import { validateSignupInputs } from '../../helpers';
 import Toast from 'react-native-toast-message';
@@ -224,9 +225,7 @@ const Signup = () => {
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center" onPress={() => navigation.goBack()}>
-                <Text className="text-white text-xl underline italic">
-                  Already have an account? Login
-                </Text>
+                <Ionicons name="arrow-back-outline" size={30} color="white" />
               </TouchableOpacity>
             </View>
           </View>
