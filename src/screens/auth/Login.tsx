@@ -24,7 +24,7 @@ const Login = () => {
   });
   const navigation = useNavigation<any>();
 
-  const handleChangeInput = (field: keyof LoginRequest, value: any) => { // FIXME: change any to fixed type
+  const handleChangeInput = (field: keyof LoginRequest, value: any) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -53,12 +53,11 @@ const Login = () => {
 
       const data = await res.json();
 
-      if (data.status_code !== 1000) {
+      if (data.code !== 1000) {
         throw new Error(data.message || "Login failed");
       }
 
       const token = data.data.token;
-      console.log(token);
       await SecureStore.setItemAsync("access-token", token);
       setToken(token);
 

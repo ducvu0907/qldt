@@ -1,21 +1,14 @@
-import { useContext } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { AuthContext } from "../../contexts/AuthContext";
-import * as SecureStore from "expo-secure-store";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useLogout } from "../../hooks/useLogout";
 
 const Logout = () => {
-  const { setToken } = useContext(AuthContext);
-
-  const handleLogout = async () => {
-    await SecureStore.deleteItemAsync("access-token");
-    setToken(null);
-  }
+  const { logout } = useLogout();
 
   return (
     <SafeAreaView>
     <View>
-      <TouchableOpacity onPress={handleLogout}>
+      <TouchableOpacity onPress={logout}>
         <Text>Logout</Text>
       </TouchableOpacity>
     </View>

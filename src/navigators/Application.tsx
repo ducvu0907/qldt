@@ -4,8 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Login from '../screens/auth/Login';
 import Signup from '../screens/auth/Signup';
 import { AuthContext } from '../contexts/AuthContext';
-import Main from '../screens/Main';
 import { useContext } from 'react';
+import Home from '../screens/home/Home';
 
 const Stack = createStackNavigator();
 
@@ -15,14 +15,14 @@ const ApplicationNavigator = () => {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={token === null ? "Login" : "Main"}>
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={token === null ? "Login" : "Home"}>
           {token === null ?
             <>
               <Stack.Screen name="Login" component={Login} />
               <Stack.Screen name="Signup" component={Signup} />
             </> :
             <>
-              <Stack.Screen name="Main" component={Main} />
+              <Stack.Screen name="Home" component={Home} />
             </>
           }
         </Stack.Navigator>
