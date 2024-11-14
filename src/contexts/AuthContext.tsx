@@ -2,11 +2,14 @@ import React, { createContext, useState, useEffect, ReactNode } from "react";
 import * as SecureStorage from "expo-secure-store";
 
 interface AuthContextType {
-  token: string | null;
+  token: string | null,
   setToken: (token: string | null) => void;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType>({
+  token: null,
+  setToken: () => {}
+});
 
 interface AuthContextProviderProps {
   children: ReactNode;
@@ -17,9 +20,11 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
 
   useEffect(() => {
     const fetchToken = async () => {
-      const userToken = await SecureStorage.getItemAsync("access-token");
-      setToken(userToken);
-    };
+      const token = await SecureStorage.getItemAsync("access-token");
+      if (token) {
+        setToken(token);
+      }
+    }
 
     fetchToken();
   }, []);

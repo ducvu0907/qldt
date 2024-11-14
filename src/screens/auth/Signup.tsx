@@ -5,7 +5,6 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AUTH_SERVER_URL } from '../../types';
-import axios from 'axios';
 import { validateSignupInputs } from '../../helpers';
 import Toast from 'react-native-toast-message';
 
@@ -29,6 +28,7 @@ const roles = [
 ];
 
 const Signup = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<SignupRequest>({
     firstName: '',
@@ -52,7 +52,8 @@ const Signup = () => {
       if (!validateSignupInputs(formData)) {
         return;
       }
-
+      setLoading(true);
+      
       const requestData: any = {
         "ho": formData.firstName,
         "ten": formData.lastName,
@@ -111,6 +112,9 @@ const Signup = () => {
         type: "error",
         text1: error.message
       });
+
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -214,6 +218,7 @@ const Signup = () => {
               <TouchableOpacity
                 className="bg-white w-2/5 py-4 rounded-full items-center mb-5"
                 onPress={handleSignUp}
+                disabled={loading}
               >
                 <Text className="text-red-500 text-3xl font-bold">Sign up</Text>
               </TouchableOpacity>

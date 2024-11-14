@@ -1,9 +1,13 @@
 import { View, Text } from "react-native";
 
-const Topbar = () => {
+interface TopbarProps {
+  title: string,
+}
+
+const Topbar: React.FC<TopbarProps> = ({ title }) => {
   return (
     <View>
-      <Text>Topbar</Text>
+      <Text>{title}</Text>
     </View>
   );
 }

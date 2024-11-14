@@ -5,6 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from '../../contexts/AuthContext';
 import Toast from 'react-native-toast-message';
+import * as SecureStore from "expo-secure-store";
+import { validateLoginInputs } from '../../helpers';
+import { AUTH_SERVER_URL } from '../../types';
 
 export type LoginRequest = {
   email: string,
@@ -30,7 +33,35 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      
+      if (!validateLoginInputs(formData)) {
+        return;
+      }
+
+      const requestData: any = {
+        "email": formData.email,
+        "password": formData.password,
+        "deviceId": 1,
+      };
+
+      const res = await fetch(`${AUTH_SERVER_URL}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      const data = await res.json();
+
+      if (data.status_code !== 1000) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      const token = data.data.token;
+      console.log(token);
+      await SecureStore.setItemAsync("access-token", token);
+      setToken(token);
+
     } catch(error: any) {
       Toast.show({
         type: "error",
