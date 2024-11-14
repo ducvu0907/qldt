@@ -1,82 +1,99 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView } from 'react-native';
 import Logo from "../../components/Logo";
-import { LoginRequest } from '../../services/auth';
-import { useState } from 'react';
-import { SignupRequest } from '../../services/auth';
+import { useContext, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { AuthContext } from '../../contexts/AuthContext';
+import Toast from 'react-native-toast-message';
+
+export type LoginRequest = {
+  email: string,
+  password: string,
+  deviceId: number // confusing
+}
 
 const Login = () => {
+  const { setToken } = useContext(AuthContext);
   const [formData, setFormData] = useState<LoginRequest>({
     email: "",
     password: "",
-    deviceId: 1, // FIXME: might change later
+    deviceId: 1,
   });
+  const navigation = useNavigation<any>();
 
-  const handleChangeInput = (field: keyof SignupRequest, value: any) => { // TODO: change value to fixed type
+  const handleChangeInput = (field: keyof LoginRequest, value: any) => { // FIXME: change any to fixed type
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
 
-  // FIXME: dummy function
-  const handleLogin = () => {
-    console.log("account signup", formData);
+  const handleLogin = async () => {
+    try {
+      
+    } catch(error: any) {
+      Toast.show({
+        type: "error",
+        text1: error.message,
+      });
+    }
   };
 
   return (
-    <View className="flex-1 bg-red-500 justify-center items-center px-6">
-      <Logo size={150}/>
-      <Text className="text-white text-xl font-semibold my-4">Welcome to Hust</Text>
-      
-      <View className="w-full space-y-4 mb-6">
-        <View className="space-y-4">
-          <TextInput 
-            placeholder="Firstname" 
-            value={formData.email}
-            onChangeText={(value) => handleChangeInput("firstname", value)}
-            placeholderTextColor="#ffffff80"
-            className="border border-white/30 rounded p-3 text-white w-full" 
-          />
-          <TextInput 
-            placeholder="Lastname"
-            value={formData.password}
-            onChangeText={(value) => handleChangeInput('lastname', value)}
-            placeholderTextColor="#ffffff80" 
-            className="border border-white/30 rounded p-3 text-white w-full" 
-          />
+      <Pressable onPress={() => Keyboard.dismiss()}>
+        <View className="w-full h-full bg-red-700 justify-around">
+        <SafeAreaView>
+          <View className="flex items-center mt-22 mb-10">
+            <Logo />
+          </View>
+
+          <View className="w-full justify-center items-center px-8">
+            <Text className="text-white text-4xl mb-12">Welcome to QLDT</Text>
+            <View className="w-full space-y-4 mb-6">
+              <TextInput
+                placeholder="Email"
+                value={formData.email}
+                onChangeText={(value) => handleChangeInput("email", value)}
+                placeholderTextColor="#ffffff80"
+                className="w-full border-2 border-white text-2xl rounded-lg p-3 text-white mb-4 mr-4"
+              />
+              <View className="relative">
+                <TextInput
+                  placeholder="Password"
+                  value={formData.password}
+                  onChangeText={(value) => handleChangeInput('password', value)}
+                  placeholderTextColor="#ffffff80"
+                  secureTextEntry
+                  className="border-2 border-white text-2xl rounded-lg p-3 text-white w-full mb-4"
+                />
+                <Icon
+                  name="lock"
+                  size={24}
+                  color="white"
+                  style={{ position: 'absolute', right: 12, top: 15 }}
+                />
+              </View>
+
+            </View>
+
+            <View className={`w-full items-center`}>
+              <TouchableOpacity
+                className="bg-white w-2/5 py-4 rounded-full items-center mb-5"
+                onPress={handleLogin}
+              >
+                <Text className="text-red-500 text-3xl font-bold">Login</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity className="items-center" onPress={() => navigation.navigate("Signup")}>
+                <Text className="text-white text-xl underline italic">
+                  Don't have an account? Register
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </SafeAreaView>
         </View>
-        
-        <TextInput 
-          placeholder="Email"
-          value={formData.email}
-          onChangeText={(value) => handleChangeInput('email', value)}
-          placeholderTextColor="#ffffff80"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          className="border border-white/30 rounded p-3 text-white w-full" 
-        />
-        
-        <TextInput 
-          placeholder="Password"
-          value={formData.password}
-          onChangeText={(value) => handleChangeInput('password', value)}
-          placeholderTextColor="#ffffff80"
-          secureTextEntry 
-          className="border border-white/30 rounded p-3 text-white w-full" 
-        />
-
-      </View>
-
-      <View className={`w-full`}>
-        <TouchableOpacity 
-          className="bg-white w-full py-3 rounded-full items-center mb-4"
-          onPress={handleLogin}
-        >
-          <Text className="text-red-500 font-semibold">Login</Text>
-        </TouchableOpacity>
-
-      </View>
-    </View>
+      </Pressable>
   );
 };
 
