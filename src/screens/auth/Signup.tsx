@@ -11,7 +11,7 @@ import Toast from 'react-native-toast-message';
 
 export enum Roles {
   STUDENT = "STUDENT",
-  TEACHER = "TEACHER",
+  LECTURER = "LECTURER",
 }
 
 export type SignupRequest = {
@@ -25,7 +25,7 @@ export type SignupRequest = {
 
 const roles = [
   { label: "student", value: Roles.STUDENT, labelStyle: { color: "#000000" } },
-  { label: "teacher", value: Roles.TEACHER, labelStyle: { color: "#000000" } },
+  { label: "lecturer", value: Roles.LECTURER, labelStyle: { color: "#000000" } },
 ];
 
 const Signup = () => {

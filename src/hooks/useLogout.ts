@@ -7,11 +7,12 @@ export const useLogout = () => {
   const { setToken } = useContext(AuthContext);
 
   const logout = async () => {
+    console.log("logging out");
     await SecureStore.deleteItemAsync("access-token");
     setToken(null);
     Toast.show({
       type: "success",
-      text1: "logout successfully"
+      text1: "logging out"
     });
   };
 
