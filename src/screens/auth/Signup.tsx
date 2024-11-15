@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView, ActivityIndicator } from 'react-native';
 import Logo from "../../components/Logo";
 import { useState } from 'react';
 import DropDownPicker from "react-native-dropdown-picker";
@@ -104,6 +104,7 @@ const Signup = () => {
           text1: "Create account successfully",
         });
         navigation.navigate("Login");
+
       } else {
         throw new Error(verifyData.message || "Verification failed");
       }
@@ -221,7 +222,7 @@ const Signup = () => {
                 onPress={handleSignUp}
                 disabled={loading}
               >
-                <Text className="text-red-500 text-3xl font-bold">Sign up</Text>
+                {!loading ? <Text className="text-red-500 text-3xl font-bold">Sign up</Text> : <ActivityIndicator />}
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center" onPress={() => navigation.goBack()}>
