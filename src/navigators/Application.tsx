@@ -8,6 +8,8 @@ import { useContext } from 'react';
 import Home from '../screens/home/Home';
 import Setting from '../screens/home/Setting';
 import ChangePassword from '../screens/home/ChangePassword';
+import ChangeInfo from '../screens/home/ChangeInfo';
+import ClassTabs from './ClassTabs';
 
 const Stack = createStackNavigator();
 
@@ -25,8 +27,10 @@ const ApplicationNavigator = () => {
             </> :
             <>
               <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen name="ClassTabs" component={ClassTabs} />
               <Stack.Screen name="Setting" component={Setting} />
               <Stack.Screen name="ChangePassword" component={ChangePassword} />
+              <Stack.Screen name="ChangeInfo" component={ChangeInfo} />
             </>
           }
         </Stack.Navigator>

@@ -1,9 +1,11 @@
 import { Image, View, Text } from "react-native";
 import { useGetUser } from "../hooks/useGetUser";
 import { ActivityIndicator } from "react-native";
+import { useLogout } from "../hooks/useLogout";
 
 const Profile = () => {
   const { user, loading } = useGetUser();
+  const {logout} = useLogout();
 
   if (loading) {
     return (
@@ -11,6 +13,10 @@ const Profile = () => {
         <ActivityIndicator size={50} color={"#000"}/>
       </View>
     );
+  }
+
+  if (user === null) {
+    logout();
   }
 
   return (

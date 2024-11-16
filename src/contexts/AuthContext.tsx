@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react";
 import * as SecureStorage from "expo-secure-store";
-import { useGetUser } from "../hooks/useGetUser";
 import { AUTH_SERVER_URL } from "../types";
 
 interface AuthContextType {

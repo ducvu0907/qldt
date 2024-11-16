@@ -1,4 +1,7 @@
-import { Text, View } from "react-native";
+import { useContext } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+import { ClassContext, ClassContextProvider } from "../contexts/ClassContext";
+import { useNavigation } from "@react-navigation/native";
 
 export interface ClassData {
   id?: number;
@@ -15,8 +18,16 @@ export interface ClassData {
 }
 
 const Class: React.FC<{ currentClass: ClassData }> = ({ currentClass }) => {
+  const {setSelectedClass} = useContext(ClassContext);
+  const navigation = useNavigation<any>();
+
+  const handleSelectClass = () => {
+    setSelectedClass(currentClass);
+    navigation.navigate("ClassTabs");
+  };
+
   return (
-    <View className="w-full p-4 bg-gray-600 rounded-lg shadow-lg my-2">
+    <TouchableOpacity onPress={handleSelectClass} className="w-full p-4 bg-gray-600 rounded-lg shadow-lg my-2">
       <Text className="text-2xl font-extrabold text-white text-center">{currentClass.class_name} - {currentClass.class_type}</Text>
 
       <View className="flex-row justify-between mt-2">
@@ -36,7 +47,7 @@ const Class: React.FC<{ currentClass: ClassData }> = ({ currentClass }) => {
           <Text className="text-sm text-white opacity-80">Lecturer ID: {currentClass.lecturer_id}</Text>
         </View>
       )}
-    </View>
+    </TouchableOpacity>
   );
 }
 
