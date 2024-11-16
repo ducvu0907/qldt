@@ -11,6 +11,7 @@ import ChangePassword from '../screens/home/ChangePassword';
 import ChangeInfo from '../screens/home/ChangeInfo';
 import ClassTabs from './ClassTabs';
 import CreateClass from '../screens/home/CreateClass';
+import RegisterClass from '../screens/home/RegisterClass';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,7 @@ const ApplicationNavigator = () => {
             <>
               <Stack.Screen name="Home" component={Home} />
               <Stack.Screen name="CreateClass" component={CreateClass} />
+              <Stack.Screen name="RegisterClass" component={RegisterClass} />
               <Stack.Screen name="ClassTabs" component={ClassTabs} />
               <Stack.Screen name="Setting" component={Setting} />
               <Stack.Screen name="ChangePassword" component={ChangePassword} />

@@ -96,14 +96,14 @@ const ChangeInfo = () => {
         <View className="flex p-5">
           <View className="mb-5">
             <Text className="text-white text-lg font-semibold mb-2">Name</Text>
-            <View className="flex-row items-center bg-white/30 rounded-lg px-4 py-4">
+            <View className="flex-row bg-white/30 rounded-lg p-4">
               <Icon name="user" size={20} color="white" />
               <TextInput
                 value={name}
-                onChangeText={setName}
+                onChangeText={(val) => setName(val)}
                 placeholder="Enter your name"
                 placeholderTextColor="white"
-                className="h-full w-full ml-3 text-white"
+                className="w-full ml-3 text-white"
               />
             </View>
           </View>

@@ -2,12 +2,12 @@ import { useState, useEffect, useContext, useCallback } from 'react';
 import { RESOURCE_SERVER_URL } from '../types';
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
-import { ClassData } from '../components/Class';
+import { ClassItemData } from '../components/ClassListItem';
 
 export const useGetClasses = () => {
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [classes, setClasses] = useState<ClassData[] | null>(null);
+  const [classes, setClasses] = useState<ClassItemData[] | null>(null);
 
   const fetchClasses = useCallback(async () => {
     try {

@@ -19,6 +19,14 @@ const Home = () => {
       >
         <Icon name="plus" size={30} color="white" />
       </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate("RegisterClass")}
+        className="absolute bottom-5 left-5 bg-blue-600 w-16 h-16 rounded-full justify-center items-center shadow-lg"
+      >
+        <Icon name="book" size={30} color="white" />
+      </TouchableOpacity>
+
     </View>
   );
 };

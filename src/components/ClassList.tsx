@@ -1,7 +1,7 @@
 import { FlatList, Text, View, ActivityIndicator } from "react-native";
 import { useState, useCallback } from "react";
 import { useGetClasses } from "../hooks/useGetClasses";
-import Class from "./Class";
+import ClassListItem from "./ClassListItem";
 
 const ClassList = () => {
   const { classes, loading, refetch } = useGetClasses();
@@ -22,19 +22,11 @@ const ClassList = () => {
     );
   }
 
-  if (classes?.length === 0) {
-    return (
-      <View className="flex justify-center items-center bg-gray-100">
-        <Text className="text-lg text-gray-600">No classes available</Text>
-      </View>
-    );
-  }
-
   return (
     <View className="w-full h-full flex p-4 bg-gray-100">
       <FlatList
         data={classes}
-        renderItem={({ item }) => <Class currentClass={item} />}
+        renderItem={({ item }) => <ClassListItem currentClass={item} />}
         onRefresh={onRefresh}
         refreshing={refreshing}
       />

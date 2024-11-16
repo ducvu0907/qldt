@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { ClassContext, ClassContextProvider } from "../contexts/ClassContext";
+import { ClassContext } from "../contexts/ClassContext";
 import { useNavigation } from "@react-navigation/native";
 
-export interface ClassData {
+export interface ClassItemData {
   id?: number;
   class_id?: string;
   class_name?: string;
@@ -17,7 +17,7 @@ export interface ClassData {
   status?: string;
 }
 
-const Class: React.FC<{ currentClass: ClassData }> = ({ currentClass }) => {
+const ClassListItem: React.FC<{ currentClass: ClassItemData }> = ({ currentClass }) => {
   const {setSelectedClass} = useContext(ClassContext);
   const navigation = useNavigation<any>();
 
@@ -41,14 +41,8 @@ const Class: React.FC<{ currentClass: ClassData }> = ({ currentClass }) => {
           Status: {currentClass.status}
         </Text>
       </View>
-
-      {currentClass.lecturer_id && (
-        <View className="mt-4">
-          <Text className="text-sm text-white opacity-80">Lecturer ID: {currentClass.lecturer_id}</Text>
-        </View>
-      )}
     </TouchableOpacity>
   );
 }
 
-export default Class;
+export default ClassListItem;
