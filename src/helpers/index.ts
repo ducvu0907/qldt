@@ -1,6 +1,7 @@
 import { LoginRequest } from "../screens/auth/Login";
 import { SignupRequest } from "../screens/auth/Signup";
 import Toast from "react-native-toast-message";
+import { ClassCreateRequest } from "../screens/home/CreateClass";
 
 export const isValidEmail = (email: string): boolean => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -85,4 +86,34 @@ export const validateLoginInputs = (formData: LoginRequest) => {
   }
 
   return true;
+};
+
+export const validateClassInputs = (formData: ClassCreateRequest): boolean => {
+  const { class_id, class_name, class_type, start_date, end_date, max_student_amount } = formData;
+
+  if (class_name.trim() === '') {
+    Toast.show({
+      type: "error",
+      text1: "Class Name cannot be empty.",
+    });
+    return false;
+  }
+
+  if (start_date >= end_date) {
+    Toast.show({
+      type: "error",
+      text1: "Start Date must be before End Date.",
+    });
+    return false;
+  }
+
+  return true;
+};
+
+
+export const formatDate = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 };

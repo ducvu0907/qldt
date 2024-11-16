@@ -4,7 +4,7 @@ import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
 import { ClassData } from '../components/Class';
 
-export const useGetClassList = () => {
+export const useGetClasses = () => {
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [classes, setClasses] = useState<ClassData[] | null>(null);
@@ -46,5 +46,5 @@ export const useGetClassList = () => {
     fetchClasses();
   }, []);
 
-  return { classes, loading, refetch: fetchClasses }; // Expose refetch for external use
+  return { classes, loading, refetch: fetchClasses };
 };

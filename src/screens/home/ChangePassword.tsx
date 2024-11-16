@@ -64,7 +64,7 @@ const ChangePassword = () => {
   };
 
   return (
-      <View className="w-full h-full bg-red-700">
+      <Pressable onPress={() => Keyboard.dismiss()} className="w-full h-full bg-red-700">
         <Topbar title="Change Password" showBack={true} showSetting={false} />
 
         <View className="flex justify-center p-5 items-center">
@@ -78,12 +78,7 @@ const ChangePassword = () => {
                 onChangeText={setOldPassword}
                 placeholder="Enter old password"
                 placeholderTextColor="white"
-                style={{
-                  flex: 1,
-                  color: 'white',
-                  marginLeft: 10,
-                  fontSize: 16,
-                }}
+                className='w-full text-white text-xl ml-4'
               />
             </View>
           </View>
@@ -98,12 +93,7 @@ const ChangePassword = () => {
                 onChangeText={setNewPassword}
                 placeholder="Enter new password"
                 placeholderTextColor="white"
-                style={{
-                  flex: 1,
-                  color: 'white',
-                  marginLeft: 10,
-                  fontSize: 16,
-                }}
+                className='w-full text-white text-xl ml-4'
               />
             </View>
           </View>
@@ -124,7 +114,7 @@ const ChangePassword = () => {
             {!loading ? <Text className="text-white font-semibold text-lg">Change Password</Text> : <ActivityIndicator />}
           </TouchableOpacity>
         </View>
-      </View>
+      </Pressable>
   );
 };
 

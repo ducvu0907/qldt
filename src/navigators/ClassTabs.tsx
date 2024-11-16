@@ -5,7 +5,7 @@ import { ClassContext } from "../contexts/ClassContext";
 const Tab = createMaterialTopTabNavigator();
 
 const ClassTabs = () => {
-  const {selectedClass} = useContext(ClassContext);
+  const { selectedClass } = useContext(ClassContext);
 
   return (
     <Tab.Navigator>

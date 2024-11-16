@@ -1,10 +1,10 @@
 import { FlatList, Text, View, ActivityIndicator } from "react-native";
 import { useState, useCallback } from "react";
-import { useGetClassList } from "../hooks/useGetClasses";
+import { useGetClasses } from "../hooks/useGetClasses";
 import Class from "./Class";
 
 const ClassList = () => {
-  const { classes, loading, refetch } = useGetClassList();
+  const { classes, loading, refetch } = useGetClasses();
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {

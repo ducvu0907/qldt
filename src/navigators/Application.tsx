@@ -10,6 +10,7 @@ import Setting from '../screens/home/Setting';
 import ChangePassword from '../screens/home/ChangePassword';
 import ChangeInfo from '../screens/home/ChangeInfo';
 import ClassTabs from './ClassTabs';
+import CreateClass from '../screens/home/CreateClass';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,7 @@ const ApplicationNavigator = () => {
             </> :
             <>
               <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen name="CreateClass" component={CreateClass} />
               <Stack.Screen name="ClassTabs" component={ClassTabs} />
               <Stack.Screen name="Setting" component={Setting} />
               <Stack.Screen name="ChangePassword" component={ChangePassword} />
