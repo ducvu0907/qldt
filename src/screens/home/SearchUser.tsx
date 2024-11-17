@@ -6,7 +6,7 @@ import SearchUserItem from "../../components/SearchUserItem";
 import { RESOURCE_SERVER_URL } from "../../types";
 import Toast from "react-native-toast-message";
 
-export interface UserData {
+export interface UserSearchData {
   account_id: string;
   last_name: string;
   first_name: string;
@@ -18,7 +18,7 @@ export interface SearchUserRequest {
 }
 
 const SearchUser = () => {
-  const [users, setUsers] = useState<UserData[]>([]);
+  const [users, setUsers] = useState<UserSearchData[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);

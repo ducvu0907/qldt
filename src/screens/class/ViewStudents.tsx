@@ -21,6 +21,8 @@ const ViewStudents = () => {
     <View className="flex-1">
       <Topbar title={"Student list"} showBack={true} />
 
+      {classInfo?.student_accounts?.length !== 0 ?
+      (
       <FlatList
         data={students}
         renderItem={({ item }) => (
@@ -31,6 +33,10 @@ const ViewStudents = () => {
         keyExtractor={(item) => item.student_id?.toString() || Math.random().toString()}
         contentContainerStyle={{ paddingBottom: 16 }}
       />
+      ) : (
+        <Text className="text-center text-2xl text-black">No students</Text>
+      )}
+
     </View>
   );
 };

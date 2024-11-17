@@ -13,7 +13,7 @@ const ClassMain = () => {
   const { selectedClassId } = useContext(ClassContext);
   const navigation = useNavigation<any>();
   const [loading, setLoading] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false); // State for modal visibility
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleDeleteClass = async () => {
     try {
@@ -43,7 +43,7 @@ const ClassMain = () => {
         text1: "Delete class successfully"
       });
 
-      navigation.popTo("Home");
+      navigation.goBack();
 
     } catch (error: any) {
       Toast.show({
@@ -113,7 +113,7 @@ const ClassMain = () => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View className="flex-1 justify-center items-center bg-black opacity-50">
+        <View className="flex-1 justify-center items-center bg-black opacity-80">
           <View className="bg-white p-6 rounded-lg w-80">
             <Text className="text-lg text-center mb-6">Are you sure you want to delete this class?</Text>
             <View className="flex-row justify-between space-x-4">

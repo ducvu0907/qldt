@@ -3,6 +3,7 @@ import { SignupRequest } from "../screens/auth/Signup";
 import Toast from "react-native-toast-message";
 import { ClassCreateRequest } from "../screens/home/CreateClass";
 import { EditClassRequest } from "../screens/class/EditClass";
+import { CreateAssignmentRequest } from "../screens/assignment/CreateAssignment";
 
 export const isValidEmail = (email: string): boolean => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -117,4 +118,64 @@ export const formatDate = (date: Date) => {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
+};
+
+// helpers.ts
+
+export const validateAssignmentInputs = (formData: CreateAssignmentRequest): boolean => {
+  const { file, classId, title, description, deadline } = formData;
+
+  if (!classId || classId.trim().length === 0) {
+    Toast.show({
+      type: "error",
+      text1: "Class ID is required.",
+    });
+    return false;
+  }
+
+  if (!title || title.trim().length === 0) {
+    Toast.show({
+      type: "error",
+      text1: "Assignment title is required.",
+    });
+    return false;
+  }
+
+  if (!description || description.trim().length === 0) {
+    Toast.show({
+      type: "error",
+      text1: "Assignment description is required.",
+    });
+    return false;
+  }
+
+  if (!deadline || deadline.getTime() < new Date().getTime()) {
+    Toast.show({
+      type: "error",
+      text1: "Deadline must be a future date.",
+    });
+    return false;
+  }
+
+  if (!file) {
+    Toast.show({
+      type: "error",
+      text1: "A file must be selected.",
+    });
+    return false;
+  }
+
+  return true;
+};
+
+export const formatDateTime = (date: Date): string => {
+  const isoString = date.toISOString();
+  const formatted = isoString.slice(0, 19);
+
+  return formatted;
+};
+
+// TODO: handle uploading files
+export const uploadFile = () => {
+
 };

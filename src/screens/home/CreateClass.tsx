@@ -80,10 +80,6 @@ const CreateClass = () => {
         body: JSON.stringify(requestData),
       });
 
-      if (!res.ok) {
-        throw new Error("Server error");
-      }
-
       const data = await res.json();
       console.log(data);
 
@@ -180,7 +176,7 @@ const CreateClass = () => {
                 onFocus={() => setOpen(false)}
                 placeholder="Max Students"
                 value={formData.max_student_amount.toString()}
-                onChangeText={(value) => handleChangeInput('max_student_amount', parseInt(value))}
+                onChangeText={(value) => handleChangeInput('max_student_amount', value)}
                 placeholderTextColor="#ffffff80"
                 keyboardType="numeric"
                 className="border-2 border-white text-2xl rounded-lg p-3 text-white w-full mb-4"
