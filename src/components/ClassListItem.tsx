@@ -4,8 +4,8 @@ import { ClassContext } from "../contexts/ClassContext";
 import { useNavigation } from "@react-navigation/native";
 
 export interface ClassItemData {
-  id?: number;
-  class_id?: string;
+  id: number;
+  class_id: string;
   class_name?: string;
   schedule?: null;
   lecturer_id?: number;
@@ -18,11 +18,11 @@ export interface ClassItemData {
 }
 
 const ClassListItem: React.FC<{ currentClass: ClassItemData }> = ({ currentClass }) => {
-  const {setSelectedClass} = useContext(ClassContext);
+  const {setSelectedClassId} = useContext(ClassContext);
   const navigation = useNavigation<any>();
 
   const handleSelectClass = () => {
-    setSelectedClass(currentClass);
+    setSelectedClassId(currentClass.class_id);
     navigation.navigate("ClassTabs");
   };
 

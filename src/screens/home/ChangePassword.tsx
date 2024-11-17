@@ -65,7 +65,7 @@ const ChangePassword = () => {
 
   return (
       <Pressable onPress={() => Keyboard.dismiss()} className="w-full h-full bg-red-700">
-        <Topbar title="Change Password" showBack={true} showSetting={false} />
+        <Topbar title="Change Password" showBack={true} />
 
         <View className="flex justify-center p-5 items-center">
           <View className="w-full mb-5">

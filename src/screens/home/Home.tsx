@@ -9,7 +9,7 @@ const Home = () => {
 
   return (
     <View className="flex-1">
-      <Topbar title={"Class List"} showBack={false} showSetting={true} />
+      <Topbar title={"Class List"} showBack={false} settingScreen={"Setting"} />
 
       <ClassList />
 

@@ -1,16 +1,13 @@
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { useContext } from "react";
-import { ClassContext } from "../contexts/ClassContext";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ClassStack from './ClassStack';
 
-const Tab = createMaterialTopTabNavigator();
+const Tab = createBottomTabNavigator();
 
 const ClassTabs = () => {
-  const { selectedClass } = useContext(ClassContext);
-
   return (
-    <Tab.Navigator>
-      <Tab.Screen />
-    </Tab.Navigator>
+      <Tab.Navigator screenOptions={{ headerShown: false }}>
+        <Tab.Screen name="ClassStack" component={ClassStack} />
+      </Tab.Navigator>
   );
 }
 

@@ -7,10 +7,10 @@ import Icon from "react-native-vector-icons/Ionicons";
 interface TopbarProps {
   title: string;
   showBack: boolean;
-  showSetting: boolean;
+  settingScreen?: string;
 }
 
-const Topbar: React.FC<TopbarProps> = ({ title, showBack, showSetting }) => {
+const Topbar: React.FC<TopbarProps> = ({ title, showBack, settingScreen }) => {
   const navigation = useNavigation<any>();
 
   return (
@@ -31,10 +31,10 @@ const Topbar: React.FC<TopbarProps> = ({ title, showBack, showSetting }) => {
         </View>
 
         <View className="flex justify-center items-end flex-1">
-          {showSetting && (
+          {settingScreen && (
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("Setting");
+                navigation.navigate(settingScreen);
               }}
             >
               <Icon name="ellipsis-vertical" size={30} color="white" />

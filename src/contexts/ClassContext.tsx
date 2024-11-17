@@ -1,14 +1,13 @@
 import React, { createContext, useState, ReactNode } from 'react';
-import { ClassItemData } from '../components/ClassListItem';
 
 interface ClassContextType {
-  selectedClass: ClassItemData | null;
-  setSelectedClass: (newClass: ClassItemData | null) => void;
+  selectedClassId: string | null;
+  setSelectedClassId: (newClassId: string | null) => void;
 };
 
 const ClassContext = createContext<ClassContextType>({
-  selectedClass: null,
-  setSelectedClass: () => {}
+  selectedClassId: null,
+  setSelectedClassId: () => {}
 });
 
 interface ClassProviderProps {
@@ -16,10 +15,10 @@ interface ClassProviderProps {
 }
 
 const ClassContextProvider: React.FC<ClassProviderProps> = ({ children }) => {
-  const [selectedClass, setSelectedClass] = useState<ClassItemData | null>(null);
+  const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
 
   return (
-    <ClassContext.Provider value={{selectedClass, setSelectedClass}}>
+    <ClassContext.Provider value={{selectedClassId, setSelectedClassId}}>
       {children}
     </ClassContext.Provider>
   );

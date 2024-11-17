@@ -70,7 +70,7 @@ const RegisterClass = () => {
 
   return (
     <Pressable onPress={() => Keyboard.dismiss()} className="w-full h-full bg-red-700">
-      <Topbar title="Register for Classes" showBack={true} showSetting={false} />
+      <Topbar title="Register for Classes" showBack={true} />
 
       <View className="flex-1 p-5">
 

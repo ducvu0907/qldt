@@ -91,7 +91,7 @@ const ChangeInfo = () => {
 
   return (
     <Pressable onPress={() => Keyboard.dismiss()} className="flex-1 bg-red-700">
-        <Topbar title="Change Info" showBack showSetting={false} />
+        <Topbar title="Change Info" showBack={true} />
 
         <View className="flex p-5">
           <View className="mb-5">
