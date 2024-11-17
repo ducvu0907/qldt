@@ -7,9 +7,7 @@ import Toast from 'react-native-toast-message';
 import { AUTH_SERVER_URL } from '../../types';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import * as fs from "expo-file-system";
 
-// FIXME: upload profile picture
 const ChangeInfo = () => {
   const { token } = useContext(AuthContext);
   const [name, setName] = useState('');
@@ -51,8 +49,11 @@ const ChangeInfo = () => {
       if (name.trim()) formData.append('name', name.trim());
 
       if (file) {
-        const fileToUpload = await fs.getContentUriAsync(file.uri);
-        formData.append("file", fileToUpload);
+        formData.append("file", {
+          uri: file.uri,
+          type: file.mimeType,
+          name: file.fileName
+        });
       }
 
       const response = await fetch(`${AUTH_SERVER_URL}/change_info_after_signup`, {

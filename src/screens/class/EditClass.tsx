@@ -21,7 +21,6 @@ export interface EditClassRequest {
   end_date?: Date | null;
 };
 
-// FIXME: refactor edit class date picker
 const EditClass = () => {
   const { token } = useContext(AuthContext);
   const { selectedClassId } = useContext(ClassContext);

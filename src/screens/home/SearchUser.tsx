@@ -83,10 +83,10 @@ const SearchUser = () => {
       <View className="p-4">
         <TextInput
           placeholder="Search by name"
-          placeholderTextColor={"black"}
+          placeholderTextColor={"gray"}
           value={searchQuery}
           onChangeText={setSearchQuery}
-          className="w-full text-black border rounded text-2xl p-2 h-[50px]"
+          className="w-full text-black border-2 rounded text-2xl p-2 h-[50px]"
         />
       </View>
 

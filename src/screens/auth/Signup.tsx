@@ -41,7 +41,7 @@ const Signup = () => {
   });
   const navigation = useNavigation<any>();
 
-  const handleChangeInput = (field: keyof SignupRequest, value: any) => { // FIXME: change any to fixed type
+  const handleChangeInput = (field: keyof SignupRequest, value: any) => {
     setFormData(prev => ({
       ...prev,
       [field]: value

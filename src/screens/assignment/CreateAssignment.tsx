@@ -8,9 +8,11 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { AuthContext } from '../../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { RESOURCE_SERVER_URL } from '../../types';
+import * as DocumentPicker from 'expo-document-picker';
+import { ClassContext } from '../../contexts/ClassContext';
 
 export interface CreateAssignmentRequest {
-  file: File;
+  file: any;
   token: string;
   classId: string;
   title: string;
@@ -20,16 +22,25 @@ export interface CreateAssignmentRequest {
 
 const CreateAssignment = () => {
   const { token } = useContext(AuthContext);
+  const {selectedClassId} = useContext(ClassContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<CreateAssignmentRequest>({
     file: {} as File,
     token: token || "",
-    classId: "",
+    classId: selectedClassId || "",
     title: "",
     deadline: new Date(),
     description: "",
   });
   const navigation = useNavigation<any>();
+
+  const handlePickingFile = async () => {
+    const file = await DocumentPicker.getDocumentAsync();
+    if (file.canceled) {
+      return;
+    }
+    handleChangeInput("file", file.assets[0]);
+  };
 
   const handleChangeInput = (field: keyof CreateAssignmentRequest, value: any) => {
     setFormData(prev => ({
@@ -46,21 +57,25 @@ const CreateAssignment = () => {
       console.log("creating new assignment");
       setLoading(true);
 
-      const requestData: any = {
-        token: formData.token,
-        class_id: formData.classId,
-        title: formData.title,
-        description: formData.description,
-        deadline: formatDateTime(formData.deadline),
-        file: formData.file,
-      };
+      const form = new FormData();
+      form.append("token", formData.token);
+      form.append("classId", formData.classId);
+      form.append("title", formData.title);
+      form.append("description", formData.title);
+      form.append("deadline", formatDateTime(formData.deadline));
+      form.append("file", {
+        uri: formData.file.uri,
+        type: formData.file.mimeType,
+        name: formData.file.name,
+      });
 
+      console.log(formData.deadline);
       const res = await fetch(`${RESOURCE_SERVER_URL}/create_survey`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
         },
-        body: JSON.stringify(requestData),
+        body: form,
       });
 
       const data = await res.json();
@@ -75,6 +90,7 @@ const CreateAssignment = () => {
       });
 
       navigation.goBack();
+
     } catch (error: any) {
       Toast.show({
         type: "error",
@@ -98,16 +114,7 @@ const CreateAssignment = () => {
           <View className="w-full justify-center items-center px-8">
             <Text className="text-white text-4xl mb-12">Create an Assignment</Text>
             <View className="w-full space-y-4 mb-6">
-              {/* Class ID */}
-              <TextInput
-                placeholder="Class ID"
-                value={formData.classId}
-                onChangeText={(value) => handleChangeInput('classId', value)}
-                placeholderTextColor="#ffffff80"
-                className="border-2 border-white text-2xl rounded-lg p-3 text-white w-full mb-4"
-              />
 
-              {/* Title */}
               <TextInput
                 placeholder="Assignment Title"
                 value={formData.title}
@@ -116,7 +123,6 @@ const CreateAssignment = () => {
                 className="border-2 border-white text-2xl rounded-lg p-3 text-white w-full mb-4"
               />
 
-              {/* Description */}
               <TextInput
                 placeholder="Assignment Description"
                 value={formData.description}
@@ -127,7 +133,6 @@ const CreateAssignment = () => {
                 className="border-2 border-white text-2xl rounded-lg p-3 text-white w-full mb-4"
               />
 
-              {/* Deadline Picker */}
               <View className="flex-row items-center border-2 border-white rounded-lg py-2 w-full mb-4">
                 <Text className="text-white text-2xl pl-3">Deadline:</Text>
                 <DateTimePicker
@@ -151,10 +156,9 @@ const CreateAssignment = () => {
                 />
               </View>
 
-              {/* File Upload (Placeholder for File Picker) */}
               <TouchableOpacity
                 onPress={() => {
-                  // You can trigger file picker logic here
+                  handlePickingFile();
                 }}
                 className="border-2 border-white rounded-lg p-3 w-full mb-4">
                 <Text className="text-white text-2xl text-center">
@@ -163,7 +167,6 @@ const CreateAssignment = () => {
               </TouchableOpacity>
             </View>
 
-            {/* Submit Button */}
             <View className="w-full items-center">
               <TouchableOpacity
                 className="bg-white w-2/5 py-4 rounded-full items-center mb-5"
@@ -173,7 +176,6 @@ const CreateAssignment = () => {
                 {!loading ? <Text className="text-blue-500 text-3xl font-bold text-center">Create</Text> : <ActivityIndicator />}
               </TouchableOpacity>
 
-              {/* Back Button */}
               <TouchableOpacity className="items-center" onPress={() => navigation.goBack()}>
                 <Ionicons name="arrow-back-outline" size={30} color="white" />
               </TouchableOpacity>

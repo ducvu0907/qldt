@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ClassStack from './ClassStack';
 import AssignmentStack from './AssignmentStack';
+import MaterialStack from './MaterialStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -10,20 +11,30 @@ const ClassTabs = () => {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen
-        name="ClassStack"
+        name="Class"
         component={ClassStack}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="school" size={size} color={color} />
+            <Ionicons name="person" size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="AssignmentStack"
+        name="Assignments"
         component={AssignmentStack}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="clipboard" size={size} color={color} />
+            <Ionicons name="document-text" size={size} color={color} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Material"
+        component={MaterialStack}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="folder" size={size} color={color} />
           ),
         }}
       />

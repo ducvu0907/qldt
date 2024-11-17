@@ -33,8 +33,8 @@ const ChangePassword = () => {
         },
         body: JSON.stringify({
           token,
-          oldPassword,
-          newPassword,
+          old_password: oldPassword,
+          new_password: newPassword,
         }),
       });
 
