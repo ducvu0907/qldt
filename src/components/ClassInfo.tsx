@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { Text, View, ScrollView, ActivityIndicator } from "react-native";
 import { ClassContext } from "../contexts/ClassContext";
 import { useGetClassInfo } from "../hooks/useGetClassInfo";
-import { useNavigation } from "@react-navigation/native";
 
 export interface StudentAccount {
   account_id?: string;
@@ -27,7 +26,7 @@ export interface ClassDetail {
   student_accounts?: StudentAccount[];
 }
 
-const ClassInfo: React.FC = () => {
+const ClassInfo = () => {
   const { selectedClassId } = useContext(ClassContext);
   const { classInfo, loading } = useGetClassInfo(selectedClassId);
 
@@ -40,24 +39,18 @@ const ClassInfo: React.FC = () => {
   }
 
   return (
-    <ScrollView className="flex-1 p-4 bg-gray-700">
-      <Text className="text-3xl font-extrabold text-white">{classInfo?.class_name}</Text>
+    <ScrollView className="flex-1 p-4 bg-white">
+      <Text className="text-4xl font-extrabold text-black">{classInfo?.class_name}</Text>
 
-      <Text className="text-lg text-white opacity-80 mt-2">{`Class ID: ${classInfo?.class_id}`}</Text>
-
-      <Text className="text-lg text-white opacity-80 mt-2">{`Class Type: ${classInfo?.class_type}`}</Text>
-
-      <Text className="text-lg text-white opacity-80 mt-2">{`Schedule: ${classInfo?.schedule || 'Not available'}`}</Text>
-
-      <Text className="text-lg text-white opacity-80 mt-2">{`Lecturer ID: ${classInfo?.lecturer_id || 'Not assigned'}`}</Text>
-
-      <Text className="text-lg text-white opacity-80 mt-2">{`Start Date: ${classInfo?.start_date}`}</Text>
-      <Text className="text-lg text-white opacity-80 mt-1">{`End Date: ${classInfo?.end_date}`}</Text>
-
-      <Text className="text-lg text-white opacity-80">{`Student Count: ${classInfo?.student_count || 'N/A'}`}</Text>
-
+      <Text className="text-2xl text-black opacity-80 mt-2">{`Class ID: ${classInfo?.class_id}`}</Text>
+      <Text className="text-2xl text-black opacity-80 mt-2">{`Class Type: ${classInfo?.class_type}`}</Text>
+      <Text className="text-2xl text-black opacity-80 mt-2">{`Schedule: ${classInfo?.schedule || 'Not available'}`}</Text>
+      <Text className="text-2xl text-black opacity-80 mt-2">{`Lecturer ID: ${classInfo?.lecturer_id || 'Not assigned'}`}</Text>
+      <Text className="text-2xl text-black opacity-80 mt-2">{`Start Date: ${classInfo?.start_date}`}</Text>
+      <Text className="text-2xl text-black opacity-80 mt-2">{`End Date: ${classInfo?.end_date}`}</Text>
+      <Text className="text-2xl text-black opacity-80 mt-2">{`Student Count: ${classInfo?.student_count}`}</Text>
       <Text
-        className={`text-lg font-semibold ${classInfo?.status === 'ACTIVE' ? 'text-green-400' : 'text-red-400'}`}
+        className={`text-2xl mt-2 font-semibold ${classInfo?.status === 'ACTIVE' ? 'text-green-400' : 'text-red-400'}`}
       >
         Status: {classInfo?.status}
       </Text>

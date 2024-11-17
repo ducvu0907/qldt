@@ -4,7 +4,6 @@ import { StudentAccount } from "../../components/ClassInfo";
 import { ClassContext } from "../../contexts/ClassContext";
 import { useGetClassInfo } from "../../hooks/useGetClassInfo";
 import StudentListItem from "../../components/StudentListItem";
-import { useNavigation } from '@react-navigation/native';
 import Topbar from "../../components/Topbar";
 
 const ViewStudents = () => {
@@ -19,14 +18,13 @@ const ViewStudents = () => {
   }, [classInfo]);
 
   return (
-    <View className="flex-1 p-4">
+    <View className="flex-1">
       <Topbar title={"Student list"} showBack={true} />
-      <Text className="text-2xl font-bold text-gray-800 mb-4">Students in Class</Text>
 
       <FlatList
         data={students}
         renderItem={({ item }) => (
-          <TouchableOpacity className="mb-4">
+          <TouchableOpacity className="mb-1 mx-2">
             <StudentListItem student={item} />
           </TouchableOpacity>
         )}

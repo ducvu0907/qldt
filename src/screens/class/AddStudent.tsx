@@ -7,6 +7,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { AuthContext } from '../../contexts/AuthContext';
 import { RESOURCE_SERVER_URL } from '../../types';
 import { formatDate } from '../../helpers';
+import { ClassContext } from '../../contexts/ClassContext';
 
 export interface AddStudentRequest {
   token: string;
@@ -16,11 +17,12 @@ export interface AddStudentRequest {
 
 const AddStudent = () => {
   const { token } = useContext(AuthContext);
+  const {selectedClassId} = useContext(ClassContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<AddStudentRequest>({
     token: token || "",
-    class_id: "",
-    account_id: "", // This will hold the student ID (or account ID)
+    class_id: selectedClassId || "",
+    account_id: "",
   });
   const navigation = useNavigation<any>();
 
@@ -49,7 +51,7 @@ const AddStudent = () => {
         account_id: formData.account_id,
       };
 
-      const res = await fetch(`${RESOURCE_SERVER_URL}/add_student_to_class`, {
+      const res = await fetch(`${RESOURCE_SERVER_URL}/add_student`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,12 +59,7 @@ const AddStudent = () => {
         body: JSON.stringify(requestData),
       });
 
-      if (!res.ok) {
-        throw new Error("Server error");
-      }
-
       const data = await res.json();
-      console.log(data);
 
       if (data.meta.code !== 1000) {
         throw new Error(data.meta.message || "Unknown error occurred while adding student");
@@ -99,15 +96,6 @@ const AddStudent = () => {
             <Text className="text-white text-4xl mb-12">Add a Student</Text>
             <View className="w-full space-y-4 mb-6">
               <TextInput
-                placeholder="Class ID"
-                value={formData.class_id}
-                onChangeText={(value) => handleChangeInput("class_id", value)}
-                placeholderTextColor="#ffffff80"
-                keyboardType="numeric"
-                className="border-2 border-white text-2xl rounded-lg p-3 text-white w-full mb-4"
-              />
-
-              <TextInput
                 placeholder="Student ID"
                 value={formData.account_id}
                 onChangeText={(value) => handleChangeInput('account_id', value)}
@@ -123,7 +111,7 @@ const AddStudent = () => {
                 onPress={handleAddStudent}
                 disabled={loading}
               >
-                {!loading ? <Text className="text-blue-500 text-3xl font-bold text-center">Add Student</Text> : <ActivityIndicator />}
+                {!loading ? <Text className="text-blue-500 text-3xl font-bold text-center">Add</Text> : <ActivityIndicator />}
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center" onPress={() => navigation.goBack()}>

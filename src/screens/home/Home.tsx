@@ -27,6 +27,12 @@ const Home = () => {
         <Icon name="book" size={30} color="white" />
       </TouchableOpacity>
 
+      <TouchableOpacity
+        onPress={() => navigation.navigate("SearchUser")}
+        className="absolute bottom-5 left-1/2 transform -translate-x-8 bg-green-600 w-16 h-16 rounded-full justify-center items-center shadow-lg"
+      >
+        <Icon name="search" size={30} color="white" />
+      </TouchableOpacity>
     </View>
   );
 };

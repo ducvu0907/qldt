@@ -1,6 +1,9 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import ClassMain from "../screens/class/ClassMain";
 import EditClass from "../screens/class/EditClass";
+import ViewStudents from "../screens/class/ViewStudents";
+import AddStudent from "../screens/class/AddStudent";
+import ClassDetailsInfo from "../screens/class/ClassDetailsInfo";
 
 const Stack = createStackNavigator();
 
@@ -9,8 +12,9 @@ const ClassStack = () => {
     <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="ClassMain">
       <Stack.Screen name="ClassMain" component={ClassMain} />
       <Stack.Screen name="EditClass" component={EditClass} />
-      <Stack.Screen name="AddStudent" component={ClassMain} />
-      <Stack.Screen name="View Students" component={ClassMain} />
+      <Stack.Screen name="AddStudent" component={AddStudent} />
+      <Stack.Screen name="ViewStudents" component={ViewStudents} />
+      <Stack.Screen name="ClassDetailsInfo" component={ClassDetailsInfo} />
     </Stack.Navigator>
   );
 };

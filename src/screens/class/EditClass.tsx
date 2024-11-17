@@ -1,6 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView, ActivityIndicator } from 'react-native';
 import Logo from "../../components/Logo";
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import DropDownPicker from "react-native-dropdown-picker";
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
@@ -10,6 +10,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { formatDate } from '../../helpers';
 import { ClassContext } from '../../contexts/ClassContext';
+import { useGetClassInfo } from '../../hooks/useGetClassInfo';
 
 export interface EditClassRequest {
   token: string;
@@ -20,21 +21,36 @@ export interface EditClassRequest {
   end_date?: Date | null;
 };
 
+// FIXME: refactor edit class date picker
 const EditClass = () => {
   const { token } = useContext(AuthContext);
   const { selectedClassId } = useContext(ClassContext);
+  const {classInfo, loading: classInfoLoading} = useGetClassInfo(selectedClassId);
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<EditClassRequest>({
     token: token || "",
     class_id: selectedClassId || "",
-    class_name: "",
-    status: null,
-    start_date: null,
-    end_date: null,
+    class_name: classInfo?.class_name,
+    status: classInfo?.status,
+    start_date: new Date(classInfo?.start_date || ""),
+    end_date: new Date(classInfo?.end_date || ""),
   });
 
   const navigation = useNavigation<any>();
+
+  useEffect(() => {
+    if (classInfo) {
+      setFormData({
+        token: token || "",
+        class_id: selectedClassId || "",
+        class_name: classInfo?.class_name || '',
+        status: classInfo?.status || '',
+        start_date: new Date(classInfo?.start_date || Date.now()),
+        end_date: new Date(classInfo?.end_date || Date.now()),
+      });
+    }
+  }, [classInfo, selectedClassId, token]);
 
   const handleChangeInput = (field: keyof EditClassRequest, value: any) => {
     setFormData(prev => ({
@@ -57,7 +73,7 @@ const EditClass = () => {
       };
 
       const res = await fetch(`${RESOURCE_SERVER_URL}/edit_class`, {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -90,6 +106,15 @@ const EditClass = () => {
       setLoading(false);
     }
   };
+
+  if (classInfoLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Loading class info...</Text>
+      </View>
+    );
+  }
 
   return (
     <Pressable onPress={() => {
@@ -155,7 +180,7 @@ const EditClass = () => {
               <View className="flex-row items-center border-2 border-white rounded-lg py-2 w-full mb-4">
                 <Text className="text-white text-2xl pl-3">Start Date:</Text>
                 <DateTimePicker
-                  value={new Date()}
+                  value={formData.start_date}
                   mode="date"
                   is24Hour={true}
                   display="default"
@@ -178,7 +203,7 @@ const EditClass = () => {
               <View className="flex-row items-center border-2 border-white rounded-lg py-2 w-full mb-4">
                 <Text className="text-white text-2xl pl-3">End Date:</Text>
                 <DateTimePicker
-                  value={new Date()}
+                  value={formData.end_date}
                   mode="date"
                   is24Hour={true}
                   display="default"

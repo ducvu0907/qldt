@@ -12,6 +12,7 @@ import ChangeInfo from '../screens/home/ChangeInfo';
 import ClassTabs from './ClassTabs';
 import CreateClass from '../screens/home/CreateClass';
 import RegisterClass from '../screens/home/RegisterClass';
+import SearchUser from '../screens/home/SearchUser';
 
 const Stack = createStackNavigator();
 
@@ -35,6 +36,7 @@ const ApplicationNavigator = () => {
               <Stack.Screen name="Setting" component={Setting} />
               <Stack.Screen name="ChangePassword" component={ChangePassword} />
               <Stack.Screen name="ChangeInfo" component={ChangeInfo} />
+              <Stack.Screen name="SearchUser" component={SearchUser} />
             </>
           }
         </Stack.Navigator>

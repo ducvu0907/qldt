@@ -2,6 +2,7 @@ import { FlatList, Text, View, ActivityIndicator } from "react-native";
 import { useState, useCallback } from "react";
 import { useGetClasses } from "../hooks/useGetClasses";
 import ClassListItem from "./ClassListItem";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ClassList = () => {
   const { classes, loading, refetch } = useGetClasses();
@@ -12,6 +13,17 @@ const ClassList = () => {
     await refetch();
     setRefreshing(false);
   }, [refetch]);
+
+  // refetch when gain focus - lets not over engineering data validation xd
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        await refetch();
+      };
+      fetchData();
+    }, [refetch])
+  );
+
 
   if (loading && !refreshing) {
     return (
