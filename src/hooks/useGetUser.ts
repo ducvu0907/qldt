@@ -38,11 +38,16 @@ export const useGetUser = () => {
 
       const data = await res.json();
 
+      if (!data.data){ 
+        throw new Error("Error while fetching user info");
+      }
+
       if (data.code !== 1000) {
-        throw new Error(data.message);
+        throw new Error(data.message || "Error while fetching user info");
       }
 
       setUser(data.data);
+
     } catch (error: any) {
       logout();
       Toast.show({

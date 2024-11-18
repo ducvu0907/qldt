@@ -5,7 +5,6 @@ import { AuthContext } from '../contexts/AuthContext';
 import { MaterialListItemData } from '../components/MaterialListItem';
 import { ClassContext } from '../contexts/ClassContext';
 
-// FIXME: there's no way that its get method with form-data gg
 export const useGetMaterials = () => {
   const { token } = useContext(AuthContext); 
   const { selectedClassId } = useContext(ClassContext);
@@ -15,22 +14,23 @@ export const useGetMaterials = () => {
   const fetchMaterials = useCallback(async () => {
     try {
       if (!token || !selectedClassId) {
-        throw new Error("Token or class id not found");
+        throw new Error("Token or class ID not found");
       }
 
-      console.log("fetching materials");
+      console.log("Fetching materials...");
       setLoading(true);
 
-      const formData = new FormData();
-      formData.append('token', token);
-      formData.append('class_id', selectedClassId);
+      const queryParams = new URLSearchParams();
+      queryParams.append('token', token);
+      queryParams.append('class_id', selectedClassId);
 
-      const res = await fetch(`${RESOURCE_SERVER_URL}/get_material_list`, {
+      const url = `${RESOURCE_SERVER_URL}/get_material_list?${queryParams.toString()}`;
+
+      const res = await fetch(url, {
         method: 'GET',
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'application/json',
         },
-        body: formData,
       });
 
       const data = await res.json();
@@ -40,14 +40,13 @@ export const useGetMaterials = () => {
       }
 
       console.log(data.data);
-      setMaterials([...data.data]);
+      setMaterials(data.data);
 
     } catch (error: any) {
       Toast.show({
         type: "error",
         text1: error.message,
       });
-
     } finally {
       setLoading(false);
     }
