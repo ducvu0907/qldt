@@ -8,11 +8,10 @@ import { RESOURCE_SERVER_URL } from '../../types';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { AuthContext } from '../../contexts/AuthContext';
 import * as DocumentPicker from 'expo-document-picker';
-import { ClassContext } from '../../contexts/ClassContext';
 
 export interface EditMaterialRequest {
   file?: any;
-  materialId?: string;
+  materialId: string;
   title?: string;
   description?: string;
   materialType: string;
@@ -53,23 +52,31 @@ const EditMaterial = ({ route }) => {
 
   const handleEditMaterial = async () => {
     try {
+      if (!formData.file && !formData.description) {
+        Toast.show({
+          type: "error",
+          text1: "No fields given"
+        });
+        return;
+      }
+
       setLoading(true);
 
-      const requestData: any = {
-        token: formData.token,
-        materialId: formData.materialId || null,
-        title: formData.title || null,
-        description: formData.description || null,
-        materialType: formData.materialType || "",
-      };
-
       const formDataObject = new FormData();
-      formDataObject.append("file", formData.file);
-
-      for (const key in requestData) {
-        if (requestData[key]) {
-          formDataObject.append(key, requestData[key]);
-        }
+      if (formData.file) {
+        formDataObject.append("file", {
+          uri: formData.file.uri,
+          type: formData.file.mimeType,
+          name: formData.file.name,
+        });
+      }
+      formDataObject.append("token", formData.token);
+      formDataObject.append("materialId", formData.materialId);
+      if (formData.title) {
+        formDataObject.append("title", formData.title);
+      }
+      if (formData.description) {
+        formDataObject.append("description", formData.description);
       }
 
       const res = await fetch(`${RESOURCE_SERVER_URL}/edit_material`, {
