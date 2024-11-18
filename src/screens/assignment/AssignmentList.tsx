@@ -1,5 +1,5 @@
 import { FlatList, Text, View, ActivityIndicator, TouchableOpacity } from "react-native";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useContext } from "react";
 import AssignmentItem from "../../components/AssignmentItem";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useGetAssignments } from "../../hooks/useGetAssignments";
@@ -30,7 +30,7 @@ const AssignmentList = () => {
   if (loading && !refreshing) {
     return (
       <View className="flex justify-center items-center bg-gray-100">
-      <Topbar title="Assignments" showBack={true}/>
+      <Topbar title="Assignments" showBack={false} goHome={true}/>
         <ActivityIndicator size="large" color="#4B5563" />
         <Text className="mt-4 text-xl text-gray-600">Loading...</Text>
       </View>
@@ -39,7 +39,7 @@ const AssignmentList = () => {
 
   return (
     <View className="flex-1 bg-gray-100">
-      <Topbar title="Assignments" showBack={true}/>
+      <Topbar title="Assignments" showBack={false} goHome={true}/>
       {assignments?.length !== 0 ? (
         <FlatList
         data={assignments}

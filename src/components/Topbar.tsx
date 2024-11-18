@@ -6,11 +6,12 @@ import Icon from "react-native-vector-icons/Ionicons";
 
 interface TopbarProps {
   title: string;
-  showBack: boolean;
+  showBack?: boolean;
   settingScreen?: string;
+  goHome?: boolean;
 }
 
-const Topbar: React.FC<TopbarProps> = ({ title, showBack, settingScreen }) => {
+const Topbar: React.FC<TopbarProps> = ({ title, showBack=false, settingScreen=null, goHome=false }) => {
   const navigation = useNavigation<any>();
 
   return (
@@ -23,7 +24,13 @@ const Topbar: React.FC<TopbarProps> = ({ title, showBack, settingScreen }) => {
               <Icon name="arrow-back-outline" size={30} color="white" />
             </TouchableOpacity>
           )}
+          {goHome && (
+            <TouchableOpacity onPress={() => navigation.popTo("Home")}>
+              <Icon name="arrow-back-outline" size={30} color="white" />
+            </TouchableOpacity>
+          )}
         </View>
+
 
         <View className="flex justify-center items-center mt-5">
           <Text className="text-white font-bold text-7xl shadow-lg shadow-black">HUST</Text>

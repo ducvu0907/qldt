@@ -5,6 +5,7 @@ import ViewStudents from "../screens/class/ViewStudents";
 import AddStudent from "../screens/class/AddStudent";
 import ClassDetailsInfo from "../screens/class/ClassDetailsInfo";
 import UserProfile from "../screens/home/UserProfile";
+import AttendanceStack from "./AttendanceStack";
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ const ClassStack = () => {
       <Stack.Screen name="ViewStudents" component={ViewStudents} />
       <Stack.Screen name="ClassDetailsInfo" component={ClassDetailsInfo} />
       <Stack.Screen name="UserProfile" component={UserProfile} />
+      <Stack.Screen name="AttendanceStack" component={AttendanceStack} />
     </Stack.Navigator>
   );
 };

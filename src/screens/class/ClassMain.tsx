@@ -117,8 +117,8 @@ const ClassMain = () => {
         </View>
       </View>
 
-      {role === "LECTURER" &&
-        <View className="p-4 flex items-center">
+      <View className="p-4 flex items-center">
+        {role === "LECTURER" &&
           <TouchableOpacity
             className="flex justify-center items-center w-16 h-16 bg-red-500 rounded-full"
             onPress={showDeleteConfirmation}
@@ -126,8 +126,8 @@ const ClassMain = () => {
           >
             {!loading ? <Ionicons name="trash-bin" size={24} color="white" /> : <ActivityIndicator size={24} />}
           </TouchableOpacity>
-        </View>
-      }
+        }
+      </View>
 
     </View>
   );

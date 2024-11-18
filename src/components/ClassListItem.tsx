@@ -28,7 +28,7 @@ const ClassListItem: React.FC<{ currentClass: ClassItemData }> = ({ currentClass
 
   return (
     <TouchableOpacity onPress={handleSelectClass} className="w-full p-4 bg-gray-600 rounded-lg shadow-lg my-2">
-      <Text className="text-2xl font-extrabold text-white text-center">{currentClass.class_name} - {currentClass.class_type}</Text>
+      <Text className="text-2xl font-extrabold text-white text-center">{currentClass.class_id} - {currentClass.class_name} - {currentClass.class_type}</Text>
 
       <View className="flex-row justify-between mt-2">
         <Text className="text-sm text-white opacity-80">{`Start: ${currentClass.start_date}`}</Text>

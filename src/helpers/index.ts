@@ -112,15 +112,13 @@ export const validateClassInputs = (formData: ClassCreateRequest): boolean => {
   return true;
 };
 
-
+// format to yyyy-mm-dd
 export const formatDate = (date: Date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
-
-// helpers.ts
 
 export const validateAssignmentInputs = (formData: CreateAssignmentRequest): boolean => {
   const { file, classId, title, description, deadline } = formData;
@@ -141,14 +139,6 @@ export const validateAssignmentInputs = (formData: CreateAssignmentRequest): boo
     return false;
   }
 
-  if (!description || description.trim().length === 0) {
-    Toast.show({
-      type: "error",
-      text1: "Assignment description is required.",
-    });
-    return false;
-  }
-
   if (!deadline || deadline.getTime() < new Date().getTime()) {
     Toast.show({
       type: "error",
@@ -157,10 +147,10 @@ export const validateAssignmentInputs = (formData: CreateAssignmentRequest): boo
     return false;
   }
 
-  if (!file) {
+  if (!file && !description) {
     Toast.show({
       type: "error",
-      text1: "A file must be selected.",
+      text1: "A file or description must be given.",
     });
     return false;
   }
@@ -173,9 +163,4 @@ export const formatDateTime = (date: Date): string => {
   const formatted = isoString.slice(0, 19);
 
   return formatted;
-};
-
-// TODO: handle uploading files
-export const uploadFile = () => {
-
 };

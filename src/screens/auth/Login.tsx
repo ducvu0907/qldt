@@ -16,7 +16,7 @@ export type LoginRequest = {
 }
 
 const Login = () => {
-  const { setToken } = useContext(AuthContext);
+  const { setToken, setRole } = useContext(AuthContext);
   const [formData, setFormData] = useState<LoginRequest>({
     email: "",
     password: "",
@@ -62,6 +62,7 @@ const Login = () => {
       const token = data.data.token;
       await SecureStore.setItemAsync("access-token", token);
       setToken(token);
+      setRole(data.data.role);
 
     } catch(error: any) {
       Toast.show({

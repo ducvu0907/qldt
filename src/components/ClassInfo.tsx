@@ -8,22 +8,22 @@ export interface StudentAccount {
   last_name?: string;
   first_name?: string;
   email?: string;
-  student_id?: number;
+  student_id: string;
 };
 
 export interface ClassDetail {
-  id?: number;
-  class_id?: string;
-  class_name?: string;
+  id: number;
+  class_id: string;
+  class_name: string;
   schedule?: null;
   lecturer_id?: number;
   student_count?: number;
   attached_code?: null;
-  class_type?: string;
-  start_date?: string;
-  end_date?: string;
+  class_type: string;
+  start_date: string;
+  end_date: string;
   status?: string;
-  student_accounts?: StudentAccount[];
+  student_accounts: StudentAccount[];
 }
 
 const ClassInfo = () => {

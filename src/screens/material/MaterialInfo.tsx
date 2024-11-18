@@ -7,7 +7,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { RESOURCE_SERVER_URL } from "../../types";
 
 const MaterialInfo = ({ route, navigation }) => {
-  const {token} = useContext(AuthContext);
+  const { token, role } = useContext(AuthContext);
   const { material } = route.params;
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -73,7 +73,7 @@ const MaterialInfo = ({ route, navigation }) => {
   return (
     <View className="flex-1 bg-gray-800">
       <Topbar title="Material Details" showBack={true} />
-      
+
       <ScrollView className="flex-1 px-4">
         <View className="bg-gray-700 rounded-xl shadow-xl my-4 overflow-hidden">
           <View className="bg-gray-600 p-5 border-b border-gray-500">
@@ -92,7 +92,7 @@ const MaterialInfo = ({ route, navigation }) => {
                   </Text>
                 </View>
               </View>
-              
+
               <View className="flex-1 ml-2">
                 <Text className="text-gray-400 text-sm mb-1">Class ID</Text>
                 <View className="bg-gray-600 rounded-lg px-3 py-2">
@@ -115,7 +115,7 @@ const MaterialInfo = ({ route, navigation }) => {
             <View>
               <Text className="text-gray-400 text-sm mb-1">Material Link</Text>
               {material.material_link ? (
-                <TouchableOpacity 
+                <TouchableOpacity
                   onPress={handleOpenLink}
                   className="bg-gray-600 rounded-lg p-3 flex-row items-center justify-between"
                 >
@@ -133,22 +133,23 @@ const MaterialInfo = ({ route, navigation }) => {
 
           </View>
         </View>
-        
-        <View className="p-5 space-y-4">
-          <TouchableOpacity 
+
+        {role === "LECTURER" && <View className="p-5 space-y-4">
+          <TouchableOpacity
             onPress={handleEdit}
             className="bg-blue-600 rounded-lg p-3 flex-row items-center justify-center"
           >
             <Text className="text-white font-semibold text-lg">Edit</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={handleDelete}
             className="bg-red-600 rounded-lg p-3 flex-row items-center justify-center mt-4"
           >
-            {!loading ? <Text className="text-white font-semibold text-lg">Delete</Text> : <ActivityIndicator size={30}/>}
+            {!loading ? <Text className="text-white font-semibold text-lg">Delete</Text> : <ActivityIndicator size={30} />}
           </TouchableOpacity>
         </View>
+        }
       </ScrollView>
     </View>
   );

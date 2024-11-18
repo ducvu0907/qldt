@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, View, Alert } from "react-native";
 import * as Clipboard from 'expo-clipboard';
 import { useNavigation } from "@react-navigation/native";
-import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import Animated, { useAnimatedStyle, interpolate } from 'react-native-reanimated';
 import { RESOURCE_SERVER_URL } from "../types";
@@ -30,7 +30,7 @@ interface Props {
 
 const AssignmentItem: React.FC<Props> = ({ assignment }) => {
   const navigation = useNavigation<any>();
-  const { token } = useContext(AuthContext);
+  const { token, role } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
   const swipeableRef = useRef<any>(null);
 
@@ -119,17 +119,6 @@ const AssignmentItem: React.FC<Props> = ({ assignment }) => {
         className="overflow-hidden"
       >
         <TouchableOpacity 
-          onPress={copyAssignmentFileToClipboard}
-          className="bg-blue-500 justify-center w-20 opacity-90 active:opacity-100"
-          disabled={loading}
-        >
-          <View className="items-center">
-            <MaterialIcons name="content-copy" size={24} color="white" />
-            <Text className="text-white text-xs mt-1 font-medium">Copy URL</Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity 
           onPress={() => {
             navigation.navigate("EditAssignment", { assignment });
             closeSwipeable();
@@ -158,45 +147,91 @@ const AssignmentItem: React.FC<Props> = ({ assignment }) => {
   };
 
   return (
-    <Swipeable
-      ref={swipeableRef}
-      renderRightActions={renderRightActions}
-      rightThreshold={40}
-      overshootRight={false}
-      friction={1}
-    >
-      <View className="w-full p-5 bg-gray-700 rounded-xl shadow-xl my-2.5">
-        <View className="space-y-3">
-          <Text className="text-2xl font-bold text-white">
-            {assignment.title}
-          </Text>
-
-          <View className="flex-row justify-between items-center">
-            <View className="bg-gray-600 px-3 py-1.5 rounded-full">
-              <Text className="text-sm text-white font-medium">
-                Due: {new Date(assignment.deadline).toLocaleDateString()}
+    <>
+      {role === "LECTURER" ? (
+        <Swipeable
+          ref={swipeableRef}
+          renderRightActions={renderRightActions}
+          rightThreshold={40}
+          overshootRight={false}
+          friction={1}
+        >
+          <View className="w-full p-5 bg-gray-700 rounded-xl shadow-xl my-2.5">
+            <View className="space-y-3">
+              <View className="flex-row justify-between items-center">
+                <Text className="text-2xl font-bold text-white">
+                  {assignment.title}
+                </Text>
+                <TouchableOpacity onPress={copyAssignmentFileToClipboard}>
+                  <Ionicons name="copy" size={20} color={"white"}/>
+                </TouchableOpacity>
+              </View>
+  
+              <View className="flex-row justify-between items-center">
+                <View className="bg-gray-600 px-3 py-1.5 rounded-full">
+                  <Text className="text-sm text-white font-medium">
+                    Due: {new Date(assignment.deadline).toLocaleDateString()}
+                  </Text>
+                </View>
+              </View>
+  
+              <View className="flex-row justify-between">
+                <Text className="text-sm text-gray-300">
+                  Lecturer ID: {assignment.lecturer_id}
+                </Text>
+                <Text className="text-sm text-gray-300">
+                  Class ID: {assignment.class_id}
+                </Text>
+              </View>
+  
+              <View className="bg-gray-600/50 p-3 rounded-lg mt-2">
+                <Text className="text-sm text-gray-100 leading-5">
+                  {assignment.description}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </Swipeable>
+      ) : (
+        <View className="w-full p-5 bg-gray-700 rounded-xl shadow-xl my-2.5">
+          <View className="space-y-3">
+            <View className="flex-row justify-between items-center">
+              <Text className="text-2xl font-bold text-white">
+                {assignment.title}
+              </Text>
+              <TouchableOpacity onPress={copyAssignmentFileToClipboard}>
+                <Ionicons name="copy" size={20} color={"white"}/>
+              </TouchableOpacity>
+            </View>
+  
+            <View className="flex-row justify-between items-center">
+              <View className="bg-gray-600 px-3 py-1.5 rounded-full">
+                <Text className="text-sm text-white font-medium">
+                  Due: {new Date(assignment.deadline).toLocaleDateString()}
+                </Text>
+              </View>
+            </View>
+  
+            <View className="flex-row justify-between">
+              <Text className="text-sm text-gray-300">
+                Lecturer ID: {assignment.lecturer_id}
+              </Text>
+              <Text className="text-sm text-gray-300">
+                Class ID: {assignment.class_id}
+              </Text>
+            </View>
+  
+            <View className="bg-gray-600/50 p-3 rounded-lg mt-2">
+              <Text className="text-sm text-gray-100 leading-5">
+                {assignment.description}
               </Text>
             </View>
           </View>
-
-          <View className="flex-row justify-between">
-            <Text className="text-sm text-gray-300">
-              Lecturer ID: {assignment.lecturer_id}
-            </Text>
-            <Text className="text-sm text-gray-300">
-              Class ID: {assignment.class_id}
-            </Text>
-          </View>
-
-          <View className="bg-gray-600/50 p-3 rounded-lg mt-2">
-            <Text className="text-sm text-gray-100 leading-5">
-              {assignment.description}
-            </Text>
-          </View>
         </View>
-      </View>
-    </Swipeable>
+      )}
+    </>
   );
+  
 };
 
 export default AssignmentItem;

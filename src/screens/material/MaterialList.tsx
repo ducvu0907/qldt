@@ -1,12 +1,14 @@
 import { FlatList, Text, View, ActivityIndicator, TouchableOpacity } from "react-native";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useContext } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useGetMaterials } from "../../hooks/useGetMaterials";
 import Topbar from "../../components/Topbar";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialListItem from "../../components/MaterialListItem";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const MaterialList = () => {
+  const { role } = useContext(AuthContext);
   const { materials, loading, refetch } = useGetMaterials();
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation<any>();
@@ -30,7 +32,7 @@ const MaterialList = () => {
   if (loading && !refreshing) {
     return (
       <View className="flex-1 bg-slate-50 dark:bg-slate-900">
-        <Topbar title="Materials" showBack={true} />
+        <Topbar title="Materials" showBack={false} goHome={true} />
         <View className="flex-1 justify-center items-center px-4">
           <ActivityIndicator size="large" color="#6366f1" />
           <Text className="mt-4 text-lg font-medium text-slate-600 dark:text-slate-300">
@@ -57,8 +59,8 @@ const MaterialList = () => {
 
   return (
     <View className="flex-1 bg-slate-50 dark:bg-slate-900">
-      <Topbar title="Materials" showBack={true} />
-      
+      <Topbar title="Materials" showBack={false} goHome={true} />
+
       {materials?.length !== 0 ? (
         <FlatList
           data={materials}
@@ -76,7 +78,7 @@ const MaterialList = () => {
         <EmptyState />
       )}
 
-      <TouchableOpacity
+      {role === "LECTURER" && <TouchableOpacity
         onPress={() => navigation.navigate("UploadMaterial")}
         className="absolute bottom-6 right-6 bg-indigo-500 rounded-full w-14 h-14 
                   items-center justify-center shadow-lg elevation-5
@@ -84,6 +86,7 @@ const MaterialList = () => {
       >
         <Icon name="plus" size={24} color="white" />
       </TouchableOpacity>
+      }
 
       {refreshing && (
         <View className="absolute top-0 left-0 right-0 bg-indigo-500 py-1 items-center">
