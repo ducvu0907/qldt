@@ -18,7 +18,7 @@ export const useGetClassInfo = (class_id: string) => {
     try {
       console.log("fetching class info");
 
-      let res = await fetch(`${RESOURCE_SERVER_URL}/get_class_info`, {
+      const res = await fetch(`${RESOURCE_SERVER_URL}/get_class_info`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
