@@ -50,7 +50,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
     }
 
     fetchToken();
-  }, [token]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ token, setToken, role, setRole }}>

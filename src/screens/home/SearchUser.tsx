@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList, Text, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, FlatList, Text, TextInput, TouchableOpacity, ActivityIndicator, Pressable, Keyboard } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import Topbar from "../../components/Topbar";
 import SearchUserItem from "../../components/SearchUserItem";
@@ -77,7 +77,7 @@ const SearchUser = () => {
   }, [searchQuery]);
 
   return (
-    <View className="flex-1">
+    <Pressable onPress={() => Keyboard.dismiss()} className="flex-1">
       <Topbar title={"Search Users"} showBack={true} />
 
       <View className="p-4">
@@ -107,7 +107,7 @@ const SearchUser = () => {
           ) : null
         }
       />
-    </View>
+    </Pressable>
   );
 };
 

@@ -5,8 +5,10 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useGetAssignments } from "../../hooks/useGetAssignments";
 import Topbar from "../../components/Topbar";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { AuthContext } from "../../contexts/AuthContext";
 
 const AssignmentList = () => {
+  const {role} = useContext(AuthContext);
   const { assignments, loading, refetch } = useGetAssignments();
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation<any>();
@@ -51,12 +53,13 @@ const AssignmentList = () => {
       ) : (
         <Text className="mt-4 text-xl text-center text-gray-600">No assignments</Text>
       )}
-       <TouchableOpacity
+       {role === "LECTURER" && <TouchableOpacity
         onPress={() => navigation.navigate("CreateAssignment")}
         className="absolute bottom-5 right-5 bg-blue-500 rounded-full p-4 shadow-lg"
       >
         <Icon name="plus" size={30} color="white" />
       </TouchableOpacity>
+      }
     </View>
   );
 };

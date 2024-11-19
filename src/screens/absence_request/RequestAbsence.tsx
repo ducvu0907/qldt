@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Pressable, Keyboard } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, Pressable, Keyboard, TextInput } from 'react-native';
 import { useState, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
@@ -8,12 +8,14 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { RESOURCE_SERVER_URL } from '../../types';
 import { ClassContext } from '../../contexts/ClassContext';
 import Topbar from '../../components/Topbar';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { formatDate } from '../../helpers';
 
 export interface AbsenceRequest {
   token: string;
-  class_id: string;
-  file?: any;
-  date: string; // yyyy-mm-dd
+  classId: string;
+  file?: any; // optional
+  date: Date; // yyyy-mm-dd
   reason: string;
 }
 
@@ -22,10 +24,10 @@ const RequestAbsence = () => {
   const { selectedClassId } = useContext(ClassContext);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<AbsenceRequest>({
-    file: {} as File,
+    file: null,
     token: token || "",
-    class_id: selectedClassId || "",
-    date: "",
+    classId: selectedClassId || "",
+    date: new Date(),
     reason: "",
   });
 
@@ -60,8 +62,8 @@ const RequestAbsence = () => {
       
       const form = new FormData();
       form.append("token", formData.token);
-      form.append("class_id", formData.class_id);
-      form.append("date", formData.date);
+      form.append("classId", formData.classId);
+      form.append("date", formatDate(formData.date));
       form.append("reason", formData.reason);
       if (formData.file) {
         form.append("file", {
@@ -70,7 +72,7 @@ const RequestAbsence = () => {
           name: formData.file.name,
         });
       }
-
+      console.log(form);
       const res = await fetch(`${RESOURCE_SERVER_URL}/request_absence`, {
         method: 'POST',
         headers: {
@@ -120,7 +122,7 @@ const RequestAbsence = () => {
                      bg-white dark:bg-slate-800 rounded-xl p-6 
                      items-center justify-center min-h-[120px]"
           >
-            {formData.file.name ? (
+            {formData.file ? (
               <View className="items-center space-y-2">
                 <Ionicons name="document-text" size={32} color="#6366f1" />
                 <Text className="text-lg text-slate-700 dark:text-slate-200 text-center">
@@ -148,15 +150,24 @@ const RequestAbsence = () => {
           <Text className="text-lg font-semibold text-slate-700 dark:text-slate-200">
             Date of Absence
           </Text>
-          <TextInput
-            placeholder="YYYY-MM-DD"
-            placeholderTextColor="#94a3b8"
-            value={formData.date}
-            onChangeText={(value) => handleChangeInput('date', value)}
-            className="bg-white dark:bg-slate-800 rounded-xl p-4 
-                     text-base text-slate-700 dark:text-slate-200
-                     border border-slate-200 dark:border-slate-700"
-          />
+                <DateTimePicker
+                  value={formData.date}
+                  mode="date"
+                  is24Hour={true}
+                  display="default"
+                  onChange={(event, date) => {
+                    if (date) {
+                      setFormData((prevState) => ({
+                        ...prevState,
+                        date: date
+                      }));
+                    }
+                  }}
+                  themeVariant='dark'
+                  style={{
+                    marginRight: 15,
+                  }}
+                />
         </View>
 
         <View className="space-y-2">

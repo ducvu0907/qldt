@@ -61,7 +61,7 @@ const CreateAssignment = () => {
       form.append("token", formData.token);
       form.append("classId", formData.classId);
       form.append("title", formData.title);
-      form.append("description", formData.title);
+      form.append("description", formData.description);
       form.append("deadline", formatDateTime(formData.deadline));
       form.append("file", {
         uri: formData.file.uri,
