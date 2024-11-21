@@ -4,8 +4,9 @@ import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
 import { ClassItemData } from '../components/ClassListItem';
 
+// TODO: pagination
 export const useGetClasses = () => {
-  const { token } = useContext(AuthContext);
+  const { token, setToken } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [classes, setClasses] = useState<ClassItemData[] | null>(null);
 
@@ -24,12 +25,16 @@ export const useGetClasses = () => {
 
       const data = await res.json();
 
-      if (data.data === null) {
-        throw new Error(data.meta.message);
+      if (data.meta.code !== "1000") {
+        if (data.meta.code === "9998") {
+          setToken(null);
+        }
+        throw new Error(data.meta.message || "Error while fetching classes");
       }
 
       console.log(data.data);
-      setClasses([...data.data]);
+
+      setClasses([...data.data.page_content]);
 
     } catch (error: any) {
       Toast.show({

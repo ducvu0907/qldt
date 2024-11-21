@@ -22,7 +22,6 @@ const EditAssignment = ({ route }) => {
   const navigation = useNavigation();
   const { id, description, deadline } = route.params.assignment;
   const [loading, setLoading] = useState<boolean>(false);
-  console.log(deadline);
   const [formData, setFormData] = useState<EditAssignmentRequest>({
     token: token || '',
     assignmentId: id,
@@ -62,7 +61,7 @@ const EditAssignment = ({ route }) => {
       form.append("token", formData.token);
       form.append("assignmentId", formData.assignmentId);
       if (formData.deadline) {
-        form.append("deadline", formData.deadline);
+        form.append("deadline", formData.deadline.slice(0, 23));
       }
       if (formData.description) {
         form.append("description", formData.description);
@@ -84,9 +83,10 @@ const EditAssignment = ({ route }) => {
         body: form,
       });
 
+      console.log(form);
       const data = await res.json();
 
-      if (data.meta.code !== 1000) {
+      if (data.meta.code !== "1000") {
         throw new Error(data.meta.message || 'Unknown error occurred while editing assignment');
       }
 
@@ -96,6 +96,7 @@ const EditAssignment = ({ route }) => {
       });
 
       navigation.goBack();
+
     } catch (error: any) {
       Toast.show({
         type: 'error',

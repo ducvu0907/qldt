@@ -83,7 +83,7 @@ const CreateClass = () => {
       const data = await res.json();
       console.log(data);
 
-      if (data.meta.code !== 1000) {
+      if (data.meta.code !== "1000") {
         throw new Error(data.meta.message || "Unknown error occurred while creating class");
       }
 

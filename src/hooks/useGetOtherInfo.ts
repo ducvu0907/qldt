@@ -2,6 +2,7 @@ import { useState, useEffect, useContext, useCallback } from 'react';
 import { AUTH_SERVER_URL } from '../types';
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
+import { useLogout } from './useLogout';
 
 export const useGetOtherInfo = (user_id: string) => {
   const { token } = useContext(AuthContext);
@@ -19,16 +20,17 @@ export const useGetOtherInfo = (user_id: string) => {
         },
         body: JSON.stringify({
           token,
-          user_id: user_id.toString()
+          user_id
         }),
       });
 
       const data = await res.json();
 
-      if (data.code !== 1000) {
+      if (data.code !== "1000") {
         throw new Error(data.message);
       }
 
+      console.log(data.data);
       setUser(data.data);
     } catch (error: any) {
       Toast.show({

@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, View, Text, ActivityIndicator } from "react-native";
+import { Image, View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
 import { useGetOtherInfo } from "../../hooks/useGetOtherInfo";
 import Topbar from "../../components/Topbar";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,7 +15,7 @@ export interface UserDetails {
   avatar: string | null;
 }
 
-const UserProfile = ({ route }) => {
+const UserProfile = ({ route, navigation }) => {
   const { user_id } = route.params;
   const { user, loading } = useGetOtherInfo(user_id);
 
@@ -33,6 +33,9 @@ const UserProfile = ({ route }) => {
         <Text className="text-center text-2xl font-semibold text-gray-600">
           User not found
         </Text>
+        <TouchableOpacity className="mt-2 bg-blue-400 rounded-full p-4" onPress={() => navigation.goBack()}>
+        <Text>Go Back</Text>
+        </TouchableOpacity>
       </SafeAreaView>
     );
   }

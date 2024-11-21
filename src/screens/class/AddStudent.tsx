@@ -6,7 +6,6 @@ import Toast from 'react-native-toast-message';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { AuthContext } from '../../contexts/AuthContext';
 import { RESOURCE_SERVER_URL } from '../../types';
-import { formatDate } from '../../helpers';
 import { ClassContext } from '../../contexts/ClassContext';
 
 export interface AddStudentRequest {
@@ -36,10 +35,10 @@ const AddStudent = () => {
   const handleAddStudent = async () => {
     try {
       if (!formData.account_id || !formData.class_id || !formData.token) {
-      Toast.show({
-        type: "error",
-        text1: "All fields are required",
-      });
+        Toast.show({
+          type: "error",
+          text1: "All fields are required",
+        });
 
         return;
       }
@@ -61,13 +60,13 @@ const AddStudent = () => {
 
       const data = await res.json();
 
-      if (data.meta.code !== 1000) {
-        throw new Error(data.meta.message || "Unknown error occurred while adding student");
+      if (data.meta.code !== "1000") {
+        throw new Error(data.data || "Unknown error occurred while adding student");
       }
 
       Toast.show({
         type: "success",
-        text1: "Student added successfully",
+        text1: data.data
       });
 
       navigation.goBack();

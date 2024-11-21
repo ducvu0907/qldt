@@ -6,7 +6,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { RESOURCE_SERVER_URL } from "../../types";
 
 const AbsenceReview = ({ route, navigation }) => {
-  const { token, role } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const { request } = route.params;
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -26,7 +26,7 @@ const AbsenceReview = ({ route, navigation }) => {
       });
 
       const data = await res.json();
-      if (data.meta.code !== 1000) {
+      if (data.meta.code !== "1000") {
         throw new Error(data.meta.message || "Error while processing the request");
       }
 

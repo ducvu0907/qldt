@@ -38,7 +38,7 @@ const MaterialInfo = ({ route, navigation }) => {
       });
 
       const data = await res.json();
-      if (data.code !== 1000) {
+      if (data.code !== "1000") {
         throw new Error(data.message || "Error while deleting material");
       }
 

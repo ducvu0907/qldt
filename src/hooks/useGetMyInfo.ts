@@ -4,7 +4,7 @@ import { useLogout } from '../hooks/useLogout';
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
 
-export const useGetUser = () => {
+export const useGetMyInfo = () => {
   const { token } = useContext(AuthContext);
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -15,7 +15,7 @@ export const useGetUser = () => {
     if (attempt <= 0) return;
 
     try {
-      console.log("fetching user info");
+      console.log("fetching my info");
 
       let res = await fetch(`${AUTH_SERVER_URL}/get_user_info`, {
         method: 'POST',
@@ -38,11 +38,7 @@ export const useGetUser = () => {
 
       const data = await res.json();
 
-      if (!data.data){ 
-        throw new Error("Error while fetching user info");
-      }
-
-      if (data.code !== 1000) {
+      if (data.code !== "1000") {
         throw new Error(data.message || "Error while fetching user info");
       }
 

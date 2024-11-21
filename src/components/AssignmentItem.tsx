@@ -26,9 +26,10 @@ export interface AssignmentDeleteRequest {
 
 interface Props {
   assignment: AssignmentItemData;
+  refetch: () => void;
 }
 
-const AssignmentItem: React.FC<Props> = ({ assignment }) => {
+const AssignmentItem: React.FC<Props> = ({ refetch, assignment }) => {
   const navigation = useNavigation<any>();
   const { token, role } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
@@ -81,7 +82,7 @@ const AssignmentItem: React.FC<Props> = ({ assignment }) => {
 
       const data = await res.json();
 
-      if (data.meta.code !== 1000) {
+      if (data.meta.code !== "1000") {
         throw new Error(data.meta.message || "Error while deleting assignment");
       }
 
@@ -89,6 +90,8 @@ const AssignmentItem: React.FC<Props> = ({ assignment }) => {
         type: "success",
         text1: "Assignment deleted successfully"
       });
+
+      refetch();
 
     } catch (error: any) {
       Toast.show({

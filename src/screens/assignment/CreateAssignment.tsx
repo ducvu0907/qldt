@@ -80,7 +80,7 @@ const CreateAssignment = () => {
 
       const data = await res.json();
 
-      if (data.meta.code !== 1000) {
+      if (data.meta.code !== "1000") {
         throw new Error(data.meta.message || "Unknown error occurred while creating assignment");
       }
 

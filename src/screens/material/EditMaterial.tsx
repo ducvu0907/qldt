@@ -18,6 +18,7 @@ export interface EditMaterialRequest {
   token: string;
 };
 
+// FIXME: server-side not working i think
 const EditMaterial = ({ route }) => {
   const {material} = route.params;
   const { token } = useContext(AuthContext);
@@ -69,6 +70,7 @@ const EditMaterial = ({ route }) => {
           type: formData.file.mimeType,
           name: formData.file.name,
         });
+        formDataObject.append("materialType", formData.materialType);
       }
       formDataObject.append("token", formData.token);
       formDataObject.append("materialId", formData.materialId);
@@ -87,15 +89,13 @@ const EditMaterial = ({ route }) => {
         body: formDataObject,
       });
 
-      if (!res.ok) {
-        throw new Error("Server error");
-      }
-
       const data = await res.json();
 
-      if (data.code !== 1000) {
+      if (data.code !== "1000") {
         throw new Error(data.message || "Unknown error occurred while editing material");
       }
+
+      console.log(data);
 
       Toast.show({
         type: "success",

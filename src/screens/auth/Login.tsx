@@ -34,9 +34,9 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      if (!validateLoginInputs(formData)) {
-        return;
-      }
+      //if (!validateLoginInputs(formData)) {
+      //  return;
+      //}
       setLoading(true);
 
       const requestData: any = {
@@ -50,13 +50,19 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestData),
+        // body: JSON.stringify(requestData) 
+        // FIXME: hard-coded for testing, change back later
+        body: JSON.stringify({
+          email: "vmh1@hust.edu.vn",
+          password: "123123",
+          deviceId: 1
+        }),
       });
 
       const data = await res.json();
 
-      if (data.code !== 1000) {
-        throw new Error(data.message || "Login failed");
+      if (data.code !== "1000") {
+        throw new Error(data.message || "Error while logging in");
       }
 
       const token = data.data.token;

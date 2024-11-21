@@ -38,12 +38,12 @@ export const useGetClassInfo = (class_id: string) => {
 
       const data = await res.json();
 
-      if (data.meta.code !== 1000) {
+      if (data.meta.code !== "1000") {
         throw new Error(data.meta.message || "Error while fetching class info");
       }
 
-      setClassInfo(data.data);
       console.log(data.data);
+      setClassInfo(data.data);
 
     } catch (error: any) {
       logout();

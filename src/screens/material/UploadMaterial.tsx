@@ -83,7 +83,7 @@ const UploadMaterial = () => {
 
       const data = await res.json();
 
-      if (data.code !== 1000) {
+      if (data.code !== "1000") {
         throw new Error(data.message || 'Unknown error occurred while uploading material');
       }
 

@@ -7,9 +7,11 @@ import Toast from 'react-native-toast-message';
 import { AUTH_SERVER_URL } from '../../types';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
+import { useGetMyInfo } from '../../hooks/useGetMyInfo';
 
 const ChangeInfo = () => {
   const { token } = useContext(AuthContext);
+  const {user, loading: userInfoLoading} = useGetMyInfo();
   const [name, setName] = useState('');
   const [file, setFile] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -46,7 +48,13 @@ const ChangeInfo = () => {
       const formData = new FormData();
 
       if (token) formData.append('token', token);
-      if (name.trim()) formData.append('name', name.trim());
+
+      // name field is always needed for some reason, so send default name as fallback
+      if (name.trim()) {
+        formData.append('name', name.trim())
+      } else {
+        formData.append("name", `${user.ho} ${user.ten}`);
+      }
 
       if (file) {
         formData.append("file", {
@@ -66,20 +74,17 @@ const ChangeInfo = () => {
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || 'Server error occurred');
-      }
-
-      if (data.code !== 1000) {
+      if (data.code !== "1000") {
         throw new Error(data.message || 'Failed to update information');
       }
 
       Toast.show({
         type: 'success',
-        text2: data.message,
+        text1: "Change user info successfully"
       });
 
       navigation.navigate('Home');
+
     } catch (error: any) {
       Toast.show({
         type: 'error',
@@ -89,6 +94,14 @@ const ChangeInfo = () => {
       setLoading(false);
     }
   };
+
+  if (userInfoLoading) {
+    return (
+      <View className="w-full h-full">
+      <ActivityIndicator size={50} color={"black"}/>
+      </View>
+    );
+  }
 
   return (
     <Pressable onPress={() => Keyboard.dismiss()} className="flex-1 bg-red-700">

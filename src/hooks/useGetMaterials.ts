@@ -35,7 +35,7 @@ export const useGetMaterials = () => {
 
       const data = await res.json();
 
-      if (data.code !== 1000) {
+      if (data.code !== "1000") {
         throw new Error(data.message || "Error while fetching class materials");
       }
 

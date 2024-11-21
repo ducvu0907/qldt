@@ -56,7 +56,7 @@ const TakeAttendance = () => {
       });
       const data = await res.json();
 
-      if (data.meta.code !== 1000) {
+      if (data.meta.code !== "1000") {
         throw new Error(data.meta.message || "Error while taking attendance");
       }
 

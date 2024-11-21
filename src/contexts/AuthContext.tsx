@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react";
 import * as SecureStorage from "expo-secure-store";
 import { AUTH_SERVER_URL } from "../types";
+import { useLogout } from "../hooks/useLogout";
 
 interface AuthContextType {
   token: string | null,

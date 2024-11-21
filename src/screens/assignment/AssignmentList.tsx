@@ -45,7 +45,7 @@ const AssignmentList = () => {
       {assignments?.length !== 0 ? (
         <FlatList
         data={assignments}
-        renderItem={({ item }) => <AssignmentItem assignment={item} />}
+        renderItem={({ item }) => <AssignmentItem refetch={refetch}assignment={item} />}
         keyExtractor={(item) => item.id.toString()}
         onRefresh={onRefresh}
         refreshing={refreshing}

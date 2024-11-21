@@ -77,7 +77,7 @@ const Signup = () => {
 
       const data = await res.json();
 
-      if (data.status_code !== 1000) {
+      if (data.code !== 1000) {
         throw new Error(data.message || "Unknown error occurred during signup");
       }
 
@@ -98,7 +98,7 @@ const Signup = () => {
 
       const verifyData = await verifyRes.json();
 
-      if (verifyData.code === 1000) {
+      if (verifyData.code === "1000") {
         Toast.show({
           type: "success",
           text1: "Create account successfully",
@@ -106,7 +106,7 @@ const Signup = () => {
         navigation.navigate("Login");
 
       } else {
-        throw new Error(verifyData.message || "Verification failed");
+        throw new Error(verifyData.message || "Error while verifying account");
       }
 
     } catch (error: any) {
