@@ -57,7 +57,7 @@ const AssignmentList = () => {
         onPress={() => navigation.navigate("CreateAssignment")}
         className="absolute bottom-5 right-5 bg-blue-500 rounded-full p-4 shadow-lg"
       >
-        <Icon name="plus" size={30} color="white" />
+        <Text className="text-white text-xl">New Assignment</Text>
       </TouchableOpacity>
       }
     </View>

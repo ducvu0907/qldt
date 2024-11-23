@@ -12,7 +12,8 @@ import { AUTH_SERVER_URL } from '../../types';
 export type LoginRequest = {
   email: string,
   password: string,
-  deviceId: number // confusing
+  device_id: number,
+  fcm_token: string | null
 }
 
 const Login = () => {
@@ -20,7 +21,8 @@ const Login = () => {
   const [formData, setFormData] = useState<LoginRequest>({
     email: "",
     password: "",
-    deviceId: 1,
+    device_id: 1,
+    fcm_token: null
   });
   const [loading, setLoading] = useState<boolean>(false);
   const navigation = useNavigation<any>();
@@ -42,7 +44,8 @@ const Login = () => {
       const requestData: any = {
         "email": formData.email,
         "password": formData.password,
-        "deviceId": 1,
+        "device_id": 1,
+        "fcm_token": null,
       };
 
       const res = await fetch(`${AUTH_SERVER_URL}/login`, {
@@ -55,7 +58,8 @@ const Login = () => {
         body: JSON.stringify({
           email: "vmh1@hust.edu.vn",
           password: "123123",
-          deviceId: 1
+          device_id: 1,
+          fcm_token: null
         }),
       });
 

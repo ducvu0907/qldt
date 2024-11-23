@@ -1,7 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView, ActivityIndicator } from 'react-native';
 import Logo from "../../components/Logo";
-import { useContext, useEffect, useState } from 'react';
-import DropDownPicker from "react-native-dropdown-picker";
+import { useContext, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { RESOURCE_SERVER_URL } from '../../types';
@@ -18,7 +17,6 @@ export interface EditMaterialRequest {
   token: string;
 };
 
-// FIXME: server-side not working i think
 const EditMaterial = ({ route }) => {
   const {material} = route.params;
   const { token } = useContext(AuthContext);

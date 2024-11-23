@@ -42,7 +42,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
           }),
         });
         const data = await res.json();
-        if (data.code !== 1000) {
+        if (data.code !== "1000") {
           setToken(null);
         }
         console.log("user role is ", data.data.role);

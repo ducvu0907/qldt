@@ -66,7 +66,7 @@ const AddStudent = () => {
 
       Toast.show({
         type: "success",
-        text1: data.data
+        text1: "Add student successfully"
       });
 
       navigation.goBack();

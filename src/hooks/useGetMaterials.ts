@@ -20,17 +20,17 @@ export const useGetMaterials = () => {
       console.log("Fetching materials...");
       setLoading(true);
 
-      const queryParams = new URLSearchParams();
-      queryParams.append('token', token);
-      queryParams.append('class_id', selectedClassId);
+      const request = {
+        token,
+        class_id: selectedClassId
+      };
 
-      const url = `${RESOURCE_SERVER_URL}/get_material_list?${queryParams.toString()}`;
-
-      const res = await fetch(url, {
-        method: 'GET',
+      const res = await fetch(`${RESOURCE_SERVER_URL}/get_material_list`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify(request)
       });
 
       const data = await res.json();
