@@ -91,7 +91,7 @@ const TakeAttendance = () => {
 
   return (
     <View className="flex-1">
-      <Topbar title="Take Attendance" showBack={false} goHome={true}/>
+      <Topbar title="Take Attendance" showBack={true} />
 
       {classInfoLoading ? (
         <View className="flex-1 justify-center items-center">

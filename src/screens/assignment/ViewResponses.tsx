@@ -32,7 +32,7 @@ const ViewResponses = ({route}) => {
   if (loading && !refreshing) {
     return (
       <View className="flex justify-center items-center bg-gray-100">
-        <Topbar title="Assignment Responses" showBack={true} goHome={true}/>
+        <Topbar title="Assignment Responses" showBack={true} />
         <ActivityIndicator size="large" color="#4B5563" />
         <Text className="mt-4 text-xl text-gray-600">Loading...</Text>
       </View>

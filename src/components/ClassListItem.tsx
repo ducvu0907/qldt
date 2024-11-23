@@ -23,7 +23,7 @@ const ClassListItem: React.FC<{ currentClass: ClassItemData }> = ({ currentClass
 
   const handleSelectClass = () => {
     setSelectedClassId(currentClass.class_id);
-    navigation.navigate("ClassTabs");
+    navigation.navigate("ClassStack");
   };
 
   return (

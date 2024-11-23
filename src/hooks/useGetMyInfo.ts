@@ -15,7 +15,7 @@ export const useGetMyInfo = () => {
     try {
       console.log("fetching my info");
 
-      let res = await fetch(`${AUTH_SERVER_URL}/get_user_info`, {
+      const res = await fetch(`${AUTH_SERVER_URL}/get_user_info`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ export const useGetMyInfo = () => {
       setLoading(false);
     }
 
-  }, [token, logout]);
+  }, [token]);
 
   useEffect(() => {
     if (token) {

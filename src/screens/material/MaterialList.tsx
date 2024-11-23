@@ -32,7 +32,7 @@ const MaterialList = () => {
   if (loading && !refreshing) {
     return (
       <View className="flex-1 bg-slate-50 dark:bg-slate-900">
-        <Topbar title="Materials" showBack={false} goHome={true} />
+        <Topbar title="Materials" showBack={true} />
         <View className="flex-1 justify-center items-center px-4">
           <ActivityIndicator size="large" color="#6366f1" />
           <Text className="mt-4 text-lg font-medium text-slate-600 dark:text-slate-300">
@@ -59,7 +59,7 @@ const MaterialList = () => {
 
   return (
     <View className="flex-1 bg-slate-50 dark:bg-slate-900">
-      <Topbar title="Materials" showBack={false} goHome={true} />
+      <Topbar title="Materials" showBack={true} />
 
       {materials?.length !== 0 ? (
         <FlatList

@@ -109,7 +109,7 @@ const RequestAbsence = () => {
       onPress={() => Keyboard.dismiss()} 
       className="flex-1 bg-slate-50 dark:bg-slate-900"
     >
-      <Topbar title="Request Absence" showBack={false} goHome={true}/>
+      <Topbar title="Request Absence" showBack={true} />
       
       <View className="flex-1 px-6 py-8 space-y-8">
         <View className="space-y-2">

@@ -5,8 +5,13 @@ import { ClassContext } from "../../contexts/ClassContext";
 import { useGetClassInfo } from "../../hooks/useGetClassInfo";
 import StudentListItem from "../../components/StudentListItem";
 import Topbar from "../../components/Topbar";
+import { useNavigation } from "@react-navigation/native";
+import { AntDesign } from '@expo/vector-icons';
+import { AuthContext } from "../../contexts/AuthContext";
 
 const ViewStudents = () => {
+  const {role} = useContext(AuthContext);
+  const navigation = useNavigation<any>();
   const [students, setStudents] = useState<StudentAccount[]>([]);
   const { selectedClassId } = useContext(ClassContext);
   const { classInfo, loading } = useGetClassInfo(selectedClassId || "");
@@ -20,6 +25,14 @@ const ViewStudents = () => {
   return (
     <View className="flex-1">
       <Topbar title={"Student list"} showBack={true} />
+
+      {role === "LECTURER" && <TouchableOpacity
+        onPress={() => navigation.navigate("AddStudent")}
+        className="absolute bottom-5 right-5 z-10 bg-blue-500 rounded-full p-3"
+      >
+        <AntDesign name="plus" size={24} color="white" />
+      </TouchableOpacity>
+      }
 
       {loading ? (
         <View className="flex-1 justify-center items-center">

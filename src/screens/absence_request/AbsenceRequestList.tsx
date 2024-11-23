@@ -35,7 +35,7 @@ const AbsenceRequestList = () => {
 
   return (
     <View className="flex-1 bg-gray-100">
-      <Topbar title="Absence Requests" showBack={false} goHome={true}/>
+      <Topbar title="Absence Requests" showBack={true} />
       {loading ? (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#3B82F6" />

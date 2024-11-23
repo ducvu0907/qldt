@@ -7,11 +7,9 @@ import Icon from "react-native-vector-icons/Ionicons";
 interface TopbarProps {
   title: string;
   showBack?: boolean;
-  settingScreen?: string;
-  goHome?: boolean;
 }
 
-const Topbar: React.FC<TopbarProps> = ({ title, showBack=false, settingScreen=null, goHome=false }) => {
+const Topbar: React.FC<TopbarProps> = ({ title, showBack=false }) => {
   const navigation = useNavigation<any>();
 
   return (
@@ -24,11 +22,6 @@ const Topbar: React.FC<TopbarProps> = ({ title, showBack=false, settingScreen=nu
               <Icon name="arrow-back-outline" size={30} color="white" />
             </TouchableOpacity>
           )}
-          {goHome && (
-            <TouchableOpacity onPress={() => navigation.popTo("Home")}>
-              <Icon name="arrow-back-outline" size={30} color="white" />
-            </TouchableOpacity>
-          )}
         </View>
 
 
@@ -38,15 +31,6 @@ const Topbar: React.FC<TopbarProps> = ({ title, showBack=false, settingScreen=nu
         </View>
 
         <View className="flex justify-center items-end flex-1">
-          {settingScreen && (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate(settingScreen);
-              }}
-            >
-              <Icon name="ellipsis-vertical" size={30} color="white" />
-            </TouchableOpacity>
-          )}
         </View>
 
       </SafeAreaView>

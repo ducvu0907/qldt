@@ -63,7 +63,7 @@ const AttendanceRecord = () => {
   if (loading) {
     return (
       <View className="flex justify-center items-center bg-gray-100">
-        <Topbar title="Attendance Records" showBack={false} goHome={true}/>
+        <Topbar title="Attendance Records" showBack={true} />
         <ActivityIndicator size="large" color="#4B5563" />
         <Text className="mt-4 text-xl text-gray-600">Loading...</Text>
       </View>
@@ -73,7 +73,7 @@ const AttendanceRecord = () => {
   if (error) {
     return (
       <View className="flex justify-center items-center bg-gray-100">
-        <Topbar title="Attendance Records" showBack={false} goHome={true}/>
+        <Topbar title="Attendance Records" showBack={true} />
         <Text className="mt-4 text-xl text-red-600">{error}</Text>
       </View>
     );
@@ -81,7 +81,7 @@ const AttendanceRecord = () => {
 
   return (
     <View className="flex-1 bg-gray-100">
-      <Topbar title="Attendance Records" showBack={false} goHome={true}/>
+      <Topbar title="Attendance Records" showBack={true} />
       {records ? (
         <FlatList
           data={records}

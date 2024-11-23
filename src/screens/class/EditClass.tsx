@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView, ActivityIndicator, Alert } from 'react-native';
 import Logo from "../../components/Logo";
 import { useContext, useEffect, useState } from 'react';
 import DropDownPicker from "react-native-dropdown-picker";
@@ -58,6 +58,65 @@ const EditClass = () => {
     }));
   };
 
+  const handleDeleteClass = async () => {
+    try {
+      setLoading(true);
+
+      console.log("deleting class");
+
+      let res = await fetch(`${RESOURCE_SERVER_URL}/delete_class`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          token,
+          class_id: selectedClassId
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.meta.code !== "1000") {
+        throw new Error(data.meta.message || "Error while deleting class");
+      }
+
+      Toast.show({
+        type: "success",
+        text1: "Delete class successfully"
+      });
+
+      navigation.popTo("Home");
+
+    } catch (error: any) {
+      Toast.show({
+        type: 'error',
+        text1: error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const showDeleteConfirmation = () => {
+    Alert.alert(
+      "Confirm Deletion",
+      "Are you sure you want to delete this class?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        {
+          text: "Delete",
+          onPress: handleDeleteClass,
+          style: "destructive"
+        }
+      ]
+    );
+  };
+
   const handleEditClass = async () => {
     try {
       setLoading(true);
@@ -106,6 +165,26 @@ const EditClass = () => {
     }
   };
 
+  const showEditConfirmation = () => {
+    Alert.alert(
+      "Confirm Edit",
+      "Are you sure you want to update this class?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        {
+          text: "Update",
+          onPress: handleEditClass,
+          style: "default"
+        }
+      ]
+    );
+  };
+
+
   if (classInfoLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -129,6 +208,15 @@ const EditClass = () => {
           <View className="w-full justify-center items-center px-8">
             <Text className="text-white text-4xl mb-12">Edit Class</Text>
             <View className="w-full space-y-4 mb-6">
+              <TextInput
+                onFocus={() => setOpen(false)}
+                placeholder="Class Id"
+                value={formData.class_id || ""}
+                onChangeText={(value) => handleChangeInput('class_id', value)}
+                placeholderTextColor="#ffffff80"
+                className="border-2 border-white text-2xl rounded-lg p-3 text-white w-full mb-4"
+              />
+
               <TextInput
                 onFocus={() => setOpen(false)}
                 placeholder="Class Name"
@@ -224,13 +312,23 @@ const EditClass = () => {
             </View>
 
             <View className={`w-full items-center`}>
+              <View className='w-full flex-row justify-evenly'>
               <TouchableOpacity
-                className="bg-white w-2/5 py-4 rounded-full items-center mb-5"
-                onPress={handleEditClass}
+                className="bg-red-800 w-2/5 py-4 rounded-full items-center mb-5"
+                onPress={showDeleteConfirmation}
                 disabled={loading}
               >
-                {!loading ? <Text className="text-blue-500 text-3xl font-bold text-center">Update Class</Text> : <ActivityIndicator size={20} />}
+                {!loading ? <Text className="text-white text-2xl font-bold text-center">Delete Class</Text> : <ActivityIndicator size={20} />}
               </TouchableOpacity>
+
+              <TouchableOpacity
+                className="bg-white w-2/5 py-4 rounded-full items-center mb-5"
+                onPress={showEditConfirmation}
+                disabled={loading}
+              >
+                {!loading ? <Text className="text-blue-500 text-2xl font-bold text-center">Update Class</Text> : <ActivityIndicator size={20} />}
+              </TouchableOpacity>
+              </View>
 
               <TouchableOpacity className="items-center" onPress={() => navigation.goBack()}>
                 <Ionicons name="arrow-back-outline" size={30} color="white" />
