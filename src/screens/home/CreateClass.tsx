@@ -10,6 +10,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { AuthContext } from '../../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { formatDate } from '../../helpers';
+import Topbar from '../../components/Topbar';
 
 export enum ClassTypes {
   LT = "LT",
@@ -111,13 +112,9 @@ const CreateClass = () => {
       setOpen(false);
     }}>
       <View className="w-full h-full bg-red-700 justify-around">
-        <SafeAreaView style={{ flex: 1 }}>
-          <View className="flex items-center mt-22 mb-10">
-            <Logo />
-          </View>
+        <Topbar title='Create class' showBack={true}/>
 
           <View className="w-full justify-center items-center px-8">
-            <Text className="text-white text-4xl mb-12">Create a Class</Text>
             <View className="w-full space-y-4 mb-6">
               <TextInput
                 onFocus={() => setOpen(false)}
@@ -238,12 +235,8 @@ const CreateClass = () => {
                 {!loading ? <Text className="text-blue-500 text-3xl font-bold text-center">Create Class</Text> : <ActivityIndicator />}
               </TouchableOpacity>
 
-              <TouchableOpacity className="items-center" onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back-outline" size={30} color="white" />
-              </TouchableOpacity>
             </View>
           </View>
-        </SafeAreaView>
       </View>
     </Pressable>
   );

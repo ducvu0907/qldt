@@ -93,7 +93,7 @@ const Login = () => {
           </View>
 
           <View className="w-full justify-center items-center px-8">
-            <Text className="text-white text-4xl mb-12">Welcome to QLDT</Text>
+            <Text className="text-white text-4xl mb-12">Welcome back</Text>
             <View className="w-full space-y-4 mb-6">
               <TextInput
                 placeholder="Email"

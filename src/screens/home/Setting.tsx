@@ -12,7 +12,7 @@ const Setting = () => {
 
   return (
     <View className="w-full h-full bg-red-700">
-      <Topbar title="Setting" showBack={true}/>
+      <Topbar title="Setting" />
       <Profile />
       <View className="flex justify-center p-5 items-center">
         <View className="rounded-lg mb-3 flex flex-row items-center px-4 py-3">

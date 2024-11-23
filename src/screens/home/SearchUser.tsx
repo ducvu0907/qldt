@@ -75,7 +75,7 @@ const SearchUser = () => {
 
   return (
     <Pressable onPress={() => Keyboard.dismiss()} className="flex-1 bg-white">
-      <Topbar title={"Search Users"} showBack={true} />
+      <Topbar title={"Search Users"} />
 
       <View className="p-4">
         <View className="flex-row items-center bg-gray-100 rounded-full px-4 py-2">

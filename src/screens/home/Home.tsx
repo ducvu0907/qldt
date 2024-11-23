@@ -11,7 +11,7 @@ const Home = () => {
   const { role } = useContext(AuthContext);
 
   return (
-    <View className="flex-1">
+    <View className="w-full h-full flex items-center">
       <Topbar title={"Class List"} showBack={false} settingScreen={"Setting"} />
 
       <ClassList />
@@ -24,17 +24,11 @@ const Home = () => {
             navigation.navigate("CreateClass");
           }
         }}
-        className="absolute bottom-5 left-5 bg-blue-600 w-16 h-16 rounded-full justify-center items-center shadow-lg"
+        className="absolute bottom-5 bg-blue-600 w-16 h-16 rounded-full justify-center items-center shadow-lg"
       >
         <Icon name={role === "STUDENT" ? "book" : "plus"} size={30} color="white" />
       </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={() => navigation.navigate("SearchUser")}
-        className="absolute bottom-5 right-5 bg-green-600 w-16 h-16 rounded-full justify-center items-center shadow-lg"
-      >
-        <Icon name="search" size={30} color="white" />
-      </TouchableOpacity>
     </View>
   );
 };

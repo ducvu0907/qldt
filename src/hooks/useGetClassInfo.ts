@@ -9,12 +9,9 @@ export const useGetClassInfo = (class_id: string) => {
   const { token } = useContext(AuthContext);
   const [classInfo, setClassInfo] = useState<ClassDetail | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [attempt, setAttempt] = useState<number>(3);
   const { logout } = useLogout();
 
   const fetchClassInfo = useCallback(async () => {
-    if (attempt <= 0) return;
-
     try {
       console.log("fetching class info");
 
@@ -25,16 +22,6 @@ export const useGetClassInfo = (class_id: string) => {
         },
         body: JSON.stringify({ token, class_id }),
       });
-
-      if (!res.ok) {
-        if (attempt > 0) {
-          console.log(`Retrying... attempts left: ${attempt}`);
-          setAttempt(attempt - 1);
-          return;
-        } else {
-          throw new Error('Server error. Please try again later.');
-        }
-      }
 
       const data = await res.json();
 
@@ -54,7 +41,7 @@ export const useGetClassInfo = (class_id: string) => {
     } finally {
       setLoading(false);
     }
-  }, [attempt, token, class_id]);
+  }, [token, class_id]);
 
   useEffect(() => {
     if (token && class_id) {

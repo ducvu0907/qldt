@@ -8,11 +8,9 @@ export const useGetMyInfo = () => {
   const { token } = useContext(AuthContext);
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [attempt, setAttempt] = useState<number>(3); // retry attempts
   const { logout } = useLogout();
 
   const fetchUserData = useCallback(async () => {
-    if (attempt <= 0) return;
 
     try {
       console.log("fetching my info");
@@ -24,17 +22,6 @@ export const useGetMyInfo = () => {
         },
         body: JSON.stringify({ token }),
       });
-
-      if (!res.ok) {
-        if (attempt > 0) {
-          console.log(`Retrying... attempts left: ${attempt}`);
-          setAttempt(attempt - 1);
-          return;
-
-        } else {
-          throw new Error('Server error. Please try again later.');
-        }
-      }
 
       const data = await res.json();
 
@@ -54,7 +41,7 @@ export const useGetMyInfo = () => {
       setLoading(false);
     }
 
-  }, [attempt, token, logout]);
+  }, [token, logout]);
 
   useEffect(() => {
     if (token) {
@@ -62,5 +49,5 @@ export const useGetMyInfo = () => {
     }
   }, []);
 
-  return { user, loading, attempt };
+  return { user, loading };
 };
