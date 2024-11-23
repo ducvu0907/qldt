@@ -164,9 +164,6 @@ const EditAssignment = ({ route }) => {
             )}
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.goBack()} className="self-center">
-            <Ionicons name="arrow-back-outline" size={30} color="white" />
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </Pressable>
