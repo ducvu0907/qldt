@@ -26,7 +26,7 @@ const MaterialList = () => {
         await refetch();
       };
       fetchData();
-    }, [refetch])
+    }, [])
   );
 
   if (loading && !refreshing) {
@@ -49,9 +49,6 @@ const MaterialList = () => {
         <Icon name="folder-open" size={48} color="#6366f1" />
         <Text className="mt-4 text-xl font-semibold text-slate-700 dark:text-slate-200">
           No Materials Yet
-        </Text>
-        <Text className="mt-2 text-center text-slate-500 dark:text-slate-400">
-          Add your first course material by tapping the plus button below
         </Text>
       </View>
     </View>

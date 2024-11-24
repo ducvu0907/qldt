@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { RESOURCE_SERVER_URL } from "../types";
 import Toast from "react-native-toast-message";
+import { useMediaLibraryPermissions } from "expo-image-picker";
 
 export interface SendNotificationRequest {
   token: string;
@@ -168,16 +169,16 @@ const useGetUnreadNotificationCount = () => {
 
   useEffect(() => {
     getUnreadNotificationCount();
-  }, []);
+  }, [useMediaLibraryPermissions]);
 
-  return {  loading, unreads };
+  return {  loading, unreads, getUnreadNotificationCount };
 };
 
-const useMarkNotificationAsRead = (notification_ids: string[]) => {
+const useMarkNotificationAsRead = () => {
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const markNotificationAsRead = useCallback(async () => {
+  const markNotificationAsRead = useCallback(async (notification_id: string) => {
     try {
       console.log("marking user notifications as read");
       setLoading(true);
@@ -189,7 +190,7 @@ const useMarkNotificationAsRead = (notification_ids: string[]) => {
         },
         body: JSON.stringify({
           token,
-          notification_ids
+          notification_id
         })
       });
 
@@ -212,11 +213,7 @@ const useMarkNotificationAsRead = (notification_ids: string[]) => {
 
   }, []);
 
-  useEffect(() => {
-    markNotificationAsRead();
-  }, []);
-
-  return { loading, refetch: markNotificationAsRead };
+  return { loading, markNotificationAsRead };
 };
 export {
   useSendNotification,

@@ -26,7 +26,7 @@ const AssignmentList = () => {
         await refetch();
       };
       fetchData();
-    }, [refetch])
+    }, [])
   );
 
   if (loading && !refreshing) {

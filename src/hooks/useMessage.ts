@@ -2,26 +2,55 @@ import { useState, useEffect, useContext, useCallback } from 'react';
 import { RESOURCE_SERVER_URL } from '../types';
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
+import { useSocket } from '../contexts/SocketContext';
+
+// for displaying in the list of conversations
+export interface ConversationItemData {
+  id: string;
+  Partner: {
+    id: string;
+    username: string;
+    avatar: string;
+  },
+  LastMessage: {
+    message: string;
+    created_at: string;
+    unread: string; // '1' or '0'
+  }
+};
+
+export interface Message {
+  message: string;
+  message_id: string;
+  sender: {
+    id: string;
+    username: string;
+    avatar: string;
+  },
+  created_at: string; // iso
+  unread: number // 1 or 0
+};
 
 const useGetListConversation = (index: string, count: string) => {
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [conversations, setConversations] = useState<any>(null);
+  const [numNewMessages, setNumNewMessages] = useState<string>('0');
 
   const fetchConversations = useCallback(async () => {
     try {
       setLoading(true);
       console.log("fetching use conversations");
 
-      let res = await fetch(`${RESOURCE_SERVER_URL}/get_list_conversation`, {
+      const res = await fetch(`${RESOURCE_SERVER_URL}/get_list_conversation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           token,
-          index: '0',
-          count: count
+          index,
+          count
         }),
       });
 
@@ -34,6 +63,7 @@ const useGetListConversation = (index: string, count: string) => {
       console.log(data.data);
 
       setConversations([...data.data.conversations]);
+      setNumNewMessages(data.data.num_new_message);
 
     } catch (error: any) {
       Toast.show({
@@ -50,14 +80,14 @@ const useGetListConversation = (index: string, count: string) => {
     fetchConversations();
   }, []);
 
-  return { conversations, loading, refetch: fetchConversations };
+  return { conversations, loading, refetch: fetchConversations, numNewMessages };
 };
 
 
 const useGetConversation = (index: string, count: string, conversation_id: string) => {
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [conversation, setConversation] = useState<any>(null);
+  const [conversation, setConversation] = useState<Message[] | null>(null);
 
   const fetchConversation = useCallback(async () => {
     try {
@@ -71,10 +101,10 @@ const useGetConversation = (index: string, count: string, conversation_id: strin
         },
         body: JSON.stringify({
           token,
-          index: 0,
-          count: count,
+          index,
+          count,
           conversation_id,
-          mark_as_read: true
+          mark_as_read: "true"
         }),
       });
 
@@ -85,6 +115,7 @@ const useGetConversation = (index: string, count: string, conversation_id: strin
       }
 
       console.log(data.data);
+      setConversation(data.data.conversation);
 
     } catch (error: any) {
       Toast.show({
@@ -102,6 +133,50 @@ const useGetConversation = (index: string, count: string, conversation_id: strin
   }, []);
 
   return { conversation, loading, refetch: fetchConversation };
+};
+
+const useSendMessage = () => {
+  const { sendMessage, isConnected } = useSocket();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const sendMessageToPartner = async (receiverId: string, content: string) => {
+    if (!receiverId || !content) {
+      Toast.show({
+        type: "error",
+        text1: "Message content is empty or receiver ID is missing",
+      });
+      return;
+    }
+
+    if (!isConnected) {
+      Toast.show({
+        type: "error",
+        text1: "Not connected to the WebSocket server",
+      });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      sendMessage(receiverId, content);
+      Toast.show({
+        type: "success",
+        text1: "Message sent successfully",
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: `Error sending message: ${error.message}`,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    sendMessageToPartner,
+    loading,
+  };
 };
 
 const useDeleteMessage = (message_id: string, partner_id: string) => {
@@ -156,5 +231,6 @@ const useDeleteMessage = (message_id: string, partner_id: string) => {
 export {
   useGetListConversation,
   useGetConversation,
-  useDeleteMessage
+  useDeleteMessage,
+  useSendMessage
 };

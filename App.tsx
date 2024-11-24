@@ -5,20 +5,23 @@ import ApplicationNavigator from "./src/navigators/Application";
 import Toast from 'react-native-toast-message';
 import { AuthContextProvider } from "./src/contexts/AuthContext";
 import { ClassContextProvider } from "./src/contexts/ClassContext";
+import { SocketProvider } from "./src/contexts/SocketContext";
 
 const queryClient = new QueryClient();
 
 const App: React.FC = () => {
   return (
-    <AuthContextProvider>
-      <ClassContextProvider>
-        <QueryClientProvider client={queryClient}>
-          <StatusBar />
-          <ApplicationNavigator />
-          <Toast />
-        </QueryClientProvider>
-      </ClassContextProvider>
-    </AuthContextProvider>
+    <SocketProvider>
+      <AuthContextProvider>
+        <ClassContextProvider>
+          <QueryClientProvider client={queryClient}>
+            <StatusBar />
+            <ApplicationNavigator />
+            <Toast />
+          </QueryClientProvider>
+        </ClassContextProvider>
+      </AuthContextProvider>
+    </SocketProvider>
   );
 }
 

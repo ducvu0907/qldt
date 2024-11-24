@@ -30,7 +30,7 @@ const AbsenceRequestList = () => {
         await refetch();
       };
       fetchData();
-    }, [refetch])
+    }, [])
   );
 
   return (

@@ -12,18 +12,19 @@ const ClassList = () => {
     setRefreshing(true);
     await refetch();
     setRefreshing(false);
-  }, [refetch]);
+  }, []);
 
-  // refetch when gain focus - lets not over engineering data validation xd
+  // refetch when screen gains focus but avoid if already loading
   useFocusEffect(
     useCallback(() => {
-      const fetchData = async () => {
-        await refetch();
-      };
-      fetchData();
-    }, [refetch])
+      if (!loading) {
+        const fetchData = async () => {
+          await refetch();
+        };
+        fetchData();
+      }
+    }, [])
   );
-
 
   if (loading && !refreshing) {
     return (

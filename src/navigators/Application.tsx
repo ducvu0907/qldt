@@ -1,8 +1,7 @@
+import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AuthContext } from '../contexts/AuthContext';
-import { useContext } from 'react';
 import MainTabs from './MainTabs';
 import AuthStack from './AuthStack';
 
@@ -13,8 +12,18 @@ const ApplicationNavigator = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={token === null ? "Auth" : "Main"}>
-        {token === null ? <Stack.Screen name='Auth' component={AuthStack} /> : <Stack.Screen name='Main' component={MainTabs} />}
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName={token ? "Main" : "Auth"}
+      >
+        {token ? (
+          <Stack.Screen
+            name="Main"
+            component={MainTabs}
+          />
+        ) : (
+          <Stack.Screen name="Auth" component={AuthStack} />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

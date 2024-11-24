@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Image, RefreshControl, TouchableOpacity } from 'react-native';
-import { useGetNotifications, useMarkNotificationAsRead, NotificationItemData } from '../../hooks/useNotification';
+import { useFocusEffect, useNavigation } from '@react-navigation/native'; // import useFocusEffect
+import { useGetNotifications, useMarkNotificationAsRead, NotificationItemData, useGetUnreadNotificationCount } from '../../hooks/useNotification';
 import { formatDate } from '../../helpers';
 import Topbar from '../../components/Topbar';
 
@@ -34,9 +35,16 @@ const NotificationIcon = ({ type }: { type: string }) => {
   );
 };
 
-const NotificationItem = ({ item }: { item: NotificationItemData }) => {
+const NotificationItem = ({ 
+  item, 
+  onPress 
+}: { 
+  item: NotificationItemData;
+  onPress: () => void;
+}) => {
   return (
-    <View 
+    <TouchableOpacity 
+      onPress={onPress}
       className={`flex-row p-4 border-b border-gray-200 ${
         item.status === 'UNREAD' ? 'bg-blue-50' : 'bg-white'
       }`}
@@ -65,29 +73,44 @@ const NotificationItem = ({ item }: { item: NotificationItemData }) => {
           />
         )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const NotificationList = () => {
   const { notifications, loading, getNotifications } = useGetNotifications('0', '20');
+  const {getUnreadNotificationCount} = useGetUnreadNotificationCount();
+  const [loadingMarkRead, setLoadingMarkRead] = useState(false);
+  const { markNotificationAsRead } = useMarkNotificationAsRead();
+  const navigation = useNavigation<any>();
 
-  // FIXME: mark notification as read is not working
-  // const { loading: markingAsRead, refetch: markAsRead } = useMarkNotificationAsRead(
-  //   notifications
-  //     ?.filter(notification => notification.status === 'UNREAD')
-  //     ?.map(notification => notification.id.toString()) || []
-  // );
-
-  // useEffect(() => {
-  //   if (notifications?.some(notification => notification.status === 'UNREAD')) {
-  //     markAsRead();
-  //   }
-  // }, [notifications]);
+  const handleNotificationPress = useCallback((notification: NotificationItemData) => {
+    if (notification.status === 'UNREAD' && !loadingMarkRead) {
+      setLoadingMarkRead(true);
+      markNotificationAsRead(notification.id.toString())
+        .then(() => {
+          getNotifications();
+          getUnreadNotificationCount();
+        })
+        .finally(() => {
+          setLoadingMarkRead(false);
+          navigation.navigate("NotificationDetails", { notification });
+        });
+    }
+  }, [loadingMarkRead, markNotificationAsRead, getNotifications]);
 
   const renderItem = useCallback(({ item }: { item: NotificationItemData }) => (
-    <NotificationItem item={item} />
-  ), []);
+    <NotificationItem 
+      item={item} 
+      onPress={() => handleNotificationPress(item)}
+    />
+  ), [handleNotificationPress]);
+
+  useFocusEffect(
+    useCallback(() => {
+      getNotifications();
+    }, [])
+  );
 
   if (loading && !notifications) {
     return (

@@ -8,6 +8,10 @@ interface AuthContextType {
   setToken: (token: string | null) => void;
   role: string | null,
   setRole: (role: string | null) => void;
+  userId: string | null,
+  setUserId: (userId: string | null) => void;
+  email: string | null,
+  setEmail: (userId: string | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -15,6 +19,10 @@ const AuthContext = createContext<AuthContextType>({
   setToken: () => {},
   role: null,
   setRole: () => {},
+  userId: null,
+  setUserId: () => {},
+  email: null,
+  setEmail: () => {},
 });
 
 interface AuthContextProviderProps {
@@ -24,6 +32,8 @@ interface AuthContextProviderProps {
 const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -45,8 +55,12 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
         if (data.code !== "1000") {
           setToken(null);
         }
-        console.log("user role is ", data.data.role);
+
+        console.log(data.data);
+
         setRole(data.data.role);
+        setUserId(data.data.id);
+        setEmail(data.data.email);
       }
     }
 
@@ -54,7 +68,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
   }, []);
 
   return (
-    <AuthContext.Provider value={{ token, setToken, role, setRole }}>
+    <AuthContext.Provider value={{ userId, setUserId, token, setToken, role, setRole, email, setEmail }}>
       {children}
     </AuthContext.Provider>
   );

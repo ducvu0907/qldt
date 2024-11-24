@@ -7,6 +7,7 @@ import NotificationStack from "./NotificationStack";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View, Text } from 'react-native';
 import { useGetUnreadNotificationCount } from '../hooks/useNotification';
+import { useGetListConversation } from "../hooks/useMessage";
 
 const Tab = createBottomTabNavigator();
 
@@ -17,9 +18,26 @@ const NotificationIcon = ({ color, size }: { color: string; size: number }) => {
     <View>
       <Ionicons name="notifications" size={size} color={color} />
       {unreads > 0 && (
-        <View className="absolute -top-1 -right-3 bg-red-500 rounded-full min-w-[16px] h-4 px-1 items-center justify-center">
+        <View className="absolute -top-1 -right-4 bg-red-500 rounded-full min-w-[16px] h-4 px-1 items-center justify-center">
           <Text className="text-white text-xs font-bold">
             {unreads > 99 ? '99+' : unreads}
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+};
+
+const MessageIcon = ({ color, size }: { color: string; size: number }) => {
+  const {numNewMessages} = useGetListConversation('0', '100');
+
+  return (
+    <View>
+      <Ionicons name="chatbubble-ellipses" size={size} color={color} />
+      {parseInt(numNewMessages) > 0 && (
+        <View className="absolute -top-1 -right-4 bg-red-500 rounded-full min-w-[16px] h-4 px-1 items-center justify-center">
+          <Text className="text-white text-xs font-bold">
+            {parseInt(numNewMessages) > 99 ? '99+' : numNewMessages}
           </Text>
         </View>
       )}
@@ -59,7 +77,7 @@ const MainTabs = () => {
         component={MessageStack}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubble-ellipses" size={size} color={color} />
+            <MessageIcon size={size} color={color} />
           ),
         }}
       />
