@@ -6,7 +6,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { ClassDetail } from '../components/ClassInfo';
 
 export const useGetClassInfo = (class_id: string) => {
-  const { token } = useContext(AuthContext);
+  const { token, role } = useContext(AuthContext);
   const [classInfo, setClassInfo] = useState<ClassDetail | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const { logout } = useLogout();
@@ -15,7 +15,8 @@ export const useGetClassInfo = (class_id: string) => {
     try {
       console.log("fetching class info");
 
-      const res = await fetch(`${RESOURCE_SERVER_URL}/get_class_info`, {
+      const url = role === "LECTURER" ? "get_class_info" : "get_basic_class_info";
+      const res = await fetch(`${RESOURCE_SERVER_URL}/${url}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

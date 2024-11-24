@@ -22,11 +22,11 @@ const ClassMain = () => {
   const menuItems = [
     ...(role === "LECTURER" ? [
       { icon: "create", label: "Edit Class", screen: "EditClass" },
+      { icon: "people", label: "Students", screen: "ViewStudents" },
+      { icon: "document-text", label: "Assignments", screen: "AssignmentStack" },
     ] : []),
     { icon: "information-circle", label: "Class Information", screen: "ClassDetailsInfo" },
-    { icon: "people", label: "Students", screen: "ViewStudents" },
     { icon: "book", label: "Materials", screen: "MaterialStack" },
-    { icon: "document-text", label: "Assignments", screen: "AssignmentStack" },
     { icon: "calendar", label: "Attendance", screen: "AttendanceStack" },
     { icon: "time", label: "Absence Request", screen: "AbsenceRequestStack" },
   ];

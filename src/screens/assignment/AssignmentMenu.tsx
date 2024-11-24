@@ -6,6 +6,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { RESOURCE_SERVER_URL } from '../../types';
 import Toast from 'react-native-toast-message';
 import Topbar from '../../components/Topbar';
+import { useGetAssignments } from '../../hooks/useGetAssignments';
 
 // Types
 interface Assignment {
@@ -158,7 +159,7 @@ const formatDate = (date: Date) => {
 };
 
 // Main Component
-const AssignmentMenu: React.FC<{ route: { params: { assignment: Assignment } } }> = ({ route }) => {
+const AssignmentMenu = ({ route }) => {
   const { token, role } = useContext(AuthContext);
   const { assignment } = route.params;
   const navigation = useNavigation<any>();
@@ -181,6 +182,7 @@ const AssignmentMenu: React.FC<{ route: { params: { assignment: Assignment } } }
 
       Toast.show({ type: "success", text1: "Assignment deleted successfully" });
       navigation.goBack();
+
     } catch (error: any) {
       Toast.show({ type: 'error', text1: error.message });
     } finally {

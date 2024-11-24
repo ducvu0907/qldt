@@ -24,14 +24,14 @@ const AbsenceRequestListItem = ({ request }) => {
 const AbsenceRequestList = () => {
   const { absenceRequests, loading, refetch } = useGetAbsenceRequests("PENDING");
 
-  useFocusEffect(
-    useCallback(() => {
-      const fetchData = async () => {
-        await refetch();
-      };
-      fetchData();
-    }, [])
-  );
+  //useFocusEffect(
+  //  useCallback(() => {
+  //    const fetchData = async () => {
+  //      await refetch();
+  //    };
+  //    fetchData();
+  //  }, [])
+  //);
 
   return (
     <View className="flex-1 bg-gray-100">

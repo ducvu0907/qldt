@@ -1,6 +1,8 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 
 export interface AssignmentItemData {
   id: number;
@@ -9,6 +11,7 @@ export interface AssignmentItemData {
   lecturer_id: number;
   deadline: Date;
   file_url: string;
+  is_submitted?: boolean;
   class_id: string;
 }
 
@@ -17,6 +20,7 @@ interface Props {
 }
 
 const AssignmentItem: React.FC<Props> = ({ assignment }) => {
+  const {role} = useContext(AuthContext);
   const navigation = useNavigation<any>();
   const isOverdue = new Date(assignment.deadline) < new Date();
 
@@ -28,9 +32,13 @@ const AssignmentItem: React.FC<Props> = ({ assignment }) => {
     });
   };
 
+  const handleNavigation = () => {
+    navigation.navigate(role === "STUDENT" ? "SubmitAssignment" : "AssignmentMenu", {assignment});
+  };
+
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate("AssignmentMenu", { assignment })}
+      onPress={handleNavigation}
       className="bg-white rounded-lg shadow-sm border border-gray-400 overflow-hidden"
     >
       <View className="p-4 space-y-3">

@@ -11,8 +11,8 @@ const queryClient = new QueryClient();
 
 const App: React.FC = () => {
   return (
-    <SocketProvider>
-      <AuthContextProvider>
+    <AuthContextProvider>
+      <SocketProvider>
         <ClassContextProvider>
           <QueryClientProvider client={queryClient}>
             <StatusBar />
@@ -20,8 +20,8 @@ const App: React.FC = () => {
             <Toast />
           </QueryClientProvider>
         </ClassContextProvider>
-      </AuthContextProvider>
-    </SocketProvider>
+      </SocketProvider>
+    </AuthContextProvider>
   );
 }
 

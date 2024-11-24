@@ -6,7 +6,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from '../../contexts/AuthContext';
 import Toast from 'react-native-toast-message';
 import * as SecureStore from "expo-secure-store";
-import { validateLoginInputs } from '../../helpers';
 import { AUTH_SERVER_URL } from '../../types';
 
 export type LoginRequest = {
@@ -17,7 +16,7 @@ export type LoginRequest = {
 }
 
 const Login = () => {
-  const { setToken, setRole } = useContext(AuthContext);
+  const { setToken, setRole, setUserId, setEmail } = useContext(AuthContext);
   const [formData, setFormData] = useState<LoginRequest>({
     email: "",
     password: "",
@@ -73,6 +72,8 @@ const Login = () => {
       await SecureStore.setItemAsync("access-token", token);
       setToken(token);
       setRole(data.data.role);
+      setUserId(data.data.id);
+      setEmail(data.data.email);
 
     } catch(error: any) {
       Toast.show({

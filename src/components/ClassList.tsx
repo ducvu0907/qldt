@@ -1,10 +1,10 @@
 import { FlatList, Text, View, ActivityIndicator } from "react-native";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useGetClasses } from "../hooks/useGetClasses";
 import ClassListItem from "./ClassListItem";
 import { useFocusEffect } from "@react-navigation/native";
 
-const ClassList = () => {
+const ClassList = ({route = null}) => {
   const { classes, loading, refetch } = useGetClasses();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -14,17 +14,16 @@ const ClassList = () => {
     setRefreshing(false);
   }, []);
 
-  // refetch when screen gains focus but avoid if already loading
-  useFocusEffect(
-    useCallback(() => {
-      if (!loading) {
-        const fetchData = async () => {
-          await refetch();
-        };
-        fetchData();
-      }
-    }, [])
-  );
+  //useFocusEffect(
+  //  useCallback(() => {
+  //    if (!loading) {
+  //      const fetchData = async () => {
+  //        await refetch();
+  //      };
+  //      fetchData();
+  //    }
+  //  }, [])
+  //);
 
   if (loading && !refreshing) {
     return (

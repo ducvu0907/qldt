@@ -5,6 +5,7 @@ import { useContext, useState } from "react";
 import Toast from "react-native-toast-message";
 import { AuthContext } from "../../contexts/AuthContext";
 import { RESOURCE_SERVER_URL } from "../../types";
+import { useGetMaterials } from "../../hooks/useGetMaterials";
 
 const MaterialInfo = ({ route, navigation }) => {
   const { token, role } = useContext(AuthContext);

@@ -1,5 +1,5 @@
 import { FlatList, Text, View, ActivityIndicator, TouchableOpacity } from "react-native";
-import { useState, useCallback, useContext } from "react";
+import { useState, useCallback, useContext, useEffect } from "react";
 import AssignmentResponseItem from "../../components/AssignmentResponseItem";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useGetAssignmentResponses } from "../../hooks/useGetAssignmentResponses";
@@ -20,14 +20,14 @@ const ViewResponses = ({route}) => {
   }, [refetch]);
 
   // Refetch when gaining focus
-  useFocusEffect(
-    useCallback(() => {
-      const fetchData = async () => {
-        await refetch(assignment.id);
-      };
-      fetchData();
-    }, [refetch])
-  );
+  //useFocusEffect(
+  //  useCallback(() => {
+  //    const fetchData = async () => {
+  //      await refetch(assignment.id);
+  //    };
+  //    fetchData();
+  //  }, [refetch])
+  //);
 
   if (loading && !refreshing) {
     return (

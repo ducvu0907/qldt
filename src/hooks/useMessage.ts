@@ -2,17 +2,16 @@ import { useState, useEffect, useContext, useCallback } from 'react';
 import { RESOURCE_SERVER_URL } from '../types';
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
-import { useSocket } from '../contexts/SocketContext';
 
 // for displaying in the list of conversations
 export interface ConversationItemData {
   id: string;
-  Partner: {
+  partner: {
     id: string;
-    username: string;
+    name: string;
     avatar: string;
   },
-  LastMessage: {
+  last_message: {
     message: string;
     created_at: string;
     unread: string; // '1' or '0'
@@ -40,7 +39,7 @@ const useGetListConversation = (index: string, count: string) => {
   const fetchConversations = useCallback(async () => {
     try {
       setLoading(true);
-      console.log("fetching use conversations");
+      console.log("fetching user conversations");
 
       const res = await fetch(`${RESOURCE_SERVER_URL}/get_list_conversation`, {
         method: 'POST',
@@ -135,50 +134,6 @@ const useGetConversation = (index: string, count: string, conversation_id: strin
   return { conversation, loading, refetch: fetchConversation };
 };
 
-const useSendMessage = () => {
-  const { sendMessage, isConnected } = useSocket();
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const sendMessageToPartner = async (receiverId: string, content: string) => {
-    if (!receiverId || !content) {
-      Toast.show({
-        type: "error",
-        text1: "Message content is empty or receiver ID is missing",
-      });
-      return;
-    }
-
-    if (!isConnected) {
-      Toast.show({
-        type: "error",
-        text1: "Not connected to the WebSocket server",
-      });
-      return;
-    }
-
-    try {
-      setLoading(true);
-      sendMessage(receiverId, content);
-      Toast.show({
-        type: "success",
-        text1: "Message sent successfully",
-      });
-    } catch (error) {
-      Toast.show({
-        type: "error",
-        text1: `Error sending message: ${error.message}`,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return {
-    sendMessageToPartner,
-    loading,
-  };
-};
-
 const useDeleteMessage = (message_id: string, partner_id: string) => {
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
@@ -231,6 +186,5 @@ const useDeleteMessage = (message_id: string, partner_id: string) => {
 export {
   useGetListConversation,
   useGetConversation,
-  useDeleteMessage,
-  useSendMessage
+  useDeleteMessage
 };

@@ -2,14 +2,16 @@ import { FlatList, Text, View, ActivityIndicator, TouchableOpacity } from "react
 import { useState, useCallback, useContext, useEffect } from "react";
 import AssignmentItem from "../../components/AssignmentItem";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { useGetAssignments } from "../../hooks/useGetAssignments";
+import { useGetAssignments, useGetStudentAssignments } from "../../hooks/useGetAssignments";
 import Topbar from "../../components/Topbar";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from "../../contexts/AuthContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const AssignmentList = () => {
+const AssignmentListStudent = ({route}) => {
   const { role } = useContext(AuthContext);
-  const { assignments, loading, refetch } = useGetAssignments();
+  const {type} = route.params;
+  const { assignments, loading, refetch} = useGetStudentAssignments(type);
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation<any>();
 
@@ -31,7 +33,6 @@ const AssignmentList = () => {
   if (loading && !refreshing) {
     return (
       <View className="flex-1 bg-white">
-        <Topbar title="Assignments" />
         <View className="flex-1 justify-center items-center">
           <ActivityIndicator size="large" color="#6366F1" />
           <Text className="mt-4 text-base text-gray-500 font-medium">Loading assignments...</Text>
@@ -42,8 +43,6 @@ const AssignmentList = () => {
 
   return (
     <View className="flex-1 bg-gray-50">
-      <Topbar title="Assignments" showBack={true} />
-      
       {assignments?.length === 0 ? (
         <View className="flex-1 justify-center items-center px-4">
           <Icon name="folder-open-o" size={48} color="#9CA3AF" />
@@ -63,16 +62,8 @@ const AssignmentList = () => {
         />
       )}
 
-      {role === "LECTURER" && (
-        <TouchableOpacity
-          onPress={() => navigation.navigate("CreateAssignment")}
-          className="absolute bottom-6 right-6 bg-indigo-500 rounded-full w-14 h-14 justify-center items-center shadow-lg"
-        >
-          <Icon name="plus" size={24} color="white" />
-        </TouchableOpacity>
-      )}
     </View>
   );
 };
 
-export default AssignmentList;
+export default AssignmentListStudent;

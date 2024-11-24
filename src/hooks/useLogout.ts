@@ -5,7 +5,7 @@ import Toast from "react-native-toast-message";
 import { AUTH_SERVER_URL } from "../types";
 
 export const useLogout = () => {
-  const { token, setToken, setRole } = useContext(AuthContext);
+  const { token, setToken, setRole, setUserId, setEmail } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
 
   const logout = async () => {
@@ -24,6 +24,8 @@ export const useLogout = () => {
       await SecureStore.deleteItemAsync("access-token");
       setToken(null);
       setRole(null);
+      setUserId(null);
+      setEmail(null);
       Toast.show({
         type: "success",
         text1: data.message

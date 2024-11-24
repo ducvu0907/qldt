@@ -2,7 +2,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import AssignmentList from "../screens/assignment/AssignmentList";
 import CreateAssignment from "../screens/assignment/CreateAssignment";
 import EditAssignment from "../screens/assignment/EditAssignment";
-import SubmitAssignment from "../screens/assignment/SubmitAssignment";
 import AssignmentMenu from "../screens/assignment/AssignmentMenu";
 import ViewResponses from "../screens/assignment/ViewResponses";
 
@@ -14,7 +13,6 @@ const AssignmentStack = () => {
       <Stack.Screen name="AssignmentList" component={AssignmentList} />
       <Stack.Screen name="CreateAssignment" component={CreateAssignment} />
       <Stack.Screen name="EditAssignment" component={EditAssignment} />
-      <Stack.Screen name="SubmitAssignment" component={SubmitAssignment} />
       <Stack.Screen name="AssignmentMenu" component={AssignmentMenu} />
       <Stack.Screen name="ViewResponses" component={ViewResponses} />
     </Stack.Navigator>

@@ -12,6 +12,7 @@ import { formatDate } from '../../helpers';
 import { ClassContext } from '../../contexts/ClassContext';
 import { useGetClassInfo } from '../../hooks/useGetClassInfo';
 import Topbar from '../../components/Topbar';
+import { useGetClasses } from '../../hooks/useGetClasses';
 
 export interface EditClassRequest {
   token: string;
@@ -154,6 +155,7 @@ const EditClass = () => {
         text1: "Class updated successfully",
       });
 
+      refetch();
       navigation.goBack();
 
     } catch (error: any) {

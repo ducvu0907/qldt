@@ -7,6 +7,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { AuthContext } from '../../contexts/AuthContext';
 import * as DocumentPicker from 'expo-document-picker';
 import Topbar from '../../components/Topbar';
+import { useGetMaterialInfo } from '../../hooks/useGetMaterialInfo';
+import { useGetMaterials } from '../../hooks/useGetMaterials';
 
 export interface EditMaterialRequest {
   file?: any;

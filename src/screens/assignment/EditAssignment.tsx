@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../../contexts/AuthContext';
 import * as DocumentPicker from 'expo-document-picker';
 import Topbar from '../../components/Topbar';
+import { useGetAssignments } from '../../hooks/useGetAssignments';
 
 export interface EditAssignmentRequest {
   file?: any;

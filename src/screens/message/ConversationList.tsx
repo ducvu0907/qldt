@@ -1,34 +1,31 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, ActivityIndicator, RefreshControl } from 'react-native';
 import { useGetListConversation, ConversationItemData } from '../../hooks/useMessage';
-import { formatDate } from '../../helpers';
 import { useNavigation } from '@react-navigation/native';
 import Topbar from '../../components/Topbar';
 import { Ionicons } from '@expo/vector-icons';
 
 const ConversationItem = ({ item }: { item: ConversationItemData }) => {
+  console.log(item);
   const navigation = useNavigation<any>();
 
   return (
     <TouchableOpacity 
       className="flex-row items-center p-4 border-b border-gray-100"
-      onPress={() => navigation.navigate('ConversationDetails', { 
-        conversationId: item.id,
-        partnerId: item.Partner.id 
-      })}
+      onPress={() => navigation.navigate('ConversationDetails', { conversationId: item.id })}
     >
       <Image 
-        source={{ uri: item.Partner.avatar || 'https://avatar.iran.liara.run/username' }}
+        source={{ uri: item.partner.avatar || 'https://avatar.iran.liara.run/username' }}
         className="w-12 h-12 rounded-full"
       />
       
       <View className="flex-1 ml-4">
         <View className="flex-row justify-between items-center">
           <Text className="font-semibold text-base text-gray-900">
-            {item.Partner.username}
+            {item.partner.name}
           </Text>
           <Text className="text-sm text-gray-500">
-            {formatDate(new Date(item.LastMessage.created_at))}
+            {item.last_message.created_at}
           </Text>
         </View>
         
@@ -36,12 +33,12 @@ const ConversationItem = ({ item }: { item: ConversationItemData }) => {
           <Text 
             numberOfLines={1} 
             className={`flex-1 text-sm ${
-              item.LastMessage.unread === '1' ? 'text-gray-900 font-semibold' : 'text-gray-500'
+              item.last_message.unread === '1' ? 'text-gray-900 font-semibold' : 'text-gray-500'
             }`}
           >
-            {item.LastMessage.message}
+            {item.last_message.message}
           </Text>
-          {item.LastMessage.unread === '1' && (
+          {item.last_message.unread === '1' && (
             <View className="w-2 h-2 rounded-full bg-blue-500 ml-2" />
           )}
         </View>
@@ -90,7 +87,7 @@ const ConversationList = () => {
       
       {/* Floating Action Button for New Message */}
       <TouchableOpacity
-        onPress={() => navigation.navigate('NewMessage')}
+        onPress={() => navigation.navigate('CreateMessage')}
         className="absolute bottom-4 right-4 bg-blue-500 w-14 h-14 rounded-full justify-center items-center shadow-lg"
       >
         <Ionicons name="create" size={24} color="white" />

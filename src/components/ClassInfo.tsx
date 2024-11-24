@@ -3,6 +3,7 @@ import { Text, View, ScrollView, ActivityIndicator } from "react-native";
 import { ClassContext } from "../contexts/ClassContext";
 import { useGetClassInfo } from "../hooks/useGetClassInfo";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { AuthContext } from "../contexts/AuthContext";
 
 export interface StudentAccount {
   account_id?: string;
@@ -61,6 +62,7 @@ const StatusBadge = ({ status }: { status?: string }) => {
 };
 
 const ClassInfo = () => {
+  const {role} = useContext(AuthContext);
   const { selectedClassId } = useContext(ClassContext);
   const { classInfo, loading } = useGetClassInfo(selectedClassId);
 
@@ -115,11 +117,12 @@ const ClassInfo = () => {
           value={classInfo?.schedule}
         />
         
-        <InfoItem 
+        {role === "LECTURER" && <InfoItem 
           icon="person-outline" 
           label="Lecturer" 
           value={classInfo?.lecturer_name ? `${classInfo.lecturer_name}` : 'Not assigned'}
         />
+        }
         
         <InfoItem 
           icon="calendar-outline" 
@@ -133,11 +136,13 @@ const ClassInfo = () => {
           value={formatDate(classInfo?.end_date)}
         />
         
-        <InfoItem 
+        {role === "LECTURER" && <InfoItem 
           icon="people-outline" 
           label="Students Enrolled" 
           value={classInfo?.student_count?.toString()}
         />
+        }
+
       </View>
 
       {/* Additional Information */}

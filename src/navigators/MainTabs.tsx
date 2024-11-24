@@ -8,6 +8,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View, Text } from 'react-native';
 import { useGetUnreadNotificationCount } from '../hooks/useNotification';
 import { useGetListConversation } from "../hooks/useMessage";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+import { AssignmentStudentStack } from "./AssignmentStudentStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -46,6 +49,8 @@ const MessageIcon = ({ color, size }: { color: string; size: number }) => {
 };
 
 const MainTabs = () => {
+  const {role} = useContext(AuthContext);
+
   return (
     <Tab.Navigator 
       screenOptions={{ 
@@ -90,6 +95,17 @@ const MainTabs = () => {
           ),
         }}
       />
+      {role === "STUDENT" &&
+        <Tab.Screen
+          name="Assignment"
+          component={AssignmentStudentStack}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="document" size={size} color={color} />
+            ),
+          }}
+        />
+      }
       <Tab.Screen
         name="Setting"
         component={SettingStack}

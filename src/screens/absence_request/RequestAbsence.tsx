@@ -67,7 +67,7 @@ const RequestAbsence = () => {
       form.append("classId", formData.classId);
       form.append("date", formatDate(formData.date));
       form.append("reason", formData.reason);
-      form.append("title", formData.title); // append title
+      form.append("title", formData.title);
       if (formData.file) {
         form.append("file", {
           uri: formData.file.uri,
@@ -116,19 +116,20 @@ const RequestAbsence = () => {
       <Topbar title="Request Absence" showBack={true} />
       
       <View className="flex-1 px-6 py-8 space-y-8">
-        {/* Title Field */}
+        {/* Reason for Absence */}
         <View className="space-y-2">
           <Text className="text-lg font-semibold text-slate-700 dark:text-slate-200">
-            Title of Absence
+            Title
           </Text>
           <TextInput
             placeholder="Title of the absence request"
             placeholderTextColor="#94a3b8"
             value={formData.title}
             onChangeText={(value) => handleChangeInput('title', value)}
-            className="bg-white dark:bg-slate-800 rounded-xl p-4 
-                     text-base text-slate-700 dark:text-slate-200
-                     border border-slate-200 dark:border-slate-700"
+            className="bg-white dark:bg-slate-800 rounded-xl p-4 text-base text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700"
+            multiline
+            numberOfLines={4}
+            textAlignVertical="top"
           />
         </View>
 
@@ -139,9 +140,7 @@ const RequestAbsence = () => {
           </Text>
           <TouchableOpacity
             onPress={handlePickingFile}
-            className="border-2 border-dashed border-slate-300 dark:border-slate-600 
-                     bg-white dark:bg-slate-800 rounded-xl p-6 
-                     items-center justify-center min-h-[120px]"
+            className="border-2 border-dashed border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded-xl p-6"
           >
             {formData.file ? (
               <View className="items-center space-y-2">
@@ -202,9 +201,7 @@ const RequestAbsence = () => {
             placeholderTextColor="#94a3b8"
             value={formData.reason}
             onChangeText={(value) => handleChangeInput('reason', value)}
-            className="bg-white dark:bg-slate-800 rounded-xl p-4 
-                     text-base text-slate-700 dark:text-slate-200
-                     border border-slate-200 dark:border-slate-700"
+            className="bg-white dark:bg-slate-800 rounded-xl p-4 text-base text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700"
             multiline
             numberOfLines={4}
             textAlignVertical="top"
