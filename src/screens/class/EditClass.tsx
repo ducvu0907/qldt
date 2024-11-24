@@ -11,6 +11,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { formatDate } from '../../helpers';
 import { ClassContext } from '../../contexts/ClassContext';
 import { useGetClassInfo } from '../../hooks/useGetClassInfo';
+import Topbar from '../../components/Topbar';
 
 export interface EditClassRequest {
   token: string;
@@ -199,140 +200,140 @@ const EditClass = () => {
       Keyboard.dismiss();
       setOpen(false);
     }}>
-      <View className="w-full h-full bg-red-700 justify-around">
-        <SafeAreaView style={{ flex: 1 }}>
-          <View className="flex items-center mt-22 mb-10">
-            <Logo />
-          </View>
+      <View className="w-full h-full bg-gray-50">
+        <Topbar title='Edit Class' showBack={true}/>
+        <SafeAreaView className="flex-1">
+          <View className="px-6 py-4">
+            <View className="space-y-4">
+              {/* Class ID Field */}
+              <View>
+                <Text className="text-xl font-medium text-gray-700 mb-1">Class ID</Text>
+                <TextInput
+                  onFocus={() => setOpen(false)}
+                  value={formData.class_id || ""}
+                  onChangeText={(value) => handleChangeInput('class_id', value)}
+                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900"
+                  placeholderTextColor="#9ca3af"
+                />
+              </View>
 
-          <View className="w-full justify-center items-center px-8">
-            <Text className="text-white text-4xl mb-12">Edit Class</Text>
-            <View className="w-full space-y-4 mb-6">
-              <TextInput
-                onFocus={() => setOpen(false)}
-                placeholder="Class Id"
-                value={formData.class_id || ""}
-                onChangeText={(value) => handleChangeInput('class_id', value)}
-                placeholderTextColor="#ffffff80"
-                className="border-2 border-white text-2xl rounded-lg p-3 text-white w-full mb-4"
-              />
+              {/* Class Name Field */}
+              <View>
+                <Text className="text-xl font-medium text-gray-700 mb-1">Class Name</Text>
+                <TextInput
+                  onFocus={() => setOpen(false)}
+                  value={formData.class_name || ""}
+                  onChangeText={(value) => handleChangeInput('class_name', value)}
+                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900"
+                  placeholderTextColor="#9ca3af"
+                />
+              </View>
 
-              <TextInput
-                onFocus={() => setOpen(false)}
-                placeholder="Class Name"
-                value={formData.class_name || ""}
-                onChangeText={(value) => handleChangeInput('class_name', value)}
-                placeholderTextColor="#ffffff80"
-                className="border-2 border-white text-2xl rounded-lg p-3 text-white w-full mb-4"
-              />
-
-              <DropDownPicker
-                open={open}
-                value={formData.status || ""}
-                items={[
-                  { label: "Complete", value: "COMPLETE", labelStyle:{color: "#000"} },
-                  { label: "Active", value: "ACTIVE", labelStyle: {color: "#000"}},
-                  { label: "Upcoming", value: "UPCOMING", labelStyle: {color: "#000"}},
-                ]}
-                onOpen={() => Keyboard.dismiss()}
-                setOpen={setOpen}
-                setValue={(callback) => {
-                  setFormData((prevState) => ({
-                    ...prevState,
-                    status: callback(prevState.status),
-                  }));
-                }}
-                placeholder="Status"
-                style={{
-                  height: 55,
-                  backgroundColor: 'transparent',
-                  borderColor: 'rgba(255, 255, 255, 1.0)',
-                  borderWidth: 2,
-                  marginBottom: 12,
-                }}
-                textStyle={{
-                  color: 'white',
-                  fontSize: 24
-                }}
-                placeholderStyle={{
-                  color: '#ffffff80'
-                }}
-                dropDownContainerStyle={{
-                  backgroundColor: '#ffffff',
-                  borderColor: 'rgba(255, 255, 255, 0.3)',
-                }}
-                theme="DARK"
-              />
-
-              <View className="flex-row items-center border-2 border-white rounded-lg py-2 w-full mb-4">
-                <Text className="text-white text-2xl pl-3">Start Date:</Text>
-                <DateTimePicker
-                  value={formData.start_date}
-                  mode="date"
-                  is24Hour={true}
-                  display="default"
-                  onChange={(event, date) => {
-                    if (date) {
-                      setFormData((prevState) => ({
-                        ...prevState,
-                        start_date: date,
-                      }));
-                    }
+              {/* Status Dropdown */}
+              <View>
+                <Text className="text-2xl font-medium text-gray-700 mb-1">Status</Text>
+                <DropDownPicker
+                  open={open}
+                  value={formData.status || ""}
+                  items={[
+                    { label: "Complete", value: "COMPLETE" },
+                    { label: "Active", value: "ACTIVE" },
+                    { label: "Upcoming", value: "UPCOMING" },
+                  ]}
+                  onOpen={() => Keyboard.dismiss()}
+                  setOpen={setOpen}
+                  setValue={(callback) => {
+                    setFormData((prevState) => ({
+                      ...prevState,
+                      status: callback(prevState.status),
+                    }));
                   }}
-                  themeVariant='dark'
                   style={{
-                    flex: 1,
-                    marginRight: 15,
+                    backgroundColor: 'white',
+                    borderColor: '#d1d5db',
+                    height: 48,
+                    marginBottom: 4
+                  }}
+                  textStyle={{
+                    fontSize: 16,
+                    color: '#111827'
+                  }}
+                  dropDownContainerStyle={{
+                    backgroundColor: 'white',
+                    borderColor: '#d1d5db',
                   }}
                 />
               </View>
 
-              <View className="flex-row items-center border-2 border-white rounded-lg py-2 w-full mb-4">
-                <Text className="text-white text-2xl pl-3">End Date:</Text>
-                <DateTimePicker
-                  value={formData.end_date}
-                  mode="date"
-                  is24Hour={true}
-                  display="default"
-                  onChange={(event, date) => {
-                    if (date) {
-                      setFormData((prevState) => ({
-                        ...prevState,
-                        end_date: date,
-                      }));
-                    }
-                  }}
-                  themeVariant='dark'
-                  style={{
-                    flex: 1,
-                    marginRight: 15,
-                  }}
-                />
+              {/* Date Fields */}
+              <View className="flex-row gap-4">
+                <View className="flex-1">
+                  <Text className="text-xl font-medium text-gray-700 mb-1">Start Date</Text>
+                  <View className="bg-white border border-gray-300 rounded-lg px-4 py-3">
+                    <DateTimePicker
+                      value={formData.start_date}
+                      mode="date"
+                      display="default"
+                      onChange={(event, date) => {
+                        if (date) {
+                          setFormData((prevState) => ({
+                            ...prevState,
+                            start_date: date,
+                          }));
+                        }
+                      }}
+                      style={{ height: 24 }}
+                    />
+                  </View>
+                </View>
+
+                <View className="flex-1">
+                  <Text className="text-xl font-medium text-gray-700 mb-1">End Date</Text>
+                  <View className="items-center bg-white border border-gray-300 rounded-lg px-4 py-3">
+                    <DateTimePicker
+                      value={formData.end_date}
+                      mode="date"
+                      display="default"
+                      onChange={(event, date) => {
+                        if (date) {
+                          setFormData((prevState) => ({
+                            ...prevState,
+                            end_date: date,
+                          }));
+                        }
+                      }}
+                      style={{ height: 24 }}
+                    />
+                  </View>
+                </View>
               </View>
-            </View>
 
-            <View className={`w-full items-center`}>
-              <View className='w-full flex-row justify-evenly'>
-              <TouchableOpacity
-                className="bg-red-800 w-2/5 py-4 rounded-full items-center mb-5"
-                onPress={showDeleteConfirmation}
-                disabled={loading}
-              >
-                {!loading ? <Text className="text-white text-2xl font-bold text-center">Delete Class</Text> : <ActivityIndicator size={20} />}
-              </TouchableOpacity>
+              {/* Action Buttons */}
+              <View className="flex-row gap-4 mt-8">
+                <TouchableOpacity
+                  className="flex-1 bg-red-50 py-3 rounded-lg border border-red-200"
+                  onPress={showDeleteConfirmation}
+                  disabled={loading}
+                >
+                  {!loading ? (
+                    <Text className="text-xl text-red-600 text-center font-medium">Delete Class</Text>
+                  ) : (
+                    <ActivityIndicator size="small" color="#dc2626" />
+                  )}
+                </TouchableOpacity>
 
-              <TouchableOpacity
-                className="bg-white w-2/5 py-4 rounded-full items-center mb-5"
-                onPress={showEditConfirmation}
-                disabled={loading}
-              >
-                {!loading ? <Text className="text-blue-500 text-2xl font-bold text-center">Update Class</Text> : <ActivityIndicator size={20} />}
-              </TouchableOpacity>
+                <TouchableOpacity
+                  className="flex-1 bg-blue-600 py-3 rounded-lg"
+                  onPress={showEditConfirmation}
+                  disabled={loading}
+                >
+                  {!loading ? (
+                    <Text className="text-xl text-white text-center font-medium">Update Class</Text>
+                  ) : (
+                    <ActivityIndicator size="small" color="white" />
+                  )}
+                </TouchableOpacity>
               </View>
-
-              <TouchableOpacity className="items-center" onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back-outline" size={30} color="white" />
-              </TouchableOpacity>
             </View>
           </View>
         </SafeAreaView>

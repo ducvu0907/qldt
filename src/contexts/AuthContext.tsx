@@ -56,7 +56,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
           setToken(null);
         }
 
-        console.log(data.data);
+        console.log("user info: ", data.data);
 
         setRole(data.data.role);
         setUserId(data.data.id);

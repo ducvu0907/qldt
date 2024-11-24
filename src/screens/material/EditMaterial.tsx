@@ -1,12 +1,12 @@
 import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView, ActivityIndicator } from 'react-native';
-import Logo from "../../components/Logo";
 import { useContext, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { RESOURCE_SERVER_URL } from '../../types';
-import Ionicons from "react-native-vector-icons/Ionicons";
+import { MaterialIcons } from '@expo/vector-icons';
 import { AuthContext } from '../../contexts/AuthContext';
 import * as DocumentPicker from 'expo-document-picker';
+import Topbar from '../../components/Topbar';
 
 export interface EditMaterialRequest {
   file?: any;
@@ -15,10 +15,10 @@ export interface EditMaterialRequest {
   description?: string;
   materialType: string;
   token: string;
-};
+}
 
 const EditMaterial = ({ route }) => {
-  const {material} = route.params;
+  const { material } = route.params;
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<EditMaterialRequest>({
@@ -40,13 +40,30 @@ const EditMaterial = ({ route }) => {
   };
 
   const handlePickingFile = async () => {
-    const file = await DocumentPicker.getDocumentAsync();
-    if (file.canceled) {
-      return;
+    try {
+      const file = await DocumentPicker.getDocumentAsync();
+      if (file.canceled) {
+        return;
+      }
+      handleChangeInput("file", file.assets[0]);
+      handleChangeInput("materialType", file.assets[0].mimeType);
+      handleChangeInput("title", file.assets[0].name);
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Error selecting file",
+        text2: "Please try again"
+      });
     }
-    handleChangeInput("file", file.assets[0]);
-    handleChangeInput("materialType", file.assets[0].mimeType);
-    handleChangeInput("title", file.assets[0].name);
+  };
+
+  const getFileTypeIcon = (mimeType: string) => {
+    if (!mimeType) return 'insert-drive-file';
+    if (mimeType.includes('pdf')) return 'picture-as-pdf';
+    if (mimeType.includes('document')) return 'article';
+    if (mimeType.includes('sheet')) return 'table-chart';
+    if (mimeType.includes('presentation')) return 'slideshow';
+    return 'insert-drive-file';
   };
 
   const handleEditMaterial = async () => {
@@ -54,7 +71,7 @@ const EditMaterial = ({ route }) => {
       if (!formData.file && !formData.description) {
         Toast.show({
           type: "error",
-          text1: "No fields given"
+          text1: "Please provide a file or description"
         });
         return;
       }
@@ -90,10 +107,8 @@ const EditMaterial = ({ route }) => {
       const data = await res.json();
 
       if (data.code !== "1000") {
-        throw new Error(data.message || "Unknown error occurred while editing material");
+        throw new Error(data.message || "Error updating material");
       }
-
-      console.log(data);
 
       Toast.show({
         type: "success",
@@ -113,55 +128,104 @@ const EditMaterial = ({ route }) => {
   };
 
   return (
-    <Pressable onPress={() => {
-      Keyboard.dismiss();
-    }}>
-      <View className="w-full h-full bg-red-700 justify-around">
-        <SafeAreaView style={{ flex: 1 }}>
-          <View className="flex items-center mt-22 mb-10">
-            <Logo />
+    <Pressable 
+      onPress={Keyboard.dismiss}
+      className="flex-1 bg-slate-50 dark:bg-slate-900"
+    >
+      <Topbar title="Edit Material"/>
+
+      <SafeAreaView className="flex-1 px-4 py-6">
+        <View className="space-y-6">
+          {/* File Selection Section */}
+          <View className="space-y-2">
+            <Text className="text-sm font-medium text-slate-600 dark:text-slate-400 ml-1">
+              Material File
+            </Text>
+            <TouchableOpacity
+              onPress={handlePickingFile}
+              className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 
+                        dark:border-slate-700 overflow-hidden active:bg-slate-50 dark:active:bg-slate-700"
+            >
+              <View className="p-4 flex-row items-center space-x-3">
+                <View className="bg-indigo-100 dark:bg-slate-700 rounded-lg p-2">
+                  <MaterialIcons 
+                    name={formData.file ? getFileTypeIcon(formData.file.mimeType) : 'upload-file'} 
+                    size={24} 
+                    color="#6366f1"
+                  />
+                </View>
+                <View className="flex-1">
+                  <Text className="text-base font-medium text-slate-900 dark:text-white" numberOfLines={1}>
+                    {formData.file ? formData.file.name : "Select a file"}
+                  </Text>
+                  {formData.file && (
+                    <Text className="text-sm text-slate-500 dark:text-slate-400">
+                      {(formData.file.size / 1024 / 1024).toFixed(2)} MB
+                    </Text>
+                  )}
+                </View>
+                <MaterialIcons 
+                  name={formData.file ? "edit" : "add"} 
+                  size={20} 
+                  color="#6366f1" 
+                />
+              </View>
+            </TouchableOpacity>
           </View>
 
-          <View className="w-full justify-center items-center px-8">
-            <Text className="text-white text-4xl mb-12">Edit Material</Text>
-            <View className="w-full space-y-4 mb-6">
-              <TouchableOpacity
-                onPress={handlePickingFile}
-                className="h-[60px] bg-white p-3 rounded-lg mb-4 justify-center"
-              >
-                <Text className="text-black text-2xl text-center">
-                  {formData.file ? formData.file.name : "Select File"}
-                </Text>
-              </TouchableOpacity>
-
+          {/* Description Section */}
+          <View className="space-y-2">
+            <Text className="text-sm font-medium text-slate-600 dark:text-slate-400 ml-1">
+              Description
+            </Text>
+            <View className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 
+                          dark:border-slate-700 overflow-hidden">
               <TextInput
-                placeholder="Description"
-                value={formData.description || ""}
+                placeholder="Enter material description..."
+                value={formData.description}
                 onChangeText={(value) => handleChangeInput('description', value)}
-                placeholderTextColor="#ffffff80"
-                className="border-2 border-white text-2xl rounded-lg p-3 text-white w-full mb-4"
+                placeholderTextColor="#94a3b8"
+                className="text-base text-slate-900 dark:text-white p-4"
                 multiline
-                numberOfLines={3}
+                numberOfLines={4}
+                textAlignVertical="top"
               />
-
-            </View>
-
-            <View className={`w-full items-center`}>
-              <TouchableOpacity
-                className="bg-white w-2/5 py-4 rounded-full items-center mb-5"
-                onPress={handleEditMaterial}
-                disabled={loading}
-              >
-                {!loading ? <Text className="text-blue-500 text-3xl font-bold text-center">Confirm</Text> : <ActivityIndicator size={20} />}
-              </TouchableOpacity>
-
-              <TouchableOpacity className="items-center" onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back-outline" size={30} color="white" />
-              </TouchableOpacity>
             </View>
           </View>
-        </SafeAreaView>
-      </View>
+        </View>
+
+        {/* Action Buttons */}
+        <View className="mt-auto space-y-4">
+          <TouchableOpacity
+            onPress={handleEditMaterial}
+            disabled={loading}
+            className="bg-indigo-500 rounded-lg p-4 flex-row items-center justify-center space-x-2
+                      active:bg-indigo-600 disabled:opacity-50"
+          >
+            {loading ? (
+              <ActivityIndicator color="white" />
+            ) : (
+              <>
+                <MaterialIcons name="save" size={20} color="white" />
+                <Text className="text-white font-semibold text-base">
+                  Save Changes
+                </Text>
+              </>
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            className="bg-slate-200 dark:bg-slate-800 rounded-lg p-4 flex-row items-center justify-center 
+                      space-x-2 active:bg-slate-300 dark:active:bg-slate-700"
+          >
+            <MaterialIcons name="close" size={20} color="#6366f1" />
+            <Text className="text-indigo-500 font-semibold text-base">
+              Cancel
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     </Pressable>
   );
 };

@@ -1,4 +1,13 @@
-import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView, ActivityIndicator } from 'react-native';
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  Pressable, 
+  Keyboard, 
+  SafeAreaView, 
+  ActivityIndicator 
+} from 'react-native';
 import Logo from "../../components/Logo";
 import { useContext, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -7,6 +16,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { AuthContext } from '../../contexts/AuthContext';
 import { RESOURCE_SERVER_URL } from '../../types';
 import { ClassContext } from '../../contexts/ClassContext';
+import Topbar from '../../components/Topbar';
 
 export interface AddStudentRequest {
   token: string;
@@ -16,7 +26,7 @@ export interface AddStudentRequest {
 
 const AddStudent = () => {
   const { token } = useContext(AuthContext);
-  const {selectedClassId} = useContext(ClassContext);
+  const { selectedClassId } = useContext(ClassContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<AddStudentRequest>({
     token: token || "",
@@ -37,36 +47,33 @@ const AddStudent = () => {
       if (!formData.account_id || !formData.class_id || !formData.token) {
         Toast.show({
           type: "error",
-          text1: "All fields are required",
+          text1: "Please enter a student ID",
         });
-
         return;
       }
+      
       setLoading(true);
-
-      const requestData: AddStudentRequest = {
-        token: formData.token,
-        class_id: formData.class_id,
-        account_id: formData.account_id,
-      };
-
       const res = await fetch(`${RESOURCE_SERVER_URL}/add_student`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestData),
+        body: JSON.stringify({
+          token: formData.token,
+          class_id: formData.class_id,
+          account_id: formData.account_id,
+        }),
       });
 
       const data = await res.json();
 
       if (data.meta.code !== "1000") {
-        throw new Error(data.data || "Unknown error occurred while adding student");
+        throw new Error(data.data || "Unable to add student. Please try again.");
       }
 
       Toast.show({
         type: "success",
-        text1: "Add student successfully"
+        text1: "Student added successfully"
       });
 
       navigation.goBack();
@@ -82,43 +89,51 @@ const AddStudent = () => {
   };
 
   return (
-    <Pressable onPress={() => {
-      Keyboard.dismiss();
-    }}>
-      <View className="w-full h-full bg-red-700 justify-around">
-        <SafeAreaView style={{ flex: 1 }}>
-          <View className="flex items-center mt-22 mb-10">
-            <Logo />
-          </View>
+    <Pressable 
+      onPress={Keyboard.dismiss}
+      className="flex-1"
+    >
+      <View className="flex-1 bg-slate-50">
+        <Topbar title='Add Student' showBack={true}/>
+          <View className="flex-1 px-6 pt-12">
+            <Text className="text-slate-800 text-2xl font-semibold mb-2">
+              Add Student
+            </Text>
+            <Text className="text-slate-500 mb-8">
+              Enter the student's ID number to add them to your class
+            </Text>
 
-          <View className="w-full justify-center items-center px-8">
-            <Text className="text-white text-4xl mb-12">Add a Student</Text>
-            <View className="w-full space-y-4 mb-6">
-              <TextInput
-                placeholder="Student ID"
-                value={formData.account_id}
-                onChangeText={(value) => handleChangeInput('account_id', value)}
-                placeholderTextColor="#ffffff80"
-                keyboardType="numeric"
-                className="border-2 border-white text-2xl rounded-lg p-3 text-white w-full mb-4"
-              />
-            </View>
+            <View className="space-y-4">
+              <View>
+                <TextInput
+                  placeholder="Student ID"
+                  value={formData.account_id}
+                  onChangeText={(value) => handleChangeInput('account_id', value)}
+                  placeholderTextColor="#94a3b8"
+                  keyboardType="numeric"
+                  className="bg-white border border-slate-200 rounded-lg px-4 py-3 text-slate-800 text-base"
+                />
+              </View>
 
-            <View className={`w-full items-center`}>
               <TouchableOpacity
-                className="bg-white w-2/5 py-4 rounded-full items-center mb-5"
+                className={`mt-6 rounded-lg py-3 px-4 ${loading ? 'bg-slate-300' : 'bg-blue-600'}`}
                 onPress={handleAddStudent}
                 disabled={loading}
               >
-                {!loading ? <Text className="text-blue-500 text-3xl font-bold text-center">Add</Text> : <ActivityIndicator />}
-              </TouchableOpacity>
-
-              <TouchableOpacity className="items-center" onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back-outline" size={30} color="white" />
+                <View className="flex-row justify-center items-center space-x-2">
+                  {loading ? (
+                    <ActivityIndicator color="#ffffff" />
+                  ) : (
+                    <>
+                      <Text className="text-white font-semibold text-base">
+                        Add Student
+                      </Text>
+                    </>
+                  )}
+                </View>
               </TouchableOpacity>
             </View>
           </View>
-        </SafeAreaView>
       </View>
     </Pressable>
   );

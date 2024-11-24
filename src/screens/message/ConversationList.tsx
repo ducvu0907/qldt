@@ -4,6 +4,7 @@ import { useGetListConversation, ConversationItemData } from '../../hooks/useMes
 import { formatDate } from '../../helpers';
 import { useNavigation } from '@react-navigation/native';
 import Topbar from '../../components/Topbar';
+import { Ionicons } from '@expo/vector-icons';
 
 const ConversationItem = ({ item }: { item: ConversationItemData }) => {
   const navigation = useNavigation<any>();
@@ -52,6 +53,7 @@ const ConversationItem = ({ item }: { item: ConversationItemData }) => {
 const ConversationList = () => {
   const { conversations, loading, refetch } = useGetListConversation('0', '20');
   const [refreshing, setRefreshing] = React.useState(false);
+  const navigation = useNavigation<any>();
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
@@ -85,6 +87,14 @@ const ConversationList = () => {
           </View>
         }
       />
+      
+      {/* Floating Action Button for New Message */}
+      <TouchableOpacity
+        onPress={() => navigation.navigate('NewMessage')}
+        className="absolute bottom-4 right-4 bg-blue-500 w-14 h-14 rounded-full justify-center items-center shadow-lg"
+      >
+        <Ionicons name="create" size={24} color="white" />
+      </TouchableOpacity>
     </View>
   );
 };

@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from "../../contexts/AuthContext";
 
 const AssignmentList = () => {
-  const {role} = useContext(AuthContext);
+  const { role } = useContext(AuthContext);
   const { assignments, loading, refetch } = useGetAssignments();
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation<any>();
@@ -19,7 +19,6 @@ const AssignmentList = () => {
     setRefreshing(false);
   }, [refetch]);
 
-  // refetch when gaining focus
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
@@ -31,35 +30,47 @@ const AssignmentList = () => {
 
   if (loading && !refreshing) {
     return (
-      <View className="flex justify-center items-center bg-gray-100">
-      <Topbar title="Assignments" showBack={true} />
-        <ActivityIndicator size="large" color="#4B5563" />
-        <Text className="mt-4 text-xl text-gray-600">Loading...</Text>
+      <View className="flex-1 bg-white">
+        <Topbar title="Assignments" showBack={true} />
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" color="#6366F1" />
+          <Text className="mt-4 text-base text-gray-500 font-medium">Loading assignments...</Text>
+        </View>
       </View>
     );
   }
 
   return (
-    <View className="flex-1 bg-gray-100">
+    <View className="flex-1 bg-gray-50">
       <Topbar title="Assignments" showBack={true} />
-      {assignments?.length !== 0 ? (
-        <FlatList
-        data={assignments}
-        renderItem={({ item }) => <AssignmentItem assignment={item} />}
-        keyExtractor={(item) => item.id.toString()}
-        onRefresh={onRefresh}
-        refreshing={refreshing}
-      />
+      
+      {assignments?.length === 0 ? (
+        <View className="flex-1 justify-center items-center px-4">
+          <Icon name="folder-open-o" size={48} color="#9CA3AF" />
+          <Text className="mt-4 text-base text-gray-500 text-center">
+            No assignments available yet
+          </Text>
+        </View>
       ) : (
-        <Text className="mt-4 text-xl text-center text-gray-600">No assignments</Text>
+        <FlatList
+          data={assignments}
+          renderItem={({ item }) => <AssignmentItem assignment={item} />}
+          keyExtractor={(item) => item.id.toString()}
+          onRefresh={onRefresh}
+          refreshing={refreshing}
+          contentContainerClassName="px-4 py-2"
+          ItemSeparatorComponent={() => <View className="h-2" />}
+        />
       )}
-       {role === "LECTURER" && <TouchableOpacity
-        onPress={() => navigation.navigate("CreateAssignment")}
-        className="absolute bottom-5 right-5 bg-blue-500 rounded-full p-4 shadow-lg"
-      >
-        <Text className="text-white text-xl">New Assignment</Text>
-      </TouchableOpacity>
-      }
+
+      {role === "LECTURER" && (
+        <TouchableOpacity
+          onPress={() => navigation.navigate("CreateAssignment")}
+          className="absolute bottom-6 right-6 bg-indigo-500 rounded-full w-14 h-14 justify-center items-center shadow-lg"
+        >
+          <Icon name="plus" size={24} color="white" />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

@@ -1,5 +1,6 @@
-import { Text, TouchableOpacity, View, Alert } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export interface AssignmentItemData {
   id: number;
@@ -11,56 +12,61 @@ export interface AssignmentItemData {
   class_id: string;
 }
 
-export interface AssignmentDeleteRequest {
-  token: string;
-  survey_id: string;
-}
-
 interface Props {
   assignment: AssignmentItemData;
 }
 
 const AssignmentItem: React.FC<Props> = ({ assignment }) => {
   const navigation = useNavigation<any>();
+  const isOverdue = new Date(assignment.deadline) < new Date();
+
+  const formatDate = (date: Date) => {
+    return new Date(date).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
 
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("AssignmentMenu", {assignment})} className="w-full p-5 bg-gray-700 rounded-xl shadow-xl my-2.5">
-      <View className="space-y-3">
-        <View className="flex-row justify-between items-center">
-          <Text className="text-2xl font-bold text-white">
+    <TouchableOpacity
+      onPress={() => navigation.navigate("AssignmentMenu", { assignment })}
+      className="bg-white rounded-lg shadow-sm border border-gray-400 overflow-hidden"
+    >
+      <View className="p-4 space-y-3">
+        <View className="flex-row justify-between items-start">
+          <Text className="text-lg font-semibold text-gray-800 flex-1 mr-2">
             {assignment.title}
           </Text>
+          {assignment.file_url && (
+            <Icon name="paperclip" size={16} color="#6B7280" />
+          )}
         </View>
 
-        <View className="flex-row justify-between items-center">
-          <View className="bg-gray-600 px-3 py-1.5 rounded-full">
-            <Text className="text-sm text-white font-medium">
-              Due: {new Date(assignment.deadline).toLocaleDateString()}
+        <Text 
+          className="text-gray-600 text-sm" 
+          numberOfLines={2}
+        >
+          {assignment.description}
+        </Text>
+
+        <View className="flex-row justify-between items-center pt-2">
+          <View className="flex-row items-center space-x-2">
+            <Icon name="calendar" size={14} color="#6B7280" />
+            <Text className={`ml-2 text-sm ${isOverdue ? 'text-red-500' : 'text-gray-600'}`}>
+              Due {formatDate(assignment.deadline)}
             </Text>
           </View>
-        </View>
-
-        <View className="flex-row justify-between">
-          <Text className="text-sm text-gray-300">
-            Lecturer ID: {assignment.lecturer_id}
-          </Text>
-          <Text className="text-sm text-gray-300">
-            Class ID: {assignment.class_id}
-          </Text>
-          <Text className="text-sm text-gray-300">
-            Assignment ID: {assignment.id}
-          </Text>
-        </View>
-
-        <View className="bg-gray-600/50 p-3 rounded-lg mt-2">
-          <Text className="text-sm text-gray-100 leading-5">
-            {assignment.description}
-          </Text>
+          
+          <View className="flex-row items-center">
+            <Text className="text-xs text-gray-500">
+              Class {assignment.class_id}
+            </Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
   );
-  
 };
 
 export default AssignmentItem;

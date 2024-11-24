@@ -2,7 +2,7 @@ import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, SafeAreaVie
 import { useState, useContext } from 'react';
 import Toast from 'react-native-toast-message';
 import { RESOURCE_SERVER_URL } from '../../types';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -15,7 +15,7 @@ export interface EditAssignmentRequest {
   assignmentId: string;
   deadline?: string;
   description?: string;
-};
+}
 
 const EditAssignment = ({ route }) => {
   const { token } = useContext(AuthContext);
@@ -31,9 +31,7 @@ const EditAssignment = ({ route }) => {
 
   const handlePickingFile = async () => {
     const file = await DocumentPicker.getDocumentAsync();
-    if (file.canceled) {
-      return;
-    }
+    if (file.canceled) return;
     handleChangeInput('file', file.assets[0]);
   };
 
@@ -49,14 +47,14 @@ const EditAssignment = ({ route }) => {
       if (!formData.description && !formData.deadline && !formData.file) {
         Toast.show({
           type: "error",
-          text1: "No fields given",
+          text1: "Please update at least one field",
+          position: "bottom",
         });
         return;
       }
 
       setLoading(true);
 
-      // request form
       const form = new FormData();
       form.append("token", formData.token);
       form.append("assignmentId", formData.assignmentId);
@@ -74,7 +72,6 @@ const EditAssignment = ({ route }) => {
         });
       }
 
-
       const res = await fetch(`${RESOURCE_SERVER_URL}/edit_survey`, {
         method: 'POST',
         headers: {
@@ -83,16 +80,16 @@ const EditAssignment = ({ route }) => {
         body: form,
       });
 
-      console.log(form);
       const data = await res.json();
 
       if (data.meta.code !== "1000") {
-        throw new Error(data.meta.message || 'Unknown error occurred while editing assignment');
+        throw new Error(data.meta.message || 'Failed to update assignment');
       }
 
       Toast.show({
         type: 'success',
         text1: 'Assignment updated successfully',
+        position: "bottom",
       });
 
       navigation.goBack();
@@ -101,6 +98,7 @@ const EditAssignment = ({ route }) => {
       Toast.show({
         type: 'error',
         text1: error.message,
+        position: "bottom",
       });
     } finally {
       setLoading(false);
@@ -108,65 +106,91 @@ const EditAssignment = ({ route }) => {
   };
 
   return (
-    <Pressable
-      onPress={() => {
-        Keyboard.dismiss();
-      }}
-      className="flex-1 bg-red-700 justify-between"
-    >
-      <SafeAreaView className="flex-1">
-      <Topbar title="Edit assignment" showBack={true}/>
-        <View className="px-4 flex-1 justify-center">
-          <TouchableOpacity
-            onPress={handlePickingFile}
-            className="border-2 border-white rounded-lg p-3 w-full mb-4"
-          >
-            <Text className="text-white text-2xl text-center">
-              {formData.file ? formData.file.name : 'Select new file'}
+    <View className="flex-1 bg-gray-50">
+      <Topbar title="Edit Assignment" showBack={true} />
+      
+      <Pressable
+        onPress={Keyboard.dismiss}
+        className="flex-1 px-6 pt-6"
+      >
+        <View className="space-y-6">
+          {/* File Upload Section */}
+          <View className="space-y-2">
+            <Text className="text-gray-600 text-sm font-medium ml-1">
+              Assignment File
             </Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handlePickingFile}
+              className="flex-row items-center justify-center space-x-2 bg-white border border-gray-200 rounded-xl p-4 shadow-sm"
+            >
+              <Ionicons 
+                name={formData.file ? "document" : "cloud-upload-outline"} 
+                size={24} 
+                color="#4F46E5"
+              />
+              <Text className="text-gray-700 text-base">
+                {formData.file ? formData.file.name : 'Select new file'}
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-          <View className="flex-row items-center border-2 border-white rounded-xl py-2 mb-4">
-            <Text className="text-white text-2xl ml-4">Deadline:</Text>
-            <DateTimePicker
-              value={formData.deadline ? new Date(formData.deadline) : new Date()}
-              mode="date"
-              is24Hour={true}
-              display="default"
-              onChange={(event, date) => {
-                if (date) {
-                  handleChangeInput('deadline', date.toISOString());
-                  console.log("date change: ", formData.deadline);
-                }
-              }}
-              themeVariant="dark"
-              style={{ flex: 1, marginRight: 16 }}
+          {/* Deadline Section */}
+          <View className="space-y-2">
+            <Text className="text-gray-600 text-sm font-medium ml-1">
+              Submission Deadline
+            </Text>
+            <View className="flex-row items-center bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+              <Ionicons name="calendar-outline" size={24} color="#4F46E5" />
+              <DateTimePicker
+                value={formData.deadline ? new Date(formData.deadline) : new Date()}
+                mode="date"
+                is24Hour={true}
+                display="default"
+                onChange={(event, date) => {
+                  if (date) {
+                    handleChangeInput('deadline', date.toISOString());
+                  }
+                }}
+                themeVariant="light"
+                style={{ flex: 1, marginLeft: 8 }}
+              />
+            </View>
+          </View>
+
+          {/* Description Section */}
+          <View className="space-y-2">
+            <Text className="text-gray-600 text-sm font-medium ml-1">
+              Description
+            </Text>
+            <TextInput
+              placeholder="Enter assignment description"
+              value={formData.description || ''}
+              onChangeText={(value) => handleChangeInput('description', value)}
+              placeholderTextColor="#9CA3AF"
+              multiline
+              numberOfLines={4}
+              className="bg-white border border-gray-200 rounded-xl p-4 text-base text-gray-700 shadow-sm"
+              style={{ textAlignVertical: 'top' }}
             />
           </View>
 
-          <TextInput
-            placeholder="Description"
-            value={formData.description || ''}
-            onChangeText={(value) => handleChangeInput('description', value)}
-            placeholderTextColor="#ffffff80"
-            className="border-2 border-white rounded-xl p-3 text-white text-2xl mb-4"
-          />
-
+          {/* Submit Button */}
           <TouchableOpacity
             onPress={handleEditAssignment}
             disabled={loading}
-            className="bg-white py-4 rounded-full items-center mb-5 w-2/5 self-center"
+            className={`mt-6 bg-indigo-600 py-4 rounded-xl items-center ${loading ? 'opacity-70' : ''}`}
           >
             {!loading ? (
-              <Text className="text-3xl font-bold text-blue-600">Update</Text>
+              <Text className="text-white text-base font-semibold">
+                Update Assignment
+              </Text>
             ) : (
-              <ActivityIndicator size={20} />
+              <ActivityIndicator color="white" />
             )}
           </TouchableOpacity>
-
         </View>
-      </SafeAreaView>
-    </Pressable>
+      </Pressable>
+    </View>
   );
 };
 

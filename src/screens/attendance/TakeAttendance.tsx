@@ -13,13 +13,13 @@ import { useNavigation } from "@react-navigation/native";
 export interface TakeAttendanceRequest {
   token: string;
   class_id: string;
-  date: string; // yyyy-mm-dd, maybe be default to today
-  attendance_list: string[]; // list of absent students id
+  date: string;
+  attendance_list: string[];
 }
 
 const TakeAttendance = () => {
   const navigation = useNavigation();
-  const [absentIds, setAbsentIds] = useState<string[]>([]); 
+  const [absentIds, setAbsentIds] = useState<string[]>([]);
   const { token } = useContext(AuthContext);
   const { selectedClassId } = useContext(ClassContext);
   const { classInfo, loading: classInfoLoading } = useGetClassInfo(selectedClassId);
@@ -51,8 +51,8 @@ const TakeAttendance = () => {
     try {
       const res = await fetch(`${RESOURCE_SERVER_URL}/take_attendance`, {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(attendanceRequest)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(attendanceRequest),
       });
       const data = await res.json();
 
@@ -60,15 +60,12 @@ const TakeAttendance = () => {
         throw new Error(data.meta.message || "Error while taking attendance");
       }
 
-      console.log("submitting attendance list today", data.data);
-
       Toast.show({
         type: "success",
         text1: "Attendance successfully taken.",
       });
 
       navigation.goBack();
-
     } catch (error: any) {
       Toast.show({
         type: "error",
@@ -80,72 +77,118 @@ const TakeAttendance = () => {
   };
 
   const toggleAbsence = (studentId: string) => {
-    setAbsentIds(prevAbsentIds => {
-      if (prevAbsentIds.includes(studentId)) {
-        return prevAbsentIds.filter(id => id !== studentId); // remove from absent list
-      } else {
-        return [...prevAbsentIds, studentId]; // add to absent list
-      }
-    });
+    setAbsentIds((prevAbsentIds) =>
+      prevAbsentIds.includes(studentId)
+        ? prevAbsentIds.filter((id) => id !== studentId)
+        : [...prevAbsentIds, studentId]
+    );
   };
 
-  return (
-    <View className="flex-1">
-      <Topbar title="Take Attendance" showBack={true} />
-
-      {classInfoLoading ? (
-        <View className="flex-1 justify-center items-center">
-          <ActivityIndicator size="large" color="#0000ff" />
+  const AttendanceHeader = () => (
+    <View className="px-4 py-6 bg-white border-b border-gray-200">
+      <Text className="text-center text-2xl font-bold text-gray-800">
+        Attendance Record
+      </Text>
+      <Text className="text-center text-lg text-gray-600 mt-2">
+        {formatDate(new Date())}
+      </Text>
+      <View className="flex-row justify-between mt-4 px-2">
+        <View className="flex-row items-center">
+          <View className="w-3 h-3 rounded-full bg-green-500 mr-2" />
+          <Text className="text-gray-600">Present</Text>
         </View>
-      ) : (
+        <View className="flex-row items-center">
+          <View className="w-3 h-3 rounded-full bg-red-500 mr-2" />
+          <Text className="text-gray-600">Absent</Text>
+        </View>
+      </View>
+    </View>
+  );
+
+  const StudentCard = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => toggleAbsence(item.student_id)}
+      className={`mx-4 mb-3 rounded-xl border ${
+        absentIds.includes(item.student_id)
+          ? "bg-red-50 border-red-200"
+          : "bg-green-50 border-green-200"
+      } shadow-sm`}
+    >
+      <View className="p-4 flex-row items-center justify-between">
+        <View className="flex-1">
+          <Text className="text-lg font-semibold text-gray-800">
+            {item.first_name} {item.last_name}
+          </Text>
+          <Text className="text-gray-500 text-sm mt-1">{item.email}</Text>
+          <Text className="text-gray-400 text-sm">ID: {item.student_id}</Text>
+        </View>
+        <View className="items-center">
+          <Checkbox
+            value={absentIds.includes(item.student_id)}
+            onValueChange={() => toggleAbsence(item.student_id)}
+            className="h-6 w-6"
+            color={absentIds.includes(item.student_id) ? "#EF4444" : "#10B981"}
+          />
+          <Text className="text-sm text-gray-500 mt-1">
+            {absentIds.includes(item.student_id) ? "Absent" : "Present"}
+          </Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
+  if (classInfoLoading) {
+    return (
+      <View className="flex-1 justify-center items-center bg-gray-50">
+        <ActivityIndicator size="large" color="#3B82F6" />
+        <Text className="text-gray-600 mt-4">Loading class information...</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View className="flex-1 bg-gray-50">
+      <Topbar title="Take Attendance" showBack={true} />
+      
+      {classInfo?.student_accounts?.length ? (
         <>
-        <Text className="text-center text-2xl font-semibold my-4">Date: {formatDate(new Date())}</Text>
-          {classInfo?.student_accounts?.length !== 0 ? (
-            <FlatList
-              data={classInfo?.student_accounts}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  className={`mb-2 p-4 border rounded-md ${
-                    absentIds.includes(item.student_id) ? 'bg-red-200' : 'bg-green-200'
-                  }`}
-                  onPress={() => toggleAbsence(item.student_id)}
-                >
-                  <View className="flex-row items-center justify-between">
-                    <View>
-                      <Text className="text-xl font-bold">{item.first_name} {item.last_name}</Text>
-                      <Text className="text-lg text-gray-600">{item.email}</Text>
-                      <Text className="text-lg text-gray-600">ID: {item.student_id}</Text>
-                    </View>
-                    <View className="flex-col justify-center items-center">
-                    <Text className="mb-2">absent</Text>
-                    <Checkbox
-                      value={absentIds.includes(item.student_id)}
-                      onValueChange={() => toggleAbsence(item.student_id)}
-                    />
-                    </View>
-                  </View>
-                </TouchableOpacity>
+          <FlatList
+            data={classInfo.student_accounts}
+            ListHeaderComponent={AttendanceHeader}
+            renderItem={({ item }) => <StudentCard item={item} />}
+            keyExtractor={(item) => item.student_id?.toString() || Math.random().toString()}
+            contentContainerStyle={{ paddingBottom: 100 }}
+          />
+          
+          <View className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200">
+            <TouchableOpacity
+              onPress={handleTakeAttendance}
+              disabled={loading || classInfo.student_accounts.length === 0}
+              className={`p-4 rounded-xl ${
+                loading || classInfo.student_accounts.length === 0
+                  ? "bg-gray-300"
+                  : "bg-blue-500"
+              }`}
+            >
+              {loading ? (
+                <View className="flex-row justify-center items-center">
+                  <ActivityIndicator size="small" color="#FFFFFF" />
+                  <Text className="text-white ml-2">Submitting...</Text>
+                </View>
+              ) : (
+                <Text className="text-white text-center font-semibold text-lg">
+                  Submit Attendance
+                </Text>
               )}
-              keyExtractor={(item) => item.student_id?.toString() || Math.random().toString()}
-              contentContainerStyle={{ paddingBottom: 16 }}
-            />
-          ) : (
-            <Text className="text-center text-xl text-black">No students in this class</Text>
-          )}
-
-          <TouchableOpacity
-            onPress={handleTakeAttendance}
-            disabled={loading || absentIds.length === 0}
-            className="bg-blue-500 p-4 rounded mt-4"
-          >
-
-            {!loading ? 
-            <Text className="text-white text-center">Submit</Text> : 
-            <ActivityIndicator size={20}color="#0000ff" />
-            }
-
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
         </>
+      ) : (
+        <View className="flex-1 justify-center items-center p-4">
+          <Text className="text-xl text-gray-600 text-center">
+            No students enrolled in this class
+          </Text>
+        </View>
       )}
     </View>
   );

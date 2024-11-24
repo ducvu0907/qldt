@@ -4,12 +4,17 @@ import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
 import { AssignmentResponseItemData } from '../components/AssignmentResponseItem';
 
-export const useGetAssignmentResponses = (assignment_id: number) => {
+interface GradeRequest {
+  score: string;
+  submission_id: string;
+};
+
+export const useGetAssignmentResponses = () => {
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [responses, setResponses] = useState<AssignmentResponseItemData[] | null>(null);
 
-  const fetchAssignmentResponses = useCallback(async () => {
+  const fetchAssignmentResponses = useCallback(async (assignment_id: string, grade: GradeRequest | null=null) => {
     try {
       setLoading(true);
       console.log("Fetching assignment responses");
@@ -21,7 +26,8 @@ export const useGetAssignmentResponses = (assignment_id: number) => {
         },
         body: JSON.stringify({
           token,
-          survey_id: assignment_id
+          survey_id: assignment_id,
+          grade
         }),
       });
 
@@ -44,10 +50,6 @@ export const useGetAssignmentResponses = (assignment_id: number) => {
       setLoading(false);
     }
   }, [token]);
-
-  useEffect(() => {
-    fetchAssignmentResponses();
-  }, []);
 
   return { responses, loading, refetch: fetchAssignmentResponses };
 };

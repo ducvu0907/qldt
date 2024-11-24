@@ -9,13 +9,13 @@ import { AuthContext } from "../../contexts/AuthContext";
 const ViewResponses = ({route}) => {
   const { role } = useContext(AuthContext);
   const {assignment} = route.params;
-  const { responses, loading, refetch } = useGetAssignmentResponses(assignment.id);
+  const { responses, loading, refetch } = useGetAssignmentResponses();
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation<any>();
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await refetch();
+    await refetch(assignment.id);
     setRefreshing(false);
   }, [refetch]);
 
@@ -23,7 +23,7 @@ const ViewResponses = ({route}) => {
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
-        await refetch();
+        await refetch(assignment.id);
       };
       fetchData();
     }, [refetch])

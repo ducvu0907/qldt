@@ -26,6 +26,8 @@ const MaterialInfo = ({ route, navigation }) => {
 
   const handleDeleteMaterial = async () => {
     try {
+      setLoading(true);
+
       const res = await fetch(`${RESOURCE_SERVER_URL}/delete_material`, {
         method: 'POST',
         headers: {
@@ -44,7 +46,7 @@ const MaterialInfo = ({ route, navigation }) => {
 
       Toast.show({
         type: "success",
-        text1: "Material deleted succesfully"
+        text1: "Material deleted successfully"
       });
 
       navigation.goBack();
@@ -70,86 +72,125 @@ const MaterialInfo = ({ route, navigation }) => {
     );
   };
 
+  const InfoField = ({ label, value, icon = null, onPress = null }) => (
+    <View className="space-y-1.5">
+      <Text className="text-sm font-medium text-slate-400 dark:text-slate-500">
+        {label}
+      </Text>
+      <TouchableOpacity
+        disabled={!onPress}
+        onPress={onPress}
+        className="bg-white/5 dark:bg-slate-800/50 rounded-lg p-3 flex-row items-center"
+      >
+        {icon && <View className="mr-3">{icon}</View>}
+        <Text 
+          className={`flex-1 ${onPress ? 'text-indigo-400' : 'text-slate-500 dark:text-slate-300'}`}
+          numberOfLines={value === material.material_link ? 1 : undefined}
+        >
+          {value || `No ${label.toLowerCase()} available`}
+        </Text>
+        {onPress && <MaterialIcons name="open-in-new" size={18} color="#818cf8" />}
+      </TouchableOpacity>
+    </View>
+  );
+
+  const getTypeIcon = (type: string) => {
+    const iconMap = {
+      pdf: { name: 'picture-as-pdf', color: '#ef4444' },
+      doc: { name: 'article', color: '#3b82f6' },
+      ppt: { name: 'slideshow', color: '#f97316' },
+      xls: { name: 'table-chart', color: '#22c55e' }
+    };
+
+    const fileType = type?.toLowerCase() || 'unknown';
+    const iconInfo = iconMap[fileType] || { name: 'insert-drive-file', color: '#6366f1' };
+
+    return <MaterialIcons name={iconInfo.name} size={20} color={iconInfo.color} />;
+  };
+
   return (
-    <View className="flex-1 bg-gray-800">
+    <View className="flex-1 bg-slate-50 dark:bg-slate-900">
       <Topbar title="Material Details" showBack={true} />
 
-      <ScrollView className="flex-1 px-4">
-        <View className="bg-gray-700 rounded-xl shadow-xl my-4 overflow-hidden">
-          <View className="bg-gray-600 p-5 border-b border-gray-500">
-            <Text className="text-2xl font-bold text-white text-center">
-              {material.material_name}
-            </Text>
+      <ScrollView 
+        className="flex-1 px-4"
+        contentContainerClassName="pb-6"
+      >
+        <View className="bg-white dark:bg-slate-800 rounded-xl shadow-sm my-4 overflow-hidden">
+          <View className="p-4 border-b border-slate-100 dark:border-slate-700">
+            <View className="flex-row items-center justify-center space-x-2">
+              {getTypeIcon(material.material_type)}
+              <Text className="text-xl font-semibold text-slate-900 dark:text-white text-center">
+                {material.material_name}
+              </Text>
+            </View>
           </View>
 
-          <View className="p-5 space-y-6">
-            <View className="flex-row justify-between">
-              <View className="flex-1 mr-2">
-                <Text className="text-gray-400 text-sm mb-1">Type</Text>
-                <View className="bg-gray-600 rounded-lg px-3 py-2">
-                  <Text className="text-white font-medium">
-                    {material.material_type || "Unknown"}
-                  </Text>
-                </View>
+          <View className="p-4 space-y-4">
+            <View className="flex-row space-x-4">
+              <View className="flex-1">
+                <InfoField
+                  label="Type"
+                  value={material.material_type}
+                  icon={getTypeIcon(material.material_type)}
+                />
               </View>
-
-              <View className="flex-1 ml-2">
-                <Text className="text-gray-400 text-sm mb-1">Class ID</Text>
-                <View className="bg-gray-600 rounded-lg px-3 py-2">
-                  <Text className="text-white font-medium">
-                    {material.class_id || "N/A"}
-                  </Text>
-                </View>
+              <View className="flex-1">
+                <InfoField
+                  label="Class ID"
+                  value={material.class_id}
+                  icon={<MaterialIcons name="class" size={20} color="#6366f1" />}
+                />
               </View>
             </View>
 
-            <View>
-              <Text className="text-gray-400 text-sm mb-1">Description</Text>
-              <View className="bg-gray-600 rounded-lg p-3">
-                <Text className="text-white leading-5">
-                  {material.description || "No description available"}
-                </Text>
-              </View>
-            </View>
+            <InfoField
+              label="Description"
+              value={material.description}
+              icon={<MaterialIcons name="description" size={20} color="#6366f1" />}
+            />
 
-            <View>
-              <Text className="text-gray-400 text-sm mb-1">Material Link</Text>
-              {material.material_link ? (
-                <TouchableOpacity
-                  onPress={handleOpenLink}
-                  className="bg-gray-600 rounded-lg p-3 flex-row items-center justify-between"
-                >
-                  <Text className="text-blue-400 flex-1 mr-2" numberOfLines={1}>
-                    {material.material_link}
-                  </Text>
-                  <MaterialIcons name="open-in-new" size={20} color="#60A5FA" />
-                </TouchableOpacity>
+            <InfoField
+              label="Material Link"
+              value={material.material_link}
+              icon={<MaterialIcons name="link" size={20} color="#6366f1" />}
+              onPress={material.material_link ? handleOpenLink : undefined}
+            />
+          </View>
+        </View>
+
+        {role === "LECTURER" && (
+          <View className="space-y-3 px-1">
+            <TouchableOpacity
+              onPress={handleEdit}
+              className="bg-indigo-500/90 rounded-lg p-3.5 flex-row items-center justify-center
+                        active:bg-indigo-600/90 backdrop-blur-sm"
+            >
+              <MaterialIcons name="edit" size={20} color="white" className="mr-2" />
+              <Text className="text-white font-medium text-base ml-2">
+                Edit Material
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={handleDelete}
+              disabled={loading}
+              className="mt-2 bg-red-500/90 rounded-lg p-3.5 flex-row items-center justify-center
+                        active:bg-red-600/90 backdrop-blur-sm"
+            >
+              {loading ? (
+                <ActivityIndicator color="white" />
               ) : (
-                <View className="bg-gray-600 rounded-lg p-3">
-                  <Text className="text-gray-400">No link available</Text>
-                </View>
+                <>
+                  <MaterialIcons name="delete-outline" size={20} color="white" className="mr-2" />
+                  <Text className="text-white font-medium text-base ml-2">
+                    Delete Material
+                  </Text>
+                </>
               )}
-            </View>
-
+            </TouchableOpacity>
           </View>
-        </View>
-
-        {role === "LECTURER" && <View className="p-5 space-y-4">
-          <TouchableOpacity
-            onPress={handleEdit}
-            className="bg-blue-600 rounded-lg p-3 flex-row items-center justify-center"
-          >
-            <Text className="text-white font-semibold text-lg">Edit</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={handleDelete}
-            className="bg-red-600 rounded-lg p-3 flex-row items-center justify-center mt-4"
-          >
-            {!loading ? <Text className="text-white font-semibold text-lg">Delete</Text> : <ActivityIndicator size={30} />}
-          </TouchableOpacity>
-        </View>
-        }
+        )}
       </ScrollView>
     </View>
   );

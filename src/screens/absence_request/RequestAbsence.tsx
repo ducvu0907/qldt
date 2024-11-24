@@ -17,6 +17,7 @@ export interface AbsenceRequest {
   file?: any; // optional
   date: Date; // yyyy-mm-dd
   reason: string;
+  title: string; // new title field
 }
 
 const RequestAbsence = () => {
@@ -29,6 +30,7 @@ const RequestAbsence = () => {
     classId: selectedClassId || "",
     date: new Date(),
     reason: "",
+    title: "", // initialize title
   });
 
   const navigation = useNavigation<any>();
@@ -50,10 +52,10 @@ const RequestAbsence = () => {
 
   const handleRequestAbsence = async () => {
     try {
-      if (!formData.date || !formData.reason) {
+      if (!formData.date || !formData.reason || !formData.title) { // check for title
         Toast.show({
           type: 'error',
-          text1: 'Date and reason are compulsory',
+          text1: 'Title, Date, and Reason are compulsory',
         });
         return;
       }
@@ -65,6 +67,7 @@ const RequestAbsence = () => {
       form.append("classId", formData.classId);
       form.append("date", formatDate(formData.date));
       form.append("reason", formData.reason);
+      form.append("title", formData.title); // append title
       if (formData.file) {
         form.append("file", {
           uri: formData.file.uri,
@@ -83,6 +86,7 @@ const RequestAbsence = () => {
 
       const data = await res.json();
 
+      console.log(data);
       if (data.meta.code !== "1000") {
         throw new Error(data.meta.message || 'Unknown error occurred while requesting absence');
       }
@@ -112,6 +116,23 @@ const RequestAbsence = () => {
       <Topbar title="Request Absence" showBack={true} />
       
       <View className="flex-1 px-6 py-8 space-y-8">
+        {/* Title Field */}
+        <View className="space-y-2">
+          <Text className="text-lg font-semibold text-slate-700 dark:text-slate-200">
+            Title of Absence
+          </Text>
+          <TextInput
+            placeholder="Title of the absence request"
+            placeholderTextColor="#94a3b8"
+            value={formData.title}
+            onChangeText={(value) => handleChangeInput('title', value)}
+            className="bg-white dark:bg-slate-800 rounded-xl p-4 
+                     text-base text-slate-700 dark:text-slate-200
+                     border border-slate-200 dark:border-slate-700"
+          />
+        </View>
+
+        {/* File Picker */}
         <View className="space-y-2">
           <Text className="text-lg font-semibold text-slate-700 dark:text-slate-200">
             Absence File (Optional)
@@ -146,30 +167,32 @@ const RequestAbsence = () => {
           </TouchableOpacity>
         </View>
 
+        {/* Date Picker */}
         <View className="space-y-2">
           <Text className="text-lg font-semibold text-slate-700 dark:text-slate-200">
             Date of Absence
           </Text>
-                <DateTimePicker
-                  value={formData.date}
-                  mode="date"
-                  is24Hour={true}
-                  display="default"
-                  onChange={(event, date) => {
-                    if (date) {
-                      setFormData((prevState) => ({
-                        ...prevState,
-                        date: date
-                      }));
-                    }
-                  }}
-                  themeVariant='dark'
-                  style={{
-                    marginRight: 15,
-                  }}
-                />
+          <DateTimePicker
+            value={formData.date}
+            mode="date"
+            is24Hour={true}
+            display="default"
+            onChange={(event, date) => {
+              if (date) {
+                setFormData((prevState) => ({
+                  ...prevState,
+                  date: date
+                }));
+              }
+            }}
+            themeVariant='dark'
+            style={{
+              marginRight: 15,
+            }}
+          />
         </View>
 
+        {/* Reason for Absence */}
         <View className="space-y-2">
           <Text className="text-lg font-semibold text-slate-700 dark:text-slate-200">
             Reason for Absence
@@ -188,6 +211,7 @@ const RequestAbsence = () => {
           />
         </View>
 
+        {/* Submit Button */}
         <View className="pt-4">
           <TouchableOpacity
             onPress={() => {handleRequestAbsence(); Keyboard.dismiss();}}
