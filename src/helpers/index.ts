@@ -2,7 +2,6 @@ import { LoginRequest } from "../screens/auth/Login";
 import { SignupRequest } from "../screens/auth/Signup";
 import Toast from "react-native-toast-message";
 import { ClassCreateRequest } from "../screens/home/CreateClass";
-import { EditClassRequest } from "../screens/class/EditClass";
 import { CreateAssignmentRequest } from "../screens/assignment/CreateAssignment";
 
 export const isValidEmail = (email: string): boolean => {
