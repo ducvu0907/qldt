@@ -82,7 +82,7 @@ const AttendanceRecord = () => {
   return (
     <View className="flex-1 bg-gray-100">
       <Topbar title="Attendance Records" showBack={true} />
-      {records ? (
+      {records.length > 0 ? (
         <FlatList
           data={records}
           renderItem={({ item }) => (
@@ -94,7 +94,7 @@ const AttendanceRecord = () => {
           keyExtractor={(item, index) => index.toString()}
         />
       ) : (
-        <Text className="mt-4 text-xl text-center text-gray-600">No attendance records available</Text>
+        <Text className="mt-4 text-xl text-center text-gray-600">No attendance records</Text>
       )}
     </View>
   );

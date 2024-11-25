@@ -1,4 +1,4 @@
-import { FlatList, Text, View, ActivityIndicator } from "react-native";
+import { FlatList, Text, View, ActivityIndicator, ScrollView } from "react-native";
 import { useState, useCallback, useEffect } from "react";
 import { useGetClasses } from "../hooks/useGetClasses";
 import ClassListItem from "./ClassListItem";
@@ -35,7 +35,7 @@ const ClassList = ({route = null}) => {
   }
 
   return (
-    <View className="w-full h-full flex p-4 bg-gray-100">
+    <View className="w-full flex-1 p-4 bg-gray-100">
       <FlatList
         data={classes}
         renderItem={({ item }) => <ClassListItem currentClass={item} />}

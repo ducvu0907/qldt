@@ -134,7 +134,7 @@ const EditMaterial = ({ route }) => {
       onPress={Keyboard.dismiss}
       className="flex-1 bg-slate-50 dark:bg-slate-900"
     >
-      <Topbar title="Edit Material"/>
+      <Topbar title="Edit Material" showBack={true}/>
 
       <SafeAreaView className="flex-1 px-4 py-6">
         <View className="space-y-6">
@@ -216,16 +216,6 @@ const EditMaterial = ({ route }) => {
             )}
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            className="bg-slate-200 dark:bg-slate-800 rounded-lg p-4 flex-row items-center justify-center 
-                      space-x-2 active:bg-slate-300 dark:active:bg-slate-700"
-          >
-            <MaterialIcons name="close" size={20} color="#6366f1" />
-            <Text className="text-indigo-500 font-semibold text-base">
-              Cancel
-            </Text>
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </Pressable>

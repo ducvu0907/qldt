@@ -11,7 +11,7 @@ const Home = () => {
   const { role } = useContext(AuthContext);
 
   return (
-    <View className="w-full h-full flex items-center">
+    <View className="w-full flex-1 items-center bg-gray-100">
       <Topbar title={"Class List"} showBack={false} />
 
       <ClassList />
@@ -28,7 +28,6 @@ const Home = () => {
       >
         <Icon name={role === "STUDENT" ? "book" : "plus"} size={30} color="white" />
       </TouchableOpacity>
-
     </View>
   );
 };

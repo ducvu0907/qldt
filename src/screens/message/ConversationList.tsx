@@ -48,7 +48,7 @@ const ConversationItem = ({ item }: { item: ConversationItemData }) => {
 };
 
 const ConversationList = () => {
-  const { conversations, loading, refetch } = useGetListConversation('0', '20');
+  const { conversations, loading, refetch } = useGetListConversation('0', '3');
   const [refreshing, setRefreshing] = React.useState(false);
   const navigation = useNavigation<any>();
 
