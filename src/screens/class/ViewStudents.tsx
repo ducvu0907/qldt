@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { View, FlatList, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { StudentAccount } from "../../components/ClassInfo";
 import { ClassContext } from "../../contexts/ClassContext";
 import { useGetClassInfo } from "../../hooks/useGetClassInfo";
 import StudentListItem from "../../components/StudentListItem";
 import Topbar from "../../components/Topbar";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Ionicons } from '@expo/vector-icons';
 import { AuthContext } from "../../contexts/AuthContext";
 
@@ -14,7 +14,13 @@ const ViewStudents = () => {
   const navigation = useNavigation<any>();
   const [students, setStudents] = useState<StudentAccount[]>([]);
   const { selectedClassId } = useContext(ClassContext);
-  const { classInfo, loading } = useGetClassInfo(selectedClassId || "");
+  const { classInfo, loading, refetch } = useGetClassInfo(selectedClassId || "");
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
 
   useEffect(() => {
     if (classInfo && classInfo.student_accounts) {
@@ -58,7 +64,6 @@ const ViewStudents = () => {
           className="absolute bottom-6 right-6 z-10 bg-blue-600 rounded-full w-14 h-14 items-center justify-center shadow-lg"
           style={{
             shadowColor: '#3b82f6',
-            shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,
             shadowRadius: 4.65,
             elevation: 8

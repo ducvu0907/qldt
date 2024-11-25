@@ -10,6 +10,8 @@ import { ClassContext } from '../../contexts/ClassContext';
 import Topbar from '../../components/Topbar';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { formatDate } from '../../helpers';
+import { useSendNotification } from '../../hooks/useNotification';
+import { useGetClassInfo } from '../../hooks/useGetClassInfo';
 
 export interface AbsenceRequest {
   token: string;
@@ -23,6 +25,7 @@ export interface AbsenceRequest {
 const RequestAbsence = () => {
   const { token } = useContext(AuthContext);
   const { selectedClassId } = useContext(ClassContext);
+  const {classInfo} = useGetClassInfo(selectedClassId);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<AbsenceRequest>({
     file: null,
@@ -32,6 +35,7 @@ const RequestAbsence = () => {
     reason: "",
     title: "", // initialize title
   });
+  const {sendNotification} = useSendNotification();
 
   const navigation = useNavigation<any>();
 
@@ -75,7 +79,7 @@ const RequestAbsence = () => {
           name: formData.file.name,
         });
       }
-      console.log(form);
+
       const res = await fetch(`${RESOURCE_SERVER_URL}/request_absence`, {
         method: 'POST',
         headers: {
@@ -86,10 +90,12 @@ const RequestAbsence = () => {
 
       const data = await res.json();
 
-      console.log(data);
       if (data.meta.code !== "1000") {
         throw new Error(data.meta.message || 'Unknown error occurred while requesting absence');
       }
+
+      console.log(classInfo);
+      await sendNotification(token, "I send a absence request", classInfo?.lecturer_id, "ABSENCE");
 
       Toast.show({
         type: 'success',

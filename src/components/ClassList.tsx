@@ -4,7 +4,7 @@ import { useGetClasses } from "../hooks/useGetClasses";
 import ClassListItem from "./ClassListItem";
 import { useFocusEffect } from "@react-navigation/native";
 
-const ClassList = ({route = null}) => {
+const ClassList = () => {
   const { classes, loading, refetch } = useGetClasses();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -14,16 +14,14 @@ const ClassList = ({route = null}) => {
     setRefreshing(false);
   }, []);
 
-  //useFocusEffect(
-  //  useCallback(() => {
-  //    if (!loading) {
-  //      const fetchData = async () => {
-  //        await refetch();
-  //      };
-  //      fetchData();
-  //    }
-  //  }, [])
-  //);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        await refetch();
+      };
+      fetchData();
+    }, [refetch])
+  );
 
   if (loading && !refreshing) {
     return (
@@ -34,6 +32,14 @@ const ClassList = ({route = null}) => {
     );
   }
 
+  const EmptyComponent = () => {
+    return (
+      <View className="flex justify-center items-center bg-gray-100">
+      <Text className="mt-4 text-xl text-gray-600">No class found</Text>
+      </View>
+    );
+  };
+
   return (
     <View className="w-full flex-1 p-4 bg-gray-100">
       <FlatList
@@ -41,6 +47,7 @@ const ClassList = ({route = null}) => {
         renderItem={({ item }) => <ClassListItem currentClass={item} />}
         onRefresh={onRefresh}
         refreshing={refreshing}
+        ListEmptyComponent={EmptyComponent}
       />
     </View>
   );

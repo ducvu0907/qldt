@@ -58,14 +58,6 @@ const ViewResponses = ({route}) => {
         <Text className="mt-4 text-xl text-center text-gray-600">No responses found</Text>
       )}
       
-      {role === "LECTURER" && (
-        <TouchableOpacity
-          onPress={() => navigation.navigate("GradeResponses")}
-          className="absolute bottom-5 right-5 bg-blue-500 rounded-full p-4 shadow-lg"
-        >
-          <Text className="text-white text-xl">Grade Responses</Text>
-        </TouchableOpacity>
-      )}
     </View>
   );
 };

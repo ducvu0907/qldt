@@ -3,6 +3,7 @@ import SockJS from 'sockjs-client';
 import {Stomp} from '@stomp/stompjs';
 import { AuthContext } from "./AuthContext";
 import { AUTH_SERVER_URL } from "../types";
+import { useGetConversation } from "../hooks/useMessage";
 
 interface SocketContextType {
   stompClient: any;

@@ -19,6 +19,7 @@ export interface ClassDetail {
   class_name: string;
   schedule?: null;
   lecturer_name?: string;
+  lecturer_id?: string;
   student_count?: number;
   attached_code?: null;
   class_type: string;

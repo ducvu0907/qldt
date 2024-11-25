@@ -3,7 +3,7 @@ import Topbar from "../../components/Topbar";
 import ClassList from "../../components/ClassList";
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useContext } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 
 const Home = () => {

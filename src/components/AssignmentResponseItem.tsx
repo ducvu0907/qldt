@@ -1,9 +1,11 @@
 import { Text, TouchableOpacity, View, TextInput, Linking } from "react-native";
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useGetAssignmentResponses } from "../hooks/useGetAssignmentResponses";
 import { StudentAccount } from "./ClassInfo";
 import Toast from "react-native-toast-message";
+import { useSendNotification } from "../hooks/useNotification";
+import { AuthContext } from "../contexts/AuthContext";
 
 export interface AssignmentResponseItemData {
   id: number;
@@ -21,8 +23,10 @@ interface AssignmentResponseProps {
 const AssignmentResponseItem: React.FC<AssignmentResponseProps> = ({
   assignmentResponse
 }) => {
+  const {token} = useContext(AuthContext);
   const [grade, setGrade] = useState<number | string>(assignmentResponse.grade ?? "");
   const { loading, refetch } = useGetAssignmentResponses();
+  const {sendNotification} = useSendNotification();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -47,6 +51,9 @@ const AssignmentResponseItem: React.FC<AssignmentResponseProps> = ({
       score: grade.toString(), 
       submission_id: assignmentResponse.id.toString()
     });
+
+    await sendNotification(token, "your assignment has been graded", assignmentResponse.student_account.account_id, "ASSIGNMENT_GRADE");
+
     Toast.show({
       type:"success",
       text1: "grade submission successfully"

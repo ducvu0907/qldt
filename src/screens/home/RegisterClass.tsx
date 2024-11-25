@@ -56,7 +56,7 @@ const RegisterClass = () => {
         text1: data.meta.message,
       });
 
-      navigation.popTo('Home');
+      navigation.goBack();
 
     } catch (error: any) {
       Toast.show({

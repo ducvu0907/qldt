@@ -24,11 +24,10 @@ export interface NotificationItemData {
   title_push_notification: string;
 };
 
-const useSendNotification = (message: string, toUser: string, type: string, image?: any) => {
-  const { token } = useContext(AuthContext);
+const useSendNotification = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const sendNotification = useCallback(async () => {
+  const sendNotification = useCallback(async (token: string, message: string, toUser: string, type: string, image?: any) => {
     try {
       setLoading(true);
 
@@ -41,6 +40,7 @@ const useSendNotification = (message: string, toUser: string, type: string, imag
         formData.append("image", image);
       }
       
+      console.log(formData);
       const res = await fetch(`${RESOURCE_SERVER_URL}/send_notification`, {
         method: 'POST',
         headers: {
@@ -54,6 +54,8 @@ const useSendNotification = (message: string, toUser: string, type: string, imag
       if (data.meta.code !== "1000") {
         throw new Error(data.meta.message || "Error while sending notification");
       }
+
+      console.log(data.data);
 
       Toast.show({
         type: "success",
@@ -72,11 +74,7 @@ const useSendNotification = (message: string, toUser: string, type: string, imag
 
   }, []);
 
-  useEffect(() => {
-    sendNotification();
-  }, []);
-
-  return {  loading, refetch: sendNotification };
+  return { loading, sendNotification };
 };
 
 const useGetNotifications = (index: string, count: string) => {
@@ -169,7 +167,7 @@ const useGetUnreadNotificationCount = () => {
 
   useEffect(() => {
     getUnreadNotificationCount();
-  }, [useMediaLibraryPermissions]);
+  }, []);
 
   return {  loading, unreads, getUnreadNotificationCount };
 };

@@ -20,7 +20,7 @@ export interface EditAssignmentRequest {
 
 const EditAssignment = ({ route }) => {
   const { token } = useContext(AuthContext);
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const { id, description, deadline } = route.params.assignment;
   const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<EditAssignmentRequest>({
@@ -93,7 +93,7 @@ const EditAssignment = ({ route }) => {
         position: "bottom",
       });
 
-      navigation.goBack();
+      navigation.popTo("AssignmentList");
 
     } catch (error: any) {
       Toast.show({

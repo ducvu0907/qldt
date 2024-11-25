@@ -106,11 +106,11 @@ const NotificationList = () => {
     />
   ), [handleNotificationPress]);
 
-  //useFocusEffect(
-  //  useCallback(() => {
-  //    getNotifications();
-  //  }, [])
-  //);
+  useFocusEffect(
+   useCallback(() => {
+     getNotifications();
+   }, [])
+  );
 
   if (loading && !notifications) {
     return (

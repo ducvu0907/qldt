@@ -140,7 +140,7 @@ const EditMaterial = ({ route }) => {
         <View className="space-y-6">
           {/* File Selection Section */}
           <View className="space-y-2">
-            <Text className="text-sm font-medium text-slate-600 dark:text-slate-400 ml-1">
+            <Text className="text-sm font-medium text-slate-600 dark:text-slate-400 ml-2">
               Material File
             </Text>
             <TouchableOpacity

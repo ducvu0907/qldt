@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState, useCallback } from 'react';
+import React, { useContext, useRef, useState, useCallback, useEffect } from 'react';
 import { View, Text, FlatList, ActivityIndicator, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Alert, Pressable, Touchable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Topbar from '../../components/Topbar';
@@ -7,13 +7,15 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { SocketContext } from '../../contexts/SocketContext';
 import Toast from 'react-native-toast-message';
 import { formatDate } from '../../helpers';
+import * as ImagePicker from 'expo-image-picker';
+import * as MediaLibrary from 'expo-media-library';
 
 const MessageBubble = React.memo(({ message, isOwnMessage, onDelete }) => {
   const [open, setOpen] = useState(false);
 
   const bubbleStyle = isOwnMessage
-    ? 'bg-blue-500 ml-auto'
-    : 'bg-gray-200 mr-auto';
+    ? 'bg-blue-500 self-end'
+    : 'bg-gray-200 self-start';
   const textStyle = isOwnMessage
     ? 'text-white'
     : 'text-gray-800';
@@ -74,6 +76,15 @@ const ConversationDetails = ({ route }) => {
 
   const {loading: loadingDeleteMessage, deleteMessage} = useDeleteMessage();
   const { conversation, loading, refetch } = useGetConversation('0', '50', conversationId);
+  const {receiveMessage} = useContext(SocketContext);
+
+  useEffect(() => {
+    receiveMessage((message) => {
+      if (message.conversation_id === conversationId) {
+        refetch();
+      }
+    });
+  }, []);
 
   const handleDeleteMessage = async (messageId) => {
     try {
@@ -89,6 +100,50 @@ const ConversationDetails = ({ route }) => {
         text1: "Failed to delete message",
         text2: error.message
       });
+    }
+  };
+
+  const handleOpenCamera = async () => {
+    // Request camera permissions
+    const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
+    if (cameraStatus !== 'granted') {
+      Alert.alert('Permission needed', 'Camera permission is required to take photos');
+      return;
+    }
+
+    // Request media library permissions
+    const { status: mediaLibraryStatus } = await MediaLibrary.requestPermissionsAsync();
+    if (mediaLibraryStatus !== 'granted') {
+      Alert.alert('Permission needed', 'Media library permission is required to save photos');
+      return;
+    }
+
+    // Launch camera
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ["images"],
+      allowsEditing: false,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      
+      // Save photo to media library
+      try {
+        const asset = await MediaLibrary.createAssetAsync(uri);
+        await MediaLibrary.createAlbumAsync("YourAppName", asset, false);
+        
+        Toast.show({
+          type: 'success',
+          text1: 'Photo saved successfully'
+        });
+      } catch (error) {
+        Toast.show({
+          type: 'error',
+          text1: 'Failed to save photo',
+          text2: error.message
+        });
+      }
     }
   };
 
@@ -154,6 +209,9 @@ const ConversationDetails = ({ route }) => {
 
       <View className="p-2 border-t border-gray-200">
         <View className="flex-row items-center bg-gray-100 rounded-full px-4 py-2">
+        <TouchableOpacity onPress={handleOpenCamera} className="mr-2">
+            <Ionicons name="camera" size={24} color="gray" />
+          </TouchableOpacity>
           <TextInput
             ref={inputRef}
             className="flex-1 mr-2 max-h-24"

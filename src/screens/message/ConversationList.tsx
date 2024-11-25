@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, ActivityIndicator, RefreshControl } from 'react-native';
 import { useGetListConversation, ConversationItemData } from '../../hooks/useMessage';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Topbar from '../../components/Topbar';
 import { Ionicons } from '@expo/vector-icons';
+import { SocketContext } from '../../contexts/SocketContext';
 
 const ConversationItem = ({ item }: { item: ConversationItemData }) => {
   console.log(item);
   const navigation = useNavigation<any>();
+
+  const formatDate = (isoString: string) => {
+    const date = new Date(isoString);
+    return date.toLocaleDateString('en-US', {
+      weekday: 'short', // e.g., "Mon"
+      year: 'numeric', // e.g., "2024"
+      month: 'short', // e.g., "Nov"
+      day: 'numeric' // e.g., "26"
+    });
+  };
 
   return (
     <TouchableOpacity 
@@ -25,7 +36,7 @@ const ConversationItem = ({ item }: { item: ConversationItemData }) => {
             {item.partner.name}
           </Text>
           <Text className="text-sm text-gray-500">
-            {item.last_message.created_at}
+            {formatDate(item.last_message.created_at)}
           </Text>
         </View>
         
@@ -48,8 +59,9 @@ const ConversationItem = ({ item }: { item: ConversationItemData }) => {
 };
 
 const ConversationList = () => {
-  const { conversations, loading, refetch } = useGetListConversation('0', '3');
-  const [refreshing, setRefreshing] = React.useState(false);
+  const { conversations, loading, refetch } = useGetListConversation('0', '100');
+  const [refreshing, setRefreshing] = useState(false);
+  const {receiveMessage} = useContext(SocketContext);
   const navigation = useNavigation<any>();
 
   const onRefresh = React.useCallback(async () => {
@@ -57,6 +69,19 @@ const ConversationList = () => {
     await refetch();
     setRefreshing(false);
   }, [refetch]);
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
+
+  useEffect(() => {
+    receiveMessage((message) => {
+      console.log(message);
+      refetch();
+    });
+  }, [receiveMessage]);
 
   if (loading && !conversations) {
     return (

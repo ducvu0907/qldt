@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { FlatList, View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -79,14 +79,14 @@ const AbsenceRequestList = ({route}) => {
   const {type} = route.params;
   const { absenceRequests, loading, refetch } = useGetAbsenceRequests(type);
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const fetchData = async () => {
-  //       await refetch();
-  //     };
-  //     fetchData();
-  //   }, [])
-  // );
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        await refetch();
+      };
+      fetchData();
+    }, [])
+  );
 
   return (
     <View className="flex-1 bg-gray-50">

@@ -6,6 +6,8 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { RESOURCE_SERVER_URL } from "../../types";
 import Topbar from "../../components/Topbar";
 import { useNavigation } from "@react-navigation/native";
+import { useSendNotification } from "../../hooks/useNotification";
+import { StudentAccount } from "../../components/ClassInfo";
 
 // Types remain the same...
 type AbsenceStatus = 'ACCEPTED' | 'REJECTED' | 'PENDING';
@@ -15,10 +17,7 @@ type RequestData = {
   title: string;
   reason: string;
   status: AbsenceStatus;
-  student_account: {
-    first_name: string;
-    last_name: string;
-  };
+  student_account: StudentAccount
   file_url: string;
 };
 
@@ -132,6 +131,8 @@ const StudentHeader = ({ firstName, lastName }: { firstName: string; lastName: s
 const AbsenceReview = ({ route }) => {
   const { token } = useContext(AuthContext);
   const { request }: { request: RequestData } = route.params;
+  console.log(request);
+  const {sendNotification} = useSendNotification();
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<any>();
 
@@ -154,6 +155,13 @@ const AbsenceReview = ({ route }) => {
       const data = await res.json();
       if (data.meta.code !== "1000") {
         throw new Error(data.meta.message || "Error while processing the request");
+      }
+
+      console.log(status);
+      if (status === "ACCEPTED") {
+        await sendNotification(token, `Your absence request has been accepted`, request.student_account.account_id, "ACCEPT_ABSENCE_REQUEST")
+      } else if (status === "REJECTED") {
+        await sendNotification(token, `Your absence request has been rejected`, request.student_account.account_id, "REJECT_ABSENCE_REQUEST")
       }
 
       Toast.show({

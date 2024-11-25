@@ -10,6 +10,7 @@ import { RESOURCE_SERVER_URL } from "../../types";
 import Topbar from "../../components/Topbar";
 import { useNavigation } from "@react-navigation/native";
 import { useGetAttendance, useGetAttendanceDates } from "../../hooks/useAttendance";
+import { useSendNotification } from "../../hooks/useNotification";
 
 export interface TakeAttendanceRequest {
   token: string;
@@ -24,8 +25,9 @@ const TakeAttendance = () => {
   const { token } = useContext(AuthContext);
   const { selectedClassId } = useContext(ClassContext);
   const { classInfo, loading: classInfoLoading } = useGetClassInfo(selectedClassId);
-  const {attendanceDates, loading: attendenceDateLoading} = useGetAttendanceDates();
+  const { attendanceDates, loading: attendenceDateLoading } = useGetAttendanceDates();
   const [loading, setLoading] = useState<boolean>(false);
+  const { loading: sendNotificationLoading, sendNotification } = useSendNotification();
   const selectedDate = new Date();
 
   const { attendanceData, loading: attendanceLoading } = useGetAttendance(formatDate(selectedDate));
@@ -71,9 +73,17 @@ const TakeAttendance = () => {
         throw new Error(data.meta.message || "Error while taking attendance");
       }
 
+      for (const studentId of absentIds) {
+        const student = classInfo?.student_accounts.find((s: any) => s.student_id === studentId);
+        if (student) {
+          const message = `You were absent today`;
+          await sendNotification(token, message, student?.account_id, "ABSENCE");
+        }
+      }
+
       Toast.show({
         type: "success",
-        text1: "Attendance successfully taken.",
+        text1: "Attendance successfully taken and notifications sent.",
       });
 
       navigation.goBack();
@@ -97,10 +107,7 @@ const TakeAttendance = () => {
 
   const AttendanceHeader = () => (
     <View className="px-4 py-6 bg-white border-b border-gray-200 items-center">
-      <Text className="text-center text-2xl font-bold text-gray-800">
-        Attendance Record
-      </Text>
-      <Text className="text-center text-xl text-gray-800">
+      <Text className="text-center text-xl font-bold text-gray-800">
         {formatDate(new Date())}
       </Text>
       <View className="flex-row justify-between mt-4 px-2">
@@ -109,7 +116,7 @@ const TakeAttendance = () => {
           <Text className="text-gray-600">Present</Text>
         </View>
         <View className="flex-row items-center">
-          <View className="w-3 h-3 rounded-full bg-red-500 mr-2" />
+          <View className="w-3 h-3 rounded-full bg-red-500 ml-2 mr-2" />
           <Text className="text-gray-600">Absent</Text>
         </View>
       </View>
@@ -148,7 +155,7 @@ const TakeAttendance = () => {
     </TouchableOpacity>
   );
 
-  if (classInfoLoading || attendanceLoading || attendenceDateLoading) {
+  if (classInfoLoading || attendanceLoading || attendenceDateLoading || sendNotificationLoading) {
     return (
       <View className="flex-1 justify-center items-center bg-gray-50">
         <ActivityIndicator size="large" color="#3B82F6" />

@@ -20,14 +20,14 @@ const AssignmentListStudent = ({route}) => {
     setRefreshing(false);
   }, [refetch]);
 
-  //useFocusEffect(
-  //  useCallback(() => {
-  //    const fetchData = async () => {
-  //      await refetch();
-  //    };
-  //    fetchData();
-  //  }, [])
-  //);
+  useFocusEffect(
+   useCallback(() => {
+     const fetchData = async () => {
+       await refetch();
+     };
+     fetchData();
+   }, [])
+  );
 
   if (loading && !refreshing) {
     return (

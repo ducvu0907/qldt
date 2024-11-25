@@ -50,5 +50,5 @@ export const useGetClassInfo = (class_id: string) => {
     }
   }, [token, class_id]);
 
-  return { classInfo, loading };
+  return { classInfo, loading, refetch: fetchClassInfo };
 };

@@ -52,7 +52,7 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        // body: JSON.stringify(requestData) 
+        //body: JSON.stringify(requestData) 
         // FIXME: hard-coded for testing, change back later
         body: JSON.stringify({
           email: "vmh1@hust.edu.vn",
