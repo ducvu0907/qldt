@@ -1,19 +1,41 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { FlatList, View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import Topbar from "../../components/Topbar";
 import { useGetAbsenceRequests } from "../../hooks/useGetAbsenceRequests";
 
-const StatusBadge = ({ status }: { status: string }) => (
-  <View className="bg-blue-100 px-3 py-1 rounded-full">
-    <Text className="text-blue-600 text-sm font-medium">
-      {status}
-    </Text>
-  </View>
-);
+const StatusBadge = ({ status }: { status: string }) => {
+  let bgColor = "bg-gray-100";
+  let textColor = "text-gray-600";
 
-const AbsenceRequestListItem = ({ request }) => {
+  switch (status) {
+    case "ACCEPTED":
+      bgColor = "bg-green-100";
+      textColor = "text-green-600";
+      break;
+    case "REJECTED":
+      bgColor = "bg-red-100";
+      textColor = "text-red-600";
+      break;
+    case "PENDING":
+      bgColor = "bg-blue-100";
+      textColor = "text-blue-600";
+      break;
+    default:
+      bgColor = "bg-gray-100";
+      textColor = "text-gray-500";
+  }
+
+  return (
+    <View className={`${bgColor} px-3 py-1 rounded-full`}>
+      <Text className={`${textColor} text-sm font-medium`}>
+        {status}
+      </Text>
+    </View>
+  );
+};
+
+const AbsenceRequestListItem = ({ type, request }) => {
   const navigation = useNavigation<any>();
 
   return (
@@ -26,7 +48,7 @@ const AbsenceRequestListItem = ({ request }) => {
           <Text className="text-sm font-semibold text-gray-500 mr-2">
             Request #{request.id}
           </Text>
-          <StatusBadge status="Pending" />
+          <StatusBadge status={type}/>
         </View>
         <MaterialIcons name="chevron-right" size={24} color="#6B7280" />
       </View>
@@ -48,16 +70,14 @@ const EmptyState = () => (
       style={{ marginBottom: 16 }}
     />
     <Text className="text-xl font-semibold text-gray-800 mb-2">
-      No Pending Requests
-    </Text>
-    <Text className="text-gray-500 text-center">
-      When team members submit absence requests, they'll appear here for review.
+      No Requests Found
     </Text>
   </View>
 );
 
-const AbsenceRequestList = () => {
-  const { absenceRequests, loading, refetch } = useGetAbsenceRequests("PENDING");
+const AbsenceRequestList = ({route}) => {
+  const {type} = route.params;
+  const { absenceRequests, loading, refetch } = useGetAbsenceRequests(type);
 
   // useFocusEffect(
   //   useCallback(() => {
@@ -70,7 +90,6 @@ const AbsenceRequestList = () => {
 
   return (
     <View className="flex-1 bg-gray-50">
-      <Topbar title="Absence Requests" showBack={true} />
       {loading ? (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#3B82F6" />
@@ -82,7 +101,7 @@ const AbsenceRequestList = () => {
         <FlatList
           data={absenceRequests}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <AbsenceRequestListItem request={item} />}
+          renderItem={({ item }) => <AbsenceRequestListItem type={type} request={item} />}
           contentContainerClassName="py-2"
           showsVerticalScrollIndicator={false}
         />

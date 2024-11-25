@@ -73,12 +73,7 @@ const NotificationDetails = ({ route }) => {
             </View>
 
             <View>
-              <Text className="text-sm font-medium text-gray-500 mb-1">Type</Text>
-              <Text className="text-base text-gray-900">{notification.type}</Text>
-            </View>
-
-            <View>
-              <Text className="text-sm font-medium text-gray-500 mb-1">Sent Time</Text>
+              <Text className="text-sm font-medium text-gray-500 mb-1">Time</Text>
               <Text className="text-base text-gray-900">
                 {formatDate(new Date(notification.sent_time))}
               </Text>

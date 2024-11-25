@@ -126,7 +126,6 @@ const StudentHeader = ({ firstName, lastName }: { firstName: string; lastName: s
     <Text className="text-xl font-semibold text-gray-800 text-center">
       {firstName} {lastName}
     </Text>
-    <Text className="text-gray-500 text-center mt-1 text-sm">Absence Request Details</Text>
   </View>
 );
 

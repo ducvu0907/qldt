@@ -36,15 +36,12 @@ const TakeAttendance = () => {
         .filter((entry: any) => entry.status === "UNEXCUSED_ABSENCE" || entry.status === "EXCUSED_ABSENCE")
         .map((entry: any) => entry.student_id);
 
-      setAbsentIds(absentStudentIds);
-    }
-  }, [selectedDate]);
+        setAbsentIds((prevAbsentIds) => {
+          return [...new Set([...prevAbsentIds, ...absentStudentIds])];
+        });
 
-  useEffect(() => {
-    if (classInfo && classInfo.student_accounts) {
-      setAbsentIds([]);
     }
-  }, [classInfo]);
+  }, [attendanceData, selectedDate]);
 
   const handleTakeAttendance = async () => {
     if (!selectedClassId || !token) {

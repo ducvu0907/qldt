@@ -24,26 +24,26 @@ const SettingItem: React.FC<SettingItemProps> = ({
   onToggle 
 }) => (
   <TouchableOpacity 
-    className="bg-white/10 rounded-xl mb-3 flex-row items-center px-5 py-4"
+    className="bg-gray-200 rounded-xl mb-3 flex-row items-center px-5 py-4"
     onPress={onPress}
     disabled={hasSwitch}
   >
-    <View className="w-8 h-8 bg-white/15 rounded-full items-center justify-center">
-      <Icon name={icon} size={16} color="white" />
+    <View className="w-8 h-8 bg-gray-300 rounded-full items-center justify-center">
+      <Icon name={icon} size={16} color="#333" />
     </View>
-    <Text className="text-white font-semibold text-base flex-1 ml-4">
+    <Text className="text-gray-800 font-semibold text-base flex-1 ml-4">
       {title}
     </Text>
     {hasSwitch ? (
       <Switch 
         value={switchValue} 
         onValueChange={onToggle}
-        ios_backgroundColor={"#4B5563"}
-        trackColor={{ false: "#4B5563", true: "#10B981" }}
+        ios_backgroundColor={"#ccc"}
+        trackColor={{ false: "#ccc", true: "#4CAF50" }}
         thumbColor="white"
       />
     ) : (
-      <Icon name="chevron-right" size={14} color="white" style={{ opacity: 0.5 }} />
+      <Icon name="chevron-right" size={14} color="#999" style={{ opacity: 0.6 }} />
     )}
   </TouchableOpacity>
 );
@@ -53,19 +53,19 @@ const Setting = () => {
   const [isEnabled, setIsEnabled] = useState(false);
 
   return (
-    <View className="flex-1 bg-gray-700">
+    <View className="flex-1 bg-white">
       <Topbar title="Settings" />
       
       {/* Profile Section */}
       <ScrollView className="flex-1">
         <View className="p-4">
-          <View className="bg-gray-800/50 rounded-2xl p-4 mb-6">
+          <View className="bg-gray-100 rounded-2xl p-4 mb-6">
             <Profile />
           </View>
 
           {/* Settings Groups */}
           <View className="mb-6">
-            <Text className="text-gray-400 text-sm font-medium mb-3 px-1">
+            <Text className="text-gray-600 text-sm font-medium mb-3 px-1">
               PREFERENCES
             </Text>
             <SettingItem 
@@ -78,7 +78,7 @@ const Setting = () => {
           </View>
 
           <View className="mb-6">
-            <Text className="text-gray-400 text-sm font-medium mb-3 px-1">
+            <Text className="text-gray-600 text-sm font-medium mb-3 px-1">
               ACCOUNT SETTINGS
             </Text>
             <SettingItem 
@@ -97,7 +97,7 @@ const Setting = () => {
       </ScrollView>
 
       {/* Logout Button */}
-      <View className="p-4 border-t border-gray-800">
+      <View className="p-4 border-t border-gray-300">
         <LogoutButton />
       </View>
     </View>

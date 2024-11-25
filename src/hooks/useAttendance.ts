@@ -15,7 +15,7 @@ const useGetAttendance = (date: string) => {
       setLoading(true);
       console.log("Fetching attendance for date:", date);
 
-      let res = await fetch(`${RESOURCE_SERVER_URL}/get_attendance_list`, {
+      const res = await fetch(`${RESOURCE_SERVER_URL}/get_attendance_list`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,8 +33,9 @@ const useGetAttendance = (date: string) => {
         throw new Error(data.meta.message || "Error while fetching attendance list");
       }
 
-      console.log(data.data);
-      setAttendanceData(data.data.attendance_student_details);
+      if (data.data) {
+        setAttendanceData(data.data.attendance_student_details);
+      }
 
     } catch (error: any) {
       Toast.show({
