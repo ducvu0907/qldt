@@ -17,9 +17,10 @@ export interface AssignmentItemData {
 
 interface Props {
   assignment: AssignmentItemData;
+  type: string;
 }
 
-const AssignmentItem: React.FC<Props> = ({ assignment }) => {
+const AssignmentItem: React.FC<Props> = ({ type, assignment }) => {
   const {role} = useContext(AuthContext);
   const navigation = useNavigation<any>();
   const isOverdue = new Date(assignment.deadline) < new Date();
@@ -33,7 +34,12 @@ const AssignmentItem: React.FC<Props> = ({ assignment }) => {
   };
 
   const handleNavigation = () => {
-    navigation.navigate(role === "STUDENT" ? "SubmitAssignment" : "AssignmentMenu", {assignment});
+    if (role === "STUDENT") {
+      navigation.navigate(type === "COMPLETED" ? "AssignmentStudentGrade" : "SubmitAssignment", {assignment});
+    } else {
+      navigation.navigate("AssignmentMenu", {assignment});
+    }
+
   };
 
   return (

@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
 import Checkbox from "expo-checkbox";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -9,6 +9,8 @@ import { formatDate } from "../../helpers";
 import { RESOURCE_SERVER_URL } from "../../types";
 import Topbar from "../../components/Topbar";
 import { useNavigation } from "@react-navigation/native";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { useGetAttendance } from "../../hooks/useAttendance";
 
 export interface TakeAttendanceRequest {
   token: string;
@@ -23,7 +25,20 @@ const TakeAttendance = () => {
   const { token } = useContext(AuthContext);
   const { selectedClassId } = useContext(ClassContext);
   const { classInfo, loading: classInfoLoading } = useGetClassInfo(selectedClassId);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { attendanceData, loading: attendanceLoading } = useGetAttendance(formatDate(selectedDate));
+
+  useEffect(() => {
+    if (attendanceData) {
+      const absentStudentIds = attendanceData
+        .filter((entry: any) => entry.status === "UNEXCUSED_ABSENCE" || entry.status === "EXCUSED_ABSENCE")
+        .map((entry: any) => entry.student_id);
+
+      setAbsentIds(absentStudentIds);
+    }
+  }, [selectedDate]);
 
   useEffect(() => {
     if (classInfo && classInfo.student_accounts) {
@@ -44,7 +59,7 @@ const TakeAttendance = () => {
     const attendanceRequest: TakeAttendanceRequest = {
       token,
       class_id: selectedClassId,
-      date: formatDate(new Date()),
+      date: formatDate(selectedDate),
       attendance_list: absentIds,
     };
 
@@ -85,13 +100,23 @@ const TakeAttendance = () => {
   };
 
   const AttendanceHeader = () => (
-    <View className="px-4 py-6 bg-white border-b border-gray-200">
+    <View className="px-4 py-6 bg-white border-b border-gray-200 items-center">
       <Text className="text-center text-2xl font-bold text-gray-800">
         Attendance Record
       </Text>
-      <Text className="text-center text-lg text-gray-600 mt-2">
-        {formatDate(new Date())}
-      </Text>
+      <DateTimePicker
+        value={selectedDate}
+        mode="date"
+        is24Hour={true}
+        display="default"
+        onChange={(_, date) => {
+          if (date) {
+            setSelectedDate(date);
+          }
+        }}
+        themeVariant="light"
+        style={{ flex: 1 }}
+      />
       <View className="flex-row justify-between mt-4 px-2">
         <View className="flex-row items-center">
           <View className="w-3 h-3 rounded-full bg-green-500 mr-2" />
@@ -137,7 +162,7 @@ const TakeAttendance = () => {
     </TouchableOpacity>
   );
 
-  if (classInfoLoading) {
+  if (classInfoLoading || attendanceLoading) {
     return (
       <View className="flex-1 justify-center items-center bg-gray-50">
         <ActivityIndicator size="large" color="#3B82F6" />

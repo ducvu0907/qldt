@@ -48,7 +48,7 @@ const ChangePassword = () => {
         text1: data.message,
       });
 
-      navigation.popTo("Home");
+      navigation.goBack();
 
     } catch (error: any) {
       Toast.show({
@@ -111,7 +111,7 @@ const ChangePassword = () => {
             onPress={() => {handleChangePassword(); Keyboard.dismiss()}}
             disabled={loading}
           >
-            {!loading ? <Text className="text-white font-semibold text-lg">Change Password</Text> : <ActivityIndicator />}
+            {!loading ? <Text className="text-white font-semibold text-lg">Change Password</Text> : <ActivityIndicator size={24} color={"blue"}/>}
           </TouchableOpacity>
         </View>
       </Pressable>

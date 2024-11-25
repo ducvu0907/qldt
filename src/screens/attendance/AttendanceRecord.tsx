@@ -40,11 +40,11 @@ const AttendanceRecord = () => {
 
         const data = await response.json();
 
+        console.log(data);
         if (data.meta.code !== "1000") {
           throw new Error(data.meta.message || "Error while fetching attendance records");
         }
 
-        console.log(data);
         setRecords(data.data.absent_dates);
 
       } catch (error: any) {
@@ -88,7 +88,7 @@ const AttendanceRecord = () => {
           renderItem={({ item }) => (
             <View className="p-4 flex-row justify-evenly items-center border-b border-gray-300">
               <Text className="text-2xl font-semibold">Absent Date:</Text>
-                <Text className="text-2xl mt-2 text-gray-600">{item}</Text>
+                <Text className="text-2xl text-gray-600">{item}</Text>
             </View>
           )}
           keyExtractor={(item, index) => index.toString()}

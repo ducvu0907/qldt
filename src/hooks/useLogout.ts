@@ -11,7 +11,7 @@ export const useLogout = () => {
   const logout = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${AUTH_SERVER_URL}/logout`, {
+      fetch(`${AUTH_SERVER_URL}/logout`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
@@ -19,17 +19,11 @@ export const useLogout = () => {
         }),
       });
 
-      const data = await res.json();
-
       await SecureStore.deleteItemAsync("access-token");
       setToken(null);
       setRole(null);
       setUserId(null);
       setEmail(null);
-      Toast.show({
-        type: "success",
-        text1: data.message
-      });
 
     } catch (error: any) {
       Toast.show({

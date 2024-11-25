@@ -19,6 +19,10 @@ const ViewResponses = ({route}) => {
     setRefreshing(false);
   }, [refetch]);
 
+  useEffect(() => {
+    refetch(assignment.id);
+  }, []);
+
   // Refetch when gaining focus
   //useFocusEffect(
   //  useCallback(() => {
@@ -34,7 +38,7 @@ const ViewResponses = ({route}) => {
       <View className="flex justify-center items-center bg-gray-100">
         <Topbar title="Assignment Responses" showBack={true} />
         <ActivityIndicator size="large" color="#4B5563" />
-        <Text className="mt-4 text-xl text-gray-600">Loading...</Text>
+        <Text className="mt-2 text-xl text-gray-600">Loading...</Text>
       </View>
     );
   }

@@ -3,6 +3,7 @@ import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { useState } from "react";
 import { useGetAssignmentResponses } from "../hooks/useGetAssignmentResponses";
 import { StudentAccount } from "./ClassInfo";
+import Toast from "react-native-toast-message";
 
 export interface AssignmentResponseItemData {
   id: number;
@@ -34,10 +35,22 @@ const AssignmentResponseItem: React.FC<AssignmentResponseProps> = ({
   };
 
   const handleGradeSubmit = async () => {
+    if (!grade) {
+      Toast.show({
+        type: "error",
+        text1: "grade input is empty"
+      });
+      return;
+    }
+
     await refetch(assignmentResponse.assignment_id.toString(), {
       score: grade.toString(), 
       submission_id: assignmentResponse.id.toString()
     });
+    Toast.show({
+      type:"success",
+      text1: "grade submission successfully"
+    })
   };
 
   const getGradeColor = (grade: number | null) => {
@@ -87,7 +100,7 @@ const AssignmentResponseItem: React.FC<AssignmentResponseProps> = ({
           keyboardType="numeric"
           placeholder="Grade (0-10)"
           placeholderTextColor="#6B7280"
-          className="flex-1 bg-gray-800 rounded-lg px-3 py-2 text-white"
+          className="flex-1 bg-gray-800 rounded-lg px-3 py-2 text-white text-base"
         />
         <TouchableOpacity 
           onPress={handleGradeSubmit}

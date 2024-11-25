@@ -12,7 +12,7 @@ const ConversationItem = ({ item }: { item: ConversationItemData }) => {
   return (
     <TouchableOpacity 
       className="flex-row items-center p-4 border-b border-gray-100"
-      onPress={() => navigation.navigate('ConversationDetails', { conversationId: item.id })}
+      onPress={() => navigation.navigate('ConversationDetails', { conversationId: item.id, partnerId: item.partner.id })}
     >
       <Image 
         source={{ uri: item.partner.avatar || 'https://avatar.iran.liara.run/username' }}

@@ -83,7 +83,7 @@ const ChangeInfo = () => {
         text1: "Change user info successfully"
       });
 
-      navigation.navigate('Home');
+      navigation.goBack();
 
     } catch (error: any) {
       Toast.show({

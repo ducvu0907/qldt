@@ -33,7 +33,7 @@ const Profile = () => {
     <View className="w-full bg-white items-center p-2 flex-row justify-around border-4 rounded-lg border-white">
       <Image
         source={{ uri: user.avatar !== null ? user.avatar : `https://avatar.iran.liara.run/username?username=${user.ho + user.ten}` }}
-        className="w-24 h-24 rounded-full"
+        className="w-12 h-12 rounded-full"
       />
         <View className="items-start">
           <Text className="text-xl font-semibold">Ten: {user.ho} {user.ten}</Text>

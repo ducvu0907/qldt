@@ -9,7 +9,6 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const AssignmentListStudent = ({route}) => {
-  const { role } = useContext(AuthContext);
   const {type} = route.params;
   const { assignments, loading, refetch} = useGetStudentAssignments(type);
   const [refreshing, setRefreshing] = useState(false);
@@ -53,7 +52,7 @@ const AssignmentListStudent = ({route}) => {
       ) : (
         <FlatList
           data={assignments}
-          renderItem={({ item }) => <AssignmentItem assignment={item} />}
+          renderItem={({ item }) => <AssignmentItem type={type} assignment={item} />}
           keyExtractor={(item) => item.id.toString()}
           onRefresh={onRefresh}
           refreshing={refreshing}

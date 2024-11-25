@@ -94,9 +94,9 @@ const NotificationList = () => {
         })
         .finally(() => {
           setLoadingMarkRead(false);
-          navigation.navigate("NotificationDetails", { notification });
         });
     }
+    navigation.navigate("NotificationDetails", { notification });
   }, [loadingMarkRead, markNotificationAsRead, getNotifications]);
 
   const renderItem = useCallback(({ item }: { item: NotificationItemData }) => (

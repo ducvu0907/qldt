@@ -56,12 +56,14 @@ const useGetListConversation = (index: string, count: string) => {
       const data = await res.json();
 
       if (data.meta.code !== "1000") {
-        throw new Error(data.meta.message || "Error while fetching conversations");
+        if (data.meta.code !== "9999") {
+          throw new Error(data.meta.message || "Error while fetching conversations");
+        }
       }
 
       console.log(data.data);
 
-      setConversations([...data.data.conversations]);
+      setConversations(data.data.conversations ? [...data.data.conversations] : []);
       setNumNewMessages(data.data.num_new_message);
 
     } catch (error: any) {
@@ -134,11 +136,11 @@ const useGetConversation = (index: string, count: string, conversation_id: strin
   return { conversation, loading, refetch: fetchConversation };
 };
 
-const useDeleteMessage = (message_id: string, partner_id: string) => {
+const useDeleteMessage = () => {
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const deleteMessage = useCallback(async () => {
+  const deleteMessage = useCallback(async (message_id: string, partner_id: string) => {
     try {
       setLoading(true);
       console.log("fetching use conversations");
@@ -177,14 +179,10 @@ const useDeleteMessage = (message_id: string, partner_id: string) => {
     }
   }, [token]);
 
-  useEffect(() => {
-    deleteMessage();
-  }, []);
-
-  return { loading, refetch: deleteMessage };
+  return { loading, deleteMessage };
 };
 export {
   useGetListConversation,
   useGetConversation,
-  useDeleteMessage
+  useDeleteMessage,
 };

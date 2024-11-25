@@ -155,7 +155,6 @@ const EditClass = () => {
         text1: "Class updated successfully",
       });
 
-      refetch();
       navigation.goBack();
 
     } catch (error: any) {

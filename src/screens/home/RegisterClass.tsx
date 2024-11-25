@@ -75,7 +75,7 @@ const RegisterClass = () => {
       <View className="flex-1 p-5">
 
         <View className="mb-5">
-          <Text className="text-white text-lg font-semibold mb-2">Enter Class IDs (separated by comma)</Text>
+          <Text className="text-white text-lg font-semibold mb-2">Enter Class IDs</Text>
           <View className="flex-row items-center bg-white/30 rounded-lg px-4 py-3">
             <Icon name="book" size={20} color="white" />
             <TextInput

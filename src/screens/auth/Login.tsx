@@ -55,7 +55,7 @@ const Login = () => {
         // body: JSON.stringify(requestData) 
         // FIXME: hard-coded for testing, change back later
         body: JSON.stringify({
-          email: "vmh1@hust.edu.vn",
+          email: "vmh@hust.edu.vn",
           password: "123123",
           device_id: 1,
           fcm_token: null

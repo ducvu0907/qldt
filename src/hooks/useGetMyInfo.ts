@@ -29,6 +29,7 @@ export const useGetMyInfo = () => {
         throw new Error(data.message || "Error while fetching user info");
       }
 
+      console.log(data.data);
       setUser(data.data);
 
     } catch (error: any) {

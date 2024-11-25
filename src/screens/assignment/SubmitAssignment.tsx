@@ -14,9 +14,9 @@ export interface SubmitAssignmentRequest {
   textResponse: string;
 }
 
-const SubmitAssignment = ({route, navigation}) => {
+const SubmitAssignment = ({ route, navigation }) => {
   const { token } = useContext(AuthContext);
-  const {assignment} = route.params;
+  const { assignment } = route.params;
   const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<SubmitAssignmentRequest>({
     file: null,
@@ -54,17 +54,19 @@ const SubmitAssignment = ({route, navigation}) => {
 
       const form = new FormData();
       form.append("token", formData.token);
-      form.append("assignmentId", formData.assignmentId);
+      form.append("assignmentId", formData.assignmentId.toString());
       form.append("textResponse", formData.textResponse);
 
-      if (formData.file.uri) {
+      if (formData.file) {
         form.append("file", {
           uri: formData.file.uri,
           type: formData.file.mimeType,
           name: formData.file.name,
         });
+
       }
 
+      console.log(form);
       const res = await fetch(`${RESOURCE_SERVER_URL}/submit_survey`, {
         method: 'POST',
         headers: {
@@ -75,8 +77,10 @@ const SubmitAssignment = ({route, navigation}) => {
 
       const data = await res.json();
 
+      console.log(data);
+
       if (data.meta.code !== "1000") {
-        throw new Error(data.meta.message || "Unknown error occurred while submitting assignment");
+        throw new Error(data.meta.message || "Error occurred while submitting assignment");
       }
 
       Toast.show({
@@ -97,53 +101,82 @@ const SubmitAssignment = ({route, navigation}) => {
   };
 
   return (
-    <Pressable onPress={() => {
-      Keyboard.dismiss();
-    }}>
-      <View className="w-full h-full bg-red-700 justify-around">
+    <Pressable onPress={() => { Keyboard.dismiss(); }} style={{ flex: 1 }}>
+      <View className="bg-red-500 flex-1 justify-center p-6">
         <SafeAreaView style={{ flex: 1 }}>
-          <View className="flex items-center mt-22 mb-10">
+          <View className="items-center mb-12">
             <Logo />
           </View>
 
-          <View className="w-full justify-center items-center px-8">
-            <Text className="text-white text-4xl mb-12">Submit Assignment</Text>
-            <View className="w-full space-y-4 mb-6">
+          <Text className="text-white text-3xl font-semibold text-center mb-10">Submit Your Assignment</Text>
 
-              <TextInput
-                placeholder="Response Text"
-                value={formData.textResponse}
-                onChangeText={(value) => handleChangeInput('textResponse', value)}
-                placeholderTextColor="#ffffff80"
-                multiline
-                numberOfLines={4}
-                className="border-2 border-white text-2xl rounded-lg p-3 text-white w-full mb-4"
-              />
+          <View className="space-y-6">
+            <TextInput
+              placeholder="Your response..."
+              value={formData.textResponse}
+              onChangeText={(value) => handleChangeInput('textResponse', value)}
+              placeholderTextColor="#ffffff80"
+              multiline
+              numberOfLines={4}
+              style={{
+                borderColor: "#ffffff", 
+                borderWidth: 1, 
+                color: "#fff", 
+                fontSize: 18, 
+                borderRadius: 8, 
+                padding: 12,
+                textAlignVertical: "top"
+              }}
+            />
 
-              <TouchableOpacity
-                onPress={() => {
-                  handlePickingFile();
-                }}
-                className="border-2 border-white rounded-lg p-3 w-full mb-4">
-                <Text className="text-white text-2xl text-center">
-                  {formData.file ? formData.file.name : "Select File"}
+            <TouchableOpacity
+              onPress={handlePickingFile}
+              style={{
+                borderColor: "#ffffff", 
+                borderWidth: 1, 
+                borderRadius: 8, 
+                padding: 12, 
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: "#4A90E2",
+                marginTop: 4
+              }}
+            >
+              <Text className='text-white text-xl'>
+                {formData.file ? formData.file.name : "Choose File"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View className="mt-12 items-center">
+            <TouchableOpacity
+              onPress={handleSubmitAssignment}
+              disabled={loading}
+              style={{
+                backgroundColor: "#ffffff", 
+                width: "60%", 
+                paddingVertical: 14, 
+                borderRadius: 50, 
+                alignItems: "center", 
+                justifyContent: "center",
+                opacity: loading ? 0.6 : 1
+              }}
+            >
+              {loading ? (
+                <ActivityIndicator size="large" color="#3b5998" />
+              ) : (
+                <Text style={{ fontSize: 20, color: "#3b5998", fontWeight: "bold" }}>
+                  Submit
                 </Text>
-              </TouchableOpacity>
-            </View>
+              )}
+            </TouchableOpacity>
 
-            <View className="w-full items-center">
-              <TouchableOpacity
-                className="bg-white w-2/5 py-4 rounded-full items-center mb-5"
-                onPress={handleSubmitAssignment}
-                disabled={loading}
-              >
-                {!loading ? <Text className="text-blue-500 text-3xl font-bold text-center">Submit</Text> : <ActivityIndicator />}
-              </TouchableOpacity>
-
-              <TouchableOpacity className="items-center" onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back-outline" size={30} color="white" />
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginTop: 15 }}
+            >
+              <Ionicons name="arrow-back-outline" size={30} color="white" />
+            </TouchableOpacity>
           </View>
         </SafeAreaView>
       </View>
