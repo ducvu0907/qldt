@@ -7,6 +7,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import Toast from 'react-native-toast-message';
 import * as SecureStore from "expo-secure-store";
 import { AUTH_SERVER_URL } from '../../types';
+import { validateLoginInputs } from '../../helpers';
 
 export type LoginRequest = {
   email: string,
@@ -41,8 +42,10 @@ const Login = () => {
       setLoading(true);
 
       const requestData: any = {
-        "email": formData.email,
-        "password": formData.password,
+        //"email": formData.email,
+        //"password": formData.password,
+        "email": "vmh@hust.edu.vn",
+        "password": "123123",
         "device_id": 1,
         "fcm_token": null,
       };
@@ -52,14 +55,7 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        //body: JSON.stringify(requestData) 
-        // FIXME: hard-coded for testing, change back later
-        body: JSON.stringify({
-          email: "vmh1@hust.edu.vn",
-          password: "123123",
-          device_id: 1,
-          fcm_token: null
-        }),
+        body: JSON.stringify(requestData) 
       });
 
       const data = await res.json();

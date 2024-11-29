@@ -9,6 +9,7 @@ import Toast from 'react-native-toast-message';
 import { formatDate } from '../../helpers';
 import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
+import { NewThingContext } from '../../contexts/NewThingContext';
 
 const MessageBubble = React.memo(({ message, isOwnMessage, onDelete }) => {
   const [open, setOpen] = useState(false);

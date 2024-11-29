@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Image, RefreshControl, TouchableOpacity } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native'; // import useFocusEffect
 import { useGetNotifications, useMarkNotificationAsRead, NotificationItemData, useGetUnreadNotificationCount } from '../../hooks/useNotification';
 import { formatDate } from '../../helpers';
 import Topbar from '../../components/Topbar';
+import { NewThingContext } from '../../contexts/NewThingContext';
 
 const NotificationIcon = ({ type }: { type: string }) => {
   let iconColor = 'bg-blue-500';
@@ -79,7 +80,7 @@ const NotificationItem = ({
 
 const NotificationList = () => {
   const { notifications, loading, getNotifications } = useGetNotifications('0', '20');
-  const {getUnreadNotificationCount} = useGetUnreadNotificationCount();
+  const {unreadNotifications, setUnreadNotifications} = useContext(NewThingContext);
   const [loadingMarkRead, setLoadingMarkRead] = useState(false);
   const { markNotificationAsRead } = useMarkNotificationAsRead();
   const navigation = useNavigation<any>();
@@ -90,7 +91,7 @@ const NotificationList = () => {
       markNotificationAsRead(notification.id.toString())
         .then(() => {
           getNotifications();
-          getUnreadNotificationCount();
+          setUnreadNotifications(unreadNotifications - 1);
         })
         .finally(() => {
           setLoadingMarkRead(false);

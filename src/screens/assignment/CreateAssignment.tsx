@@ -12,7 +12,7 @@ import { ClassContext } from '../../contexts/ClassContext';
 import { formatDateTime, validateAssignmentInputs } from '../../helpers';
 import { RESOURCE_SERVER_URL } from '../../types';
 
-interface CreateAssignmentRequest {
+export interface CreateAssignmentRequest {
   file: any;
   token: string;
   classId: string;
@@ -73,19 +73,16 @@ const CreateAssignment = () => {
       setLoading(true);
       const form = new FormData();
       
-      // Append form data
-      Object.entries({
-        token: formData.token,
-        classId: formData.classId,
-        title: formData.title,
-        description: formData.description,
-        deadline: formatDateTime(formData.deadline),
-        file: {
-          uri: formData.file.uri,
-          type: formData.file.mimeType,
-          name: formData.file.name,
-        }
-      }).forEach(([key, value]) => form.append(key, value));
+      form.append("token", formData.token);
+      form.append("classId", formData.classId);
+      form.append("title", formData.title);
+      form.append("description", formData.description);
+      form.append("deadline", formatDateTime(formData.deadline));
+      form.append("file", {
+        uri: formData.file.uri,
+        type: formData.file.mimeType,
+        name: formData.file.name,
+      });
 
       const response = await fetch(`${RESOURCE_SERVER_URL}/create_survey`, {
         method: 'POST',

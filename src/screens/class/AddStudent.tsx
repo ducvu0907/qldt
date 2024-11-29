@@ -5,14 +5,11 @@ import {
   TouchableOpacity, 
   Pressable, 
   Keyboard, 
-  SafeAreaView, 
   ActivityIndicator 
 } from 'react-native';
-import Logo from "../../components/Logo";
 import { useContext, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { AuthContext } from '../../contexts/AuthContext';
 import { RESOURCE_SERVER_URL } from '../../types';
 import { ClassContext } from '../../contexts/ClassContext';
@@ -68,7 +65,7 @@ const AddStudent = () => {
       const data = await res.json();
 
       if (data.meta.code !== "1000") {
-        throw new Error(data.data || "Unable to add student. Please try again.");
+        throw new Error(data.data || "Error while adding student");
       }
 
       Toast.show({

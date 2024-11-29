@@ -11,7 +11,7 @@ import Topbar from '../../components/Topbar';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { formatDate } from '../../helpers';
 import { useSendNotification } from '../../hooks/useNotification';
-import { useGetClassInfo } from '../../hooks/useGetClassInfo';
+import { useGetBasicClassInfo, useGetClassInfo } from '../../hooks/useGetClassInfo';
 
 export interface AbsenceRequest {
   token: string;
@@ -25,7 +25,7 @@ export interface AbsenceRequest {
 const RequestAbsence = () => {
   const { token } = useContext(AuthContext);
   const { selectedClassId } = useContext(ClassContext);
-  const {classInfo} = useGetClassInfo(selectedClassId);
+  const {classInfo} = useGetBasicClassInfo(selectedClassId); // this hook has lecturer_id for the request, the details one doesn't have lecturer id for some reason
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<AbsenceRequest>({
     file: null,

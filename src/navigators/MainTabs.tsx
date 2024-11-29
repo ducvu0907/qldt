@@ -8,22 +8,23 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View, Text } from 'react-native';
 import { useGetUnreadNotificationCount } from '../hooks/useNotification';
 import { useGetListConversation } from "../hooks/useMessage";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { AssignmentStudentStack } from "./AssignmentStudentStack";
+import { useFocusEffect } from "@react-navigation/native";
+import { NewThingContext } from "../contexts/NewThingContext";
 
 const Tab = createBottomTabNavigator();
 
-const NotificationIcon = ({ color, size }: { color: string; size: number }) => {
-  const { unreads } = useGetUnreadNotificationCount();
-  
+const NotificationIcon = ({ color, size, unreadNotifications }: { color: string; size: number, unreadNotifications: number }) => {
+
   return (
     <View>
       <Ionicons name="notifications" size={size} color={color} />
-      {unreads > 0 && (
+      {unreadNotifications > 0 && (
         <View className="absolute -top-1 -right-4 bg-red-500 rounded-full min-w-[16px] h-4 px-1 items-center justify-center">
           <Text className="text-white text-xs font-bold">
-            {unreads > 99 ? '99+' : unreads}
+            {unreadNotifications > 99 ? '99+' : unreadNotifications}
           </Text>
         </View>
       )}
@@ -31,16 +32,14 @@ const NotificationIcon = ({ color, size }: { color: string; size: number }) => {
   );
 };
 
-const MessageIcon = ({ color, size }: { color: string; size: number }) => {
-  const {numNewMessages} = useGetListConversation('0', '100');
-
+const MessageIcon = ({ color, size, numNewMessages }: { color: string; size: number, numNewMessages: number }) => {
   return (
     <View>
       <Ionicons name="chatbubble-ellipses" size={size} color={color} />
-      {parseInt(numNewMessages) > 0 && (
+      {numNewMessages > 0 && (
         <View className="absolute -top-1 -right-4 bg-red-500 rounded-full min-w-[16px] h-4 px-1 items-center justify-center">
           <Text className="text-white text-xs font-bold">
-            {parseInt(numNewMessages) > 99 ? '99+' : numNewMessages}
+            {numNewMessages > 99 ? '99+' : numNewMessages}
           </Text>
         </View>
       )}
@@ -50,6 +49,7 @@ const MessageIcon = ({ color, size }: { color: string; size: number }) => {
 
 const MainTabs = () => {
   const {role} = useContext(AuthContext);
+  const {numNewMessages, unreadNotifications} = useContext(NewThingContext);
 
   return (
     <Tab.Navigator 
@@ -82,7 +82,7 @@ const MainTabs = () => {
         component={MessageStack}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MessageIcon size={size} color={color} />
+            <MessageIcon size={size} color={color} numNewMessages={numNewMessages}/>
           ),
         }}
       />
@@ -91,7 +91,7 @@ const MainTabs = () => {
         component={NotificationStack}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <NotificationIcon color={color} size={size} />
+            <NotificationIcon color={color} size={size} unreadNotifications={unreadNotifications}/>
           ),
         }}
       />

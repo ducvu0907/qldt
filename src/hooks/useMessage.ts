@@ -2,6 +2,7 @@ import { useState, useEffect, useContext, useCallback } from 'react';
 import { RESOURCE_SERVER_URL } from '../types';
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
+import { NewThingContext } from '../contexts/NewThingContext';
 
 // for displaying in the list of conversations
 export interface ConversationItemData {
@@ -89,6 +90,7 @@ const useGetConversation = (index: string, count: string, conversation_id: strin
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [conversation, setConversation] = useState<Message[] | null>(null);
+  const {numNewMessages, setNumNewMessages} = useContext(NewThingContext);
 
   const fetchConversation = useCallback(async () => {
     try {
@@ -117,6 +119,9 @@ const useGetConversation = (index: string, count: string, conversation_id: strin
 
       console.log(data.data);
       setConversation(data.data.conversation);
+      if (data.data.conversation.length > 0 && data.data.conversation[0].unread === 1) {
+        setNumNewMessages(numNewMessages - 1);
+      }
 
     } catch (error: any) {
       Toast.show({

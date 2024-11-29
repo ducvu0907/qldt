@@ -63,7 +63,6 @@ const StatusBadge = ({ status }: { status?: string }) => {
 };
 
 const ClassInfo = () => {
-  const {role} = useContext(AuthContext);
   const { selectedClassId } = useContext(ClassContext);
   const { classInfo, loading } = useGetClassInfo(selectedClassId);
 
@@ -118,12 +117,11 @@ const ClassInfo = () => {
           value={classInfo?.schedule}
         />
         
-        {role === "LECTURER" && <InfoItem 
+        <InfoItem 
           icon="person-outline" 
           label="Lecturer" 
           value={classInfo?.lecturer_name ? `${classInfo.lecturer_name}` : 'Not assigned'}
         />
-        }
         
         <InfoItem 
           icon="calendar-outline" 
@@ -137,12 +135,11 @@ const ClassInfo = () => {
           value={formatDate(classInfo?.end_date)}
         />
         
-        {role === "LECTURER" && <InfoItem 
+        <InfoItem 
           icon="people-outline" 
           label="Students Enrolled" 
           value={classInfo?.student_count?.toString()}
         />
-        }
 
       </View>
 
