@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView, ActivityIndicator, Modal, Platform } from 'react-native';
 import { useState, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -46,8 +46,9 @@ const CreateAssignment = () => {
   const { token } = useContext(AuthContext);
   const { selectedClassId } = useContext(ClassContext);
   const [loading, setLoading] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [formData, setFormData] = useState<CreateAssignmentRequest>({
-    file: {} as File,
+    file: null,
     token: token || "",
     classId: selectedClassId || "",
     title: "",
@@ -66,6 +67,17 @@ const CreateAssignment = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    const currentDate = selectedDate || formData.deadline;
+    
+    // For Android, close the modal after selection
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+    }
+    
+    handleChangeInput('deadline', currentDate);
+  };
+
   const handleCreateAssignment = async () => {
     if (!validateAssignmentInputs(formData)) return;
 
@@ -78,12 +90,15 @@ const CreateAssignment = () => {
       form.append("title", formData.title);
       form.append("description", formData.description);
       form.append("deadline", formatDateTime(formData.deadline));
-      form.append("file", {
-        uri: formData.file.uri,
-        type: formData.file.mimeType,
-        name: formData.file.name,
-      });
+      if (formData.file) {
+        form.append("file", {
+          uri: formData.file.uri,
+          type: formData.file.mimeType,
+          name: formData.file.name,
+        });
 
+      }
+      console.log(form);
       const response = await fetch(`${RESOURCE_SERVER_URL}/create_survey`, {
         method: 'POST',
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -138,18 +153,51 @@ const CreateAssignment = () => {
               />
 
               {/* Deadline Picker */}
-              <View className="flex-row items-center border-2 border-white rounded-lg p-4">
-                <Text className="text-white text-xl mr-4">Deadline:</Text>
-                <DateTimePicker
-                  value={formData.deadline}
-                  mode="date"
-                  is24Hour={true}
-                  display="default"
-                  onChange={(_, date) => date && handleChangeInput('deadline', date)}
-                  themeVariant="dark"
-                  style={{ flex: 1 }}
-                />
-              </View>
+              {Platform.OS === 'ios' ? (
+                <View className="flex-row items-center border-2 border-white rounded-lg p-4">
+                  <Text className="text-white text-xl mr-4">Deadline:</Text>
+                  <DateTimePicker
+                    value={formData.deadline}
+                    mode="date"
+                    is24Hour={true}
+                    display="default"
+                    onChange={handleDateChange}
+                    themeVariant="dark"
+                    style={{ flex: 1 }}
+                  />
+                </View>
+              ) : (
+                <TouchableOpacity 
+                  onPress={() => setShowDatePicker(true)}
+                  className="flex-row items-center border-2 border-white rounded-lg p-4"
+                >
+                  <Text className="text-white text-xl mr-4">Deadline:</Text>
+                  <Text className="text-white text-xl">
+                    {formData.deadline.toLocaleDateString()}
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              {/* Android Date Picker Modal */}
+              {Platform.OS === 'android' && showDatePicker && (
+                <Modal
+                  transparent={true}
+                  animationType="slide"
+                  visible={showDatePicker}
+                  onRequestClose={() => setShowDatePicker(false)}
+                >
+                  <View className="flex-1 justify-center items-center bg-black/50">
+                      <DateTimePicker
+                        value={formData.deadline}
+                        mode="date"
+                        is24Hour={true}
+                        display="default"
+                        onChange={handleDateChange}
+                        themeVariant="light"
+                      />
+                  </View>
+                </Modal>
+              )}
 
               {/* File Picker */}
               <TouchableOpacity
@@ -157,7 +205,7 @@ const CreateAssignment = () => {
                 className="border-2 border-white rounded-lg mt-4 p-4"
               >
                 <Text className="text-white text-xl text-center">
-                  {formData.file.name || "Select File"}
+                  {formData.file || "Select File"}
                 </Text>
               </TouchableOpacity>
             </View>

@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView, ActivityIndicator, Alert, Platform } from 'react-native';
 import Logo from "../../components/Logo";
 import { useContext, useEffect, useState } from 'react';
 import DropDownPicker from "react-native-dropdown-picker";
@@ -38,6 +38,9 @@ const EditClass = () => {
     end_date: new Date(classInfo?.end_date || ""),
   });
 
+  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -57,6 +60,24 @@ const EditClass = () => {
     setFormData(prev => ({
       ...prev,
       [field]: value,
+    }));
+  };
+
+  const onStartDateChange = (event: any, selectedDate?: Date) => {
+    const currentDate = selectedDate || formData.start_date;
+    setShowStartDatePicker(Platform.OS === 'ios');
+    setFormData(prevState => ({
+      ...prevState,
+      start_date: currentDate,
+    }));
+  };
+
+  const onEndDateChange = (event: any, selectedDate?: Date) => {
+    const currentDate = selectedDate || formData.end_date;
+    setShowEndDatePicker(Platform.OS === 'ios');
+    setFormData(prevState => ({
+      ...prevState,
+      end_date: currentDate,
     }));
   };
 
@@ -202,7 +223,7 @@ const EditClass = () => {
       setOpen(false);
     }}>
       <View className="w-full h-full bg-gray-50">
-        <Topbar title='Edit Class' showBack={true}/>
+        <Topbar title='Edit Class' showBack={true} />
         <SafeAreaView className="flex-1">
           <View className="px-6 py-4">
             <View className="space-y-4">
@@ -270,45 +291,48 @@ const EditClass = () => {
               <View className="flex-row gap-4">
                 <View className="flex-1">
                   <Text className="text-xl font-medium text-gray-700 mb-1">Start Date</Text>
-                  <View className="bg-white border border-gray-300 rounded-lg px-4 py-3">
+                  <TouchableOpacity
+                    className="bg-white border border-gray-300 rounded-lg px-4 py-3"
+                    onPress={() => setShowStartDatePicker(true)}
+                  >
+                    <Text>{formatDate(formData.start_date)}</Text>
+                  </TouchableOpacity>
+
+                  {(Platform.OS === 'ios' || showStartDatePicker) && (
                     <DateTimePicker
+                      testID="startDatePicker"
                       value={formData.start_date}
                       mode="date"
-                      display="default"
-                      onChange={(event, date) => {
-                        if (date) {
-                          setFormData((prevState) => ({
-                            ...prevState,
-                            start_date: date,
-                          }));
-                        }
-                      }}
+                      is24Hour={true}
+                      display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                      onChange={onStartDateChange}
                       style={{ height: 24 }}
                     />
-                  </View>
+                  )}
                 </View>
 
                 <View className="flex-1">
                   <Text className="text-xl font-medium text-gray-700 mb-1">End Date</Text>
-                  <View className="items-center bg-white border border-gray-300 rounded-lg px-4 py-3">
+                  <TouchableOpacity
+                    className="bg-white border border-gray-300 rounded-lg px-4 py-3"
+                    onPress={() => setShowEndDatePicker(true)}
+                  >
+                    <Text>{formatDate(formData.end_date)}</Text>
+                  </TouchableOpacity>
+
+                  {(Platform.OS === 'ios' || showEndDatePicker) && (
                     <DateTimePicker
+                      testID="endDatePicker"
                       value={formData.end_date}
                       mode="date"
-                      display="default"
-                      onChange={(event, date) => {
-                        if (date) {
-                          setFormData((prevState) => ({
-                            ...prevState,
-                            end_date: date,
-                          }));
-                        }
-                      }}
+                      is24Hour={true}
+                      display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                      onChange={onEndDateChange}
                       style={{ height: 24 }}
                     />
-                  </View>
+                  )}
                 </View>
               </View>
-
               {/* Action Buttons */}
               <View className="flex-row gap-4 mt-8">
                 <TouchableOpacity

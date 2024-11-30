@@ -11,7 +11,7 @@ const AssignmentTabs = () => {
       <Tab.Navigator>
         <Tab.Screen name='Upcoming' component={AssignmentListStudent} initialParams={{ type: "UPCOMING" }} />
         <Tab.Screen name='Completed' component={AssignmentListStudent} initialParams={{ type: "COMPLETED" }} />
-        <Tab.Screen name='Pass due' component={AssignmentListStudent} initialParams={{ type: "PASS_DUE" }} />
+        <Tab.Screen name='Pass Due' component={AssignmentListStudent} initialParams={{ type: "PASS_DUE" }} />
       </Tab.Navigator>
     </>
   );

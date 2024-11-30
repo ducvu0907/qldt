@@ -44,7 +44,7 @@ const Login = () => {
       const requestData: any = {
         //"email": formData.email,
         //"password": formData.password,
-        "email": "vmh@hust.edu.vn",
+        "email": "vmh1@hust.edu.vn",
         "password": "123123",
         "device_id": 1,
         "fcm_token": null,

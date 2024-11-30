@@ -95,31 +95,27 @@ const ConversationDetails = ({ route }) => {
         type: "success",
         text1: "Message deleted successfully"
       });
-    } catch (error) {
+    } catch (error: any) {
       Toast.show({
         type: "error",
         text1: "Failed to delete message",
-        text2: error.message
       });
     }
   };
 
   const handleOpenCamera = async () => {
-    // Request camera permissions
     const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
     if (cameraStatus !== 'granted') {
       Alert.alert('Permission needed', 'Camera permission is required to take photos');
       return;
     }
 
-    // Request media library permissions
     const { status: mediaLibraryStatus } = await MediaLibrary.requestPermissionsAsync();
     if (mediaLibraryStatus !== 'granted') {
       Alert.alert('Permission needed', 'Media library permission is required to save photos');
       return;
     }
 
-    // Launch camera
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ["images"],
       allowsEditing: false,
@@ -129,7 +125,6 @@ const ConversationDetails = ({ route }) => {
     if (!result.canceled) {
       const uri = result.assets[0].uri;
       
-      // Save photo to media library
       try {
         const asset = await MediaLibrary.createAssetAsync(uri);
         await MediaLibrary.createAlbumAsync("YourAppName", asset, false);
@@ -138,11 +133,10 @@ const ConversationDetails = ({ route }) => {
           type: 'success',
           text1: 'Photo saved successfully'
         });
-      } catch (error) {
+      } catch (error: any) {
         Toast.show({
           type: 'error',
           text1: 'Failed to save photo',
-          text2: error.message
         });
       }
     }

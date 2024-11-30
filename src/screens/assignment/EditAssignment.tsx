@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, SafeAreaView, Pressable, Keyboard } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, SafeAreaView, Pressable, Keyboard, Modal, Platform } from 'react-native';
 import { useState, useContext } from 'react';
 import Toast from 'react-native-toast-message';
 import { RESOURCE_SERVER_URL } from '../../types';
@@ -23,6 +23,7 @@ const EditAssignment = ({ route }) => {
   const navigation = useNavigation<any>();
   const { id, description, deadline } = route.params.assignment;
   const [loading, setLoading] = useState<boolean>(false);
+  const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [formData, setFormData] = useState<EditAssignmentRequest>({
     token: token || '',
     assignmentId: id,
@@ -41,6 +42,17 @@ const EditAssignment = ({ route }) => {
       ...prev,
       [field]: value,
     }));
+  };
+
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    const currentDate = selectedDate || (formData.deadline ? new Date(formData.deadline) : new Date());
+    
+    // For Android, close the modal after selection
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+    }
+    
+    handleChangeInput('deadline', currentDate.toISOString());
   };
 
   const handleEditAssignment = async () => {
@@ -136,27 +148,69 @@ const EditAssignment = ({ route }) => {
           </View>
 
           {/* Deadline Section */}
-          <View className="space-y-2">
-            <Text className="text-gray-600 text-sm font-medium ml-1">
-              Submission Deadline
-            </Text>
-            <View className="flex-row items-center bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
-              <Ionicons name="calendar-outline" size={24} color="#4F46E5" />
-              <DateTimePicker
-                value={formData.deadline ? new Date(formData.deadline) : new Date()}
-                mode="date"
-                is24Hour={true}
-                display="default"
-                onChange={(event, date) => {
-                  if (date) {
-                    handleChangeInput('deadline', date.toISOString());
-                  }
-                }}
-                themeVariant="light"
-                style={{ flex: 1, marginLeft: 8 }}
-              />
+          {Platform.OS === 'ios' ? (
+            <View className="space-y-2">
+              <Text className="text-gray-600 text-sm font-medium ml-1">
+                Submission Deadline
+              </Text>
+              <View className="flex-row items-center bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                <Ionicons name="calendar-outline" size={24} color="#4F46E5" />
+                <DateTimePicker
+                  value={formData.deadline ? new Date(formData.deadline) : new Date()}
+                  mode="date"
+                  is24Hour={true}
+                  display="default"
+                  onChange={(event, date) => {
+                    if (date) {
+                      handleChangeInput('deadline', date.toISOString());
+                    }
+                  }}
+                  themeVariant="light"
+                  style={{ flex: 1, marginLeft: 8 }}
+                />
+              </View>
             </View>
-          </View>
+          ) : (
+            <View className="space-y-2">
+              <Text className="text-gray-600 text-sm font-medium ml-1">
+                Submission Deadline
+              </Text>
+              <TouchableOpacity 
+                onPress={() => setShowDatePicker(true)}
+                className="flex-row items-center bg-white border border-gray-200 rounded-xl p-4 shadow-sm"
+              >
+                <Ionicons name="calendar-outline" size={24} color="#4F46E5" />
+                <Text className="ml-2 text-gray-700 text-base">
+                  {formData.deadline 
+                    ? new Date(formData.deadline).toLocaleDateString() 
+                    : 'Select Date'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {/* Android Date Picker Modal */}
+          {Platform.OS === 'android' && showDatePicker && (
+            <Modal
+              transparent={true}
+              animationType="slide"
+              visible={showDatePicker}
+              onRequestClose={() => setShowDatePicker(false)}
+            >
+              <View className="flex-1 justify-center items-center bg-black/50">
+                <View className="p-4 rounded-lg w-11/12">
+                  <DateTimePicker
+                    value={formData.deadline ? new Date(formData.deadline) : new Date()}
+                    mode="date"
+                    is24Hour={true}
+                    display="default"
+                    onChange={handleDateChange}
+                    themeVariant="light"
+                  />
+                </View>
+              </View>
+            </Modal>
+          )}
 
           {/* Description Section */}
           <View className="space-y-2">

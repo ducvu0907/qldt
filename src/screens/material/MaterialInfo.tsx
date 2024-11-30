@@ -153,7 +153,7 @@ const MaterialInfo = ({ route, navigation }) => {
 
             <InfoField
               label="Material Link"
-              value={material.material_link}
+              value={"View attached file"}
               icon={<MaterialIcons name="link" size={20} color="#6366f1" />}
               onPress={material.material_link ? handleOpenLink : undefined}
             />
