@@ -41,7 +41,7 @@ const MaterialListItem: React.FC<{ material: MaterialListItemData }> = ({ materi
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate("MaterialInfo", { material })}
-      className="w-full bg-white dark:bg-slate-800 rounded-xl shadow-md 
+      className="w-full bg-white dark:bg-slate-800 rounded-xl
                 active:bg-slate-50 dark:active:bg-slate-700 transition-colors"
     >
       <View className="p-4">
@@ -55,7 +55,7 @@ const MaterialListItem: React.FC<{ material: MaterialListItemData }> = ({ materi
         </View>
         
         <View className="flex-row items-center justify-between mt-4 pt-3 border-t border-slate-100 dark:border-slate-700">
-          <Text className="text-sm font-medium text-indigo-500 dark:text-indigo-400">
+          <Text className="text-sm font-medium text-indigo-500">
             View Details
           </Text>
           <Icon name="chevron-right" size={14} color="#6366f1" />

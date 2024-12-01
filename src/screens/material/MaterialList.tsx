@@ -93,8 +93,7 @@ const MaterialList = () => {
         <TouchableOpacity
           onPress={() => navigation.navigate("UploadMaterial")}
           className="absolute bottom-6 right-6 bg-indigo-500 rounded-full w-16 h-16 
-                    items-center justify-center shadow-xl elevation-5
-                    active:bg-indigo-600 active:scale-95 transform transition-transform"
+                    items-center justify-center"
         >
           <Icon name="plus" size={24} color="white" />
         </TouchableOpacity>
