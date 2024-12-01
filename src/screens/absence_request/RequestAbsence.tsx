@@ -107,6 +107,7 @@ const RequestAbsence = () => {
         });
       }
 
+      console.log(form);
       const res = await fetch(`${RESOURCE_SERVER_URL}/request_absence`, {
         method: 'POST',
         headers: {

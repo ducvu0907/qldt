@@ -1,6 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity, Pressable, Keyboard, SafeAreaView, ActivityIndicator } from 'react-native';
 import Logo from "../../components/Logo";
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -17,7 +17,7 @@ export type LoginRequest = {
 }
 
 const Login = () => {
-  const { setToken, setRole, setUserId, setEmail } = useContext(AuthContext);
+  const { setToken, setRole, setUserId, setEmail, fcmToken } = useContext(AuthContext);
   const [formData, setFormData] = useState<LoginRequest>({
     email: "",
     password: "",
@@ -36,20 +36,19 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      //if (!validateLoginInputs(formData)) {
-      //  return;
-      //}
+      if (!validateLoginInputs(formData)) {
+        return;
+      }
       setLoading(true);
 
       const requestData: any = {
-        //"email": formData.email,
-        //"password": formData.password,
-        "email": "vmh1@hust.edu.vn",
-        "password": "123123",
+        "email": formData.email,
+        "password": formData.password,
         "device_id": 1,
-        "fcm_token": null,
+        "fcm_token": fcmToken,
       };
 
+      console.log(requestData);
       const res = await fetch(`${AUTH_SERVER_URL}/login`, {
         method: 'POST',
         headers: {

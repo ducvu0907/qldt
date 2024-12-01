@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react";
 import * as SecureStorage from "expo-secure-store";
 import { AUTH_SERVER_URL } from "../types";
-import { useLogout } from "../hooks/useLogout";
 
 interface AuthContextType {
   token: string | null,
@@ -12,6 +11,8 @@ interface AuthContextType {
   setUserId: (userId: string | null) => void;
   email: string | null,
   setEmail: (userId: string | null) => void;
+  fcmToken: string | null,
+  setFcmToken: (fcmToken: string | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -23,6 +24,8 @@ const AuthContext = createContext<AuthContextType>({
   setUserId: () => {},
   email: null,
   setEmail: () => {},
+  fcmToken: null,
+  setFcmToken: () => {}
 });
 
 interface AuthContextProviderProps {
@@ -34,6 +37,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
   const [role, setRole] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
+  const [fcmToken, setFcmToken] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -68,7 +72,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
   }, []);
 
   return (
-    <AuthContext.Provider value={{ userId, setUserId, token, setToken, role, setRole, email, setEmail }}>
+    <AuthContext.Provider value={{ userId, setUserId, token, setToken, role, setRole, email, setEmail, fcmToken, setFcmToken }}>
       {children}
     </AuthContext.Provider>
   );

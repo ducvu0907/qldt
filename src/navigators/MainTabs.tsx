@@ -6,12 +6,9 @@ import MessageStack from "./MessageStack";
 import NotificationStack from "./NotificationStack";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View, Text } from 'react-native';
-import { useGetUnreadNotificationCount } from '../hooks/useNotification';
-import { useGetListConversation } from "../hooks/useMessage";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { AssignmentStudentStack } from "./AssignmentStudentStack";
-import { useFocusEffect } from "@react-navigation/native";
 import { NewThingContext } from "../contexts/NewThingContext";
 
 const Tab = createBottomTabNavigator();
