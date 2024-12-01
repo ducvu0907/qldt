@@ -163,3 +163,13 @@ export const formatDateTime = (date: Date): string => {
 
   return formatted;
 };
+
+export const isTodayValid = (start_date: string, end_date: string) => { // yyyy-mm-dd
+  const today = new Date();
+  const start = new Date(start_date);
+  const end = new Date(end_date);
+  today.setHours(0, 0, 0, 0);
+  start.setHours(0, 0, 0, 0);
+  end.setHours(0, 0, 0, 0);
+  return today > start && today < end;
+};

@@ -50,5 +50,5 @@ export const useGetMyInfo = () => {
     }
   }, []);
 
-  return { user, loading };
+  return { user, loading, refetch: fetchUserData };
 };

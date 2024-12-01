@@ -205,7 +205,7 @@ const CreateAssignment = () => {
                 className="border-2 border-white rounded-lg mt-4 p-4"
               >
                 <Text className="text-white text-xl text-center">
-                  {formData.file || "Select File"}
+                  {formData.file ? formData.file.name : "Select File"}
                 </Text>
               </TouchableOpacity>
             </View>

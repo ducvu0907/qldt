@@ -11,6 +11,7 @@ import Topbar from "../../components/Topbar";
 import { useNavigation } from "@react-navigation/native";
 import { useGetAttendance, useGetAttendanceDates } from "../../hooks/useAttendance";
 import { useSendNotification } from "../../hooks/useNotification";
+import { isTodayValid } from "../../helpers";
 
 export interface TakeAttendanceRequest {
   token: string;
@@ -29,6 +30,7 @@ const TakeAttendance = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { loading: sendNotificationLoading, sendNotification } = useSendNotification();
   const selectedDate = new Date();
+  const isButtonDisabled = loading || classInfo?.student_accounts.length === 0 || attendanceDates.includes(formatDate(selectedDate)) || !isTodayValid(classInfo?.start_date, classInfo?.end_date);
 
   const { attendanceData, loading: attendanceLoading } = useGetAttendance(formatDate(selectedDate));
 
@@ -83,7 +85,7 @@ const TakeAttendance = () => {
 
       Toast.show({
         type: "success",
-        text1: "Attendance successfully taken and notifications sent.",
+        text1: "Attendance successfully taken",
       });
 
       navigation.goBack();
@@ -181,12 +183,8 @@ const TakeAttendance = () => {
           <View className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200">
             <TouchableOpacity
               onPress={handleTakeAttendance}
-              disabled={loading || classInfo.student_accounts.length === 0}
-              className={`p-4 rounded-xl ${
-                loading || classInfo.student_accounts.length === 0 || attendanceDates.includes(formatDate(selectedDate))
-                  ? "bg-gray-300"
-                  : "bg-blue-500"
-              }`}
+              disabled={isButtonDisabled}
+              className={`p-4 rounded-xl ${ isButtonDisabled ? "bg-gray-300" : "bg-blue-500" }`}
             >
               {loading ? (
                 <View className="flex-row justify-center items-center">
