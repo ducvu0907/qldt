@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Switch, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Topbar from '../../components/Topbar';
 import LogoutButton from '../../components/LogoutButton';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Profile from '../../components/Profile';
+import { useGetMyInfo } from '../../hooks/useGetMyInfo';
 
 interface SettingItemProps {
   icon: string;
@@ -48,9 +49,22 @@ const SettingItem: React.FC<SettingItemProps> = ({
   </TouchableOpacity>
 );
 
-const Setting = () => {
+const Setting = ({route}) => {
   const navigation = useNavigation<any>();
+  const { user, loading, refetch } = useGetMyInfo();
   const [isEnabled, setIsEnabled] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+          await refetch();
+      };
+  
+      if (route.params?.shouldRefetch) {
+        fetchData();
+      }
+    }, [route.params?.shouldRefetch])
+  );
 
   return (
     <View className="flex-1 bg-white">
@@ -60,7 +74,7 @@ const Setting = () => {
       <ScrollView className="flex-1">
         <View className="p-4">
           <View className="bg-gray-100 rounded-2xl p-4 mb-6">
-            <Profile />
+            <Profile user={user} loading={loading}/>
           </View>
 
           {/* Settings Groups */}

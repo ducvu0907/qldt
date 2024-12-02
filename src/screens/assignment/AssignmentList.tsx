@@ -7,7 +7,7 @@ import Topbar from "../../components/Topbar";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from "../../contexts/AuthContext";
 
-const AssignmentList = () => {
+const AssignmentList = ({route}) => {
   const { role } = useContext(AuthContext);
   const { assignments, loading, refetch } = useGetAssignments();
   const [refreshing, setRefreshing] = useState(false);
@@ -20,12 +20,15 @@ const AssignmentList = () => {
   }, [refetch]);
 
   useFocusEffect(
-   useCallback(() => {
-     const fetchData = async () => {
-       await refetch();
-     };
-     fetchData();
-   }, [])
+    useCallback(() => {
+      const fetchData = async () => {
+        await refetch();
+      };
+  
+      if (route.params?.shouldRefetch) {
+        fetchData();
+      }
+    }, [route.params?.shouldRefetch])
   );
 
   if (loading && !refreshing) {

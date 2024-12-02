@@ -3,6 +3,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { RESOURCE_SERVER_URL } from "../types";
 import Toast from "react-native-toast-message";
 import { useMediaLibraryPermissions } from "expo-image-picker";
+import { showToastError } from "../helpers";
 
 export interface SendNotificationRequest {
   token: string;
@@ -63,11 +64,7 @@ const useSendNotification = () => {
       });
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
-
+      showToastError(error)
     } finally {
       setLoading(false);
     }
@@ -109,11 +106,7 @@ const useGetNotifications = (index: string, count: string) => {
       setNotifications([...data.data]);
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
-
+      showToastError(error)
     } finally {
       setLoading(false);
     }
@@ -154,11 +147,7 @@ const useGetUnreadNotificationCount = () => {
       setUnReads(data.data);
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
-
+      showToastError(error)
     } finally {
       setLoading(false);
     }
@@ -200,11 +189,7 @@ const useMarkNotificationAsRead = () => {
       }
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
-
+      showToastError(error)
     } finally {
       setLoading(false);
     }

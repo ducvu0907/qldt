@@ -2,9 +2,9 @@ import { Image, View, Text, TouchableOpacity, SafeAreaView } from "react-native"
 import { useGetMyInfo } from "../hooks/useGetMyInfo";
 import { ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useEffect } from "react";
 
-const Profile = () => {
-  const { user, loading } = useGetMyInfo();
+const Profile = ({ user, loading }) => {
   const navigation = useNavigation<any>();
 
   if (loading) {
@@ -32,8 +32,10 @@ const Profile = () => {
   return (
     <View className="w-full bg-white items-center p-2 flex-row justify-around border-4 rounded-lg border-white">
       <Image
-        source={{ uri: user.avatar !== null ? user.avatar : `https://avatar.iran.liara.run/username?username=${user.ho + user.ten}` }}
-        className="w-12 h-12 rounded-full object-cover"
+        // FIXME: use avatar placeholder for demo
+        //source={{ uri: user.avatar !== null ? user.avatar : `https://avatar.iran.liara.run/username?username=${user.ho + user.ten}` }}
+        source={{ uri: `https://avatar.iran.liara.run/username?username=${user.name}` }}
+        className="w-28 h-28 object-cover"
       />
         <View className="items-start">
           <Text className="text-xl font-semibold">{user.name}</Text>

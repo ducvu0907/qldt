@@ -18,6 +18,7 @@ import { SocketContext } from '../../contexts/SocketContext';
 import Topbar from '../../components/Topbar';
 import { RESOURCE_SERVER_URL } from '../../types';
 import { useNavigation } from '@react-navigation/native';
+import { showToastError } from '../../helpers';
 
 interface UserSearchData {
   account_id: string;
@@ -63,10 +64,7 @@ const CreateMessage = () => {
 
       setUsers(data.data.page_content);
     } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: error.message,
-      });
+      showToastError(error)
     } finally {
       setSearchLoading(false);
     }
@@ -115,13 +113,10 @@ const CreateMessage = () => {
 
       setMessage('');
       Keyboard.dismiss();
-      navigation.goBack();
+      navigation.popTo("ConversationList", {shouldRefetch: true});
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message
-      });
+      showToastError(error)
     } finally {
       setIsLoading(false);
     }

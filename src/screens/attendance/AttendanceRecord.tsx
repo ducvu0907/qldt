@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { RESOURCE_SERVER_URL } from "../../types";
 import Toast from "react-native-toast-message";
+import { showToastError } from "../../helpers";
 
 export interface AttendanceRecordRequest {
   token: string;
@@ -48,10 +49,7 @@ const AttendanceRecord = () => {
         setRecords(data.data.absent_dates);
 
       } catch (error: any) {
-        Toast.show({
-          type: "error",
-          text1: error.message
-        });
+        showToastError(error)
       } finally {
         setLoading(false);
       }

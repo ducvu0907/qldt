@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Image, RefreshControl, TouchableOpacity } from 'react-native';
-import { useFocusEffect, useNavigation } from '@react-navigation/native'; // import useFocusEffect
+import { useNavigation } from '@react-navigation/native';
 import { useGetNotifications, useMarkNotificationAsRead, NotificationItemData, useGetUnreadNotificationCount } from '../../hooks/useNotification';
 import { formatDate } from '../../helpers';
 import Topbar from '../../components/Topbar';
@@ -106,12 +106,6 @@ const NotificationList = () => {
       onPress={() => handleNotificationPress(item)}
     />
   ), [handleNotificationPress]);
-
-  useFocusEffect(
-   useCallback(() => {
-     getNotifications();
-   }, [])
-  );
 
   if (loading && !notifications) {
     return (

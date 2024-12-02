@@ -3,7 +3,7 @@ import { RESOURCE_SERVER_URL } from '../types';
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
 import { ClassContext } from '../contexts/ClassContext';
-import { formatDate } from '../helpers';
+import { formatDate, showToastError } from '../helpers';
 
 const useGetAttendance = (date: string) => {
   const { token } = useContext(AuthContext);
@@ -35,11 +35,7 @@ const useGetAttendance = (date: string) => {
       }
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
-
+      showToastError(error)
     } finally {
       setLoading(false);
     }
@@ -83,11 +79,7 @@ const useGetAttendanceDates = () => {
       setAttendanceDates(data.data);
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
-
+      showToastError(error)
     } finally {
       setLoading(false);
     }

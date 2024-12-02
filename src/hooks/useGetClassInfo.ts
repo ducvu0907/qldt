@@ -3,6 +3,7 @@ import { RESOURCE_SERVER_URL } from '../types';
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
 import { ClassDetail } from '../components/ClassInfo';
+import { showToastError } from '../helpers';
 
 export const useGetClassInfo = (class_id: string) => {
   const { token, role } = useContext(AuthContext);
@@ -31,10 +32,7 @@ export const useGetClassInfo = (class_id: string) => {
       setClassInfo(data.data);
 
     } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: error.message,
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }
@@ -76,10 +74,7 @@ export const useGetBasicClassInfo = (class_id: string) => {
       setClassInfo(data.data);
 
     } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: error.message,
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

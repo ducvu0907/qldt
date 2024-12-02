@@ -1,20 +1,34 @@
 import { View, TouchableOpacity } from "react-native";
 import Topbar from "../../components/Topbar";
 import ClassList from "../../components/ClassList";
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
+import { useGetClasses } from "../../hooks/useGetClasses";
 
-const Home = () => {
+const Home = ({ route }) => {
+  const { classes, loading, refetch } = useGetClasses();
   const navigation = useNavigation<any>();
   const { role } = useContext(AuthContext);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        await refetch();
+      };
+  
+      if (route.params?.shouldRefetch) {
+        fetchData();
+      }
+    }, [route.params?.shouldRefetch])
+  );
 
   return (
     <View className="w-full flex-1 items-center bg-gray-100">
       <Topbar title={"Class List"} showBack={false} />
 
-      <ClassList />
+      <ClassList classes={classes} loading={loading} refetch={refetch}/>
 
       <TouchableOpacity
         onPress={() => {

@@ -6,6 +6,7 @@ import { RESOURCE_SERVER_URL } from '../../types';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Topbar from '../../components/Topbar';
+import { showToastError } from '../../helpers';
 
 interface RegisterClassRequest {
   token: string,
@@ -56,13 +57,10 @@ const RegisterClass = () => {
         text1: data.meta.message,
       });
 
-      navigation.goBack();
+      navigation.popTo("Home", {shouldRefetch: true});
 
     } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: error.message,
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

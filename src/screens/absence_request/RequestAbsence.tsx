@@ -8,7 +8,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { RESOURCE_SERVER_URL } from '../../types';
 import { ClassContext } from '../../contexts/ClassContext';
 import Topbar from '../../components/Topbar';
-import { formatDate } from '../../helpers';
+import { formatDate, showToastError } from '../../helpers';
 import { useSendNotification } from '../../hooks/useNotification';
 import { useGetBasicClassInfo } from '../../hooks/useGetClassInfo';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -132,10 +132,7 @@ const RequestAbsence = () => {
       navigation.goBack();
 
     } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: error.message,
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

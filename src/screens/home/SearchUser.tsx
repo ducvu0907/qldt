@@ -5,6 +5,7 @@ import Topbar from "../../components/Topbar";
 import SearchUserItem from "../../components/SearchUserItem";
 import { RESOURCE_SERVER_URL } from "../../types";
 import Toast from "react-native-toast-message";
+import { showToastError } from "../../helpers";
 
 export interface UserSearchData {
   account_id: string;
@@ -52,10 +53,7 @@ const SearchUser = () => {
       setUsers(data.data.page_content);
 
     } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: error.message,
-      });
+      showToastError(error)
       setError(error.message);
     } finally {
       setLoading(false);

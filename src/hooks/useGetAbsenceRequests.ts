@@ -4,6 +4,7 @@ import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
 import { AbsenceRequestData } from '../components/AbsenceRequestItem';
 import { ClassContext } from '../contexts/ClassContext';
+import { showToastError } from '../helpers';
 
 export const useGetAbsenceRequests = (status: string) => { 
   const { token } = useContext(AuthContext);
@@ -38,11 +39,7 @@ export const useGetAbsenceRequests = (status: string) => {
       setAbsenceRequests([...data.data.page_content]);
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message || "An error occurred while fetching absence requests.",
-      });
-
+      showToastError(error);
     } finally {
       setLoading(false);
     }

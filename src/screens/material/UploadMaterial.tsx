@@ -92,7 +92,7 @@ const UploadMaterial = () => {
         text1: 'Material uploaded successfully',
       });
 
-      navigation.goBack();
+      navigation.popTo("MaterialList", {shouldRefetch: true});
 
     } catch (error: any) {
       Toast.show({

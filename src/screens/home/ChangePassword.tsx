@@ -6,6 +6,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import Toast from 'react-native-toast-message';
 import { AUTH_SERVER_URL } from '../../types';
 import { useNavigation } from '@react-navigation/native';
+import { showToastError } from '../../helpers';
 
 const ChangePassword = () => {
   const { token } = useContext(AuthContext);
@@ -51,10 +52,7 @@ const ChangePassword = () => {
       navigation.goBack();
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
+      showToastError(error)
       setOldPassword(null);
       setNewPassword(null);
 

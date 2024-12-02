@@ -2,10 +2,8 @@ import { FlatList, Text, View, ActivityIndicator, ScrollView } from "react-nativ
 import { useState, useCallback, useEffect } from "react";
 import { useGetClasses } from "../hooks/useGetClasses";
 import ClassListItem from "./ClassListItem";
-import { useFocusEffect } from "@react-navigation/native";
 
-const ClassList = () => {
-  const { classes, loading, refetch } = useGetClasses();
+const ClassList = ({classes, loading, refetch}) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {
@@ -13,15 +11,6 @@ const ClassList = () => {
     await refetch();
     setRefreshing(false);
   }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      const fetchData = async () => {
-        await refetch();
-      };
-      fetchData();
-    }, [refetch])
-  );
 
   if (loading && !refreshing) {
     return (

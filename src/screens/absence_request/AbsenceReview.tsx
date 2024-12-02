@@ -8,6 +8,7 @@ import Topbar from "../../components/Topbar";
 import { useNavigation } from "@react-navigation/native";
 import { useSendNotification } from "../../hooks/useNotification";
 import { StudentAccount } from "../../components/ClassInfo";
+import { showToastError } from "../../helpers";
 
 // Types remain the same...
 type AbsenceStatus = 'ACCEPTED' | 'REJECTED' | 'PENDING';
@@ -40,11 +41,7 @@ const FileField = ({ url }: { url: string | null }) => {
       try {
         await Linking.openURL(url);
       } catch (error) {
-        Toast.show({
-          type: "error",
-          text1: "Error opening file",
-          text2: "Could not open the attached file"
-        });
+        showToastError(error)
       }
     }
   };
@@ -170,14 +167,10 @@ const AbsenceReview = ({ route }) => {
         text2: `The absence request has been ${status.toLowerCase()}`
       });
 
-      navigation.goBack();
+      navigation.popTo("AbsenceTabs", {shouldRefetch: true});
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: "Error processing request",
-        text2: error.message
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

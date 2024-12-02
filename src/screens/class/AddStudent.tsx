@@ -14,6 +14,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { RESOURCE_SERVER_URL } from '../../types';
 import { ClassContext } from '../../contexts/ClassContext';
 import Topbar from '../../components/Topbar';
+import { showToastError } from '../../helpers';
 
 export interface AddStudentRequest {
   token: string;
@@ -73,13 +74,10 @@ const AddStudent = () => {
         text1: "Student added successfully"
       });
 
-      navigation.goBack();
+      navigation.popTo("ViewStudents", {shouldRefetch: true});
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

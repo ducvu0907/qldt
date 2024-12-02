@@ -6,6 +6,7 @@ import Toast from "react-native-toast-message";
 import { AuthContext } from "../../contexts/AuthContext";
 import { RESOURCE_SERVER_URL } from "../../types";
 import { useGetMaterials } from "../../hooks/useGetMaterials";
+import { showToastError } from "../../helpers";
 
 const MaterialInfo = ({ route, navigation }) => {
   const { token, role } = useContext(AuthContext);
@@ -50,13 +51,10 @@ const MaterialInfo = ({ route, navigation }) => {
         text1: "Material deleted successfully"
       });
 
-      navigation.goBack();
+      navigation.popTo("MaterialList", {shouldRefetch: true});
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

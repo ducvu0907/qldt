@@ -7,6 +7,7 @@ import { RESOURCE_SERVER_URL } from '../../types';
 import Toast from 'react-native-toast-message';
 import Topbar from '../../components/Topbar';
 import { useGetAssignments } from '../../hooks/useGetAssignments';
+import { showToastError } from '../../helpers';
 
 // Types
 interface Assignment {
@@ -181,10 +182,10 @@ const AssignmentMenu = ({ route }) => {
       }
 
       Toast.show({ type: "success", text1: "Assignment deleted successfully" });
-      navigation.goBack();
+      navigation.popTo("AssignmentList", {shouldRefetch: true});
 
     } catch (error: any) {
-      Toast.show({ type: 'error', text1: error.message });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

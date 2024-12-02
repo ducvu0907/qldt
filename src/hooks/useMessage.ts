@@ -3,6 +3,7 @@ import { RESOURCE_SERVER_URL } from '../types';
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
 import { NewThingContext } from '../contexts/NewThingContext';
+import { showToastError } from '../helpers';
 
 // for displaying in the list of conversations
 export interface ConversationItemData {
@@ -68,10 +69,7 @@ const useGetListConversation = (index: string, count: string) => {
       setNumNewMessages(data.data.num_new_message);
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
+      showToastError(error)
 
     } finally {
       setLoading(false);
@@ -124,10 +122,7 @@ const useGetConversation = (index: string, count: string, conversation_id: strin
       }
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
+      showToastError(error)
 
     } finally {
       setLoading(false);
@@ -174,11 +169,7 @@ const useDeleteMessage = () => {
       });
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
-
+      showToastError(error)
     } finally {
       setLoading(false);
     }

@@ -4,6 +4,7 @@ import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
 import { ClassItemData } from '../components/ClassListItem';
 import { OpenClassItemData } from '../screens/class/ViewOpenClasses';
+import { showToastError } from '../helpers';
 
 export const useGetClasses = () => {
   const { token, setToken } = useContext(AuthContext);
@@ -34,11 +35,7 @@ export const useGetClasses = () => {
       setClasses([...data.data.page_content]);
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
-
+      showToastError(error);
     } finally {
       setLoading(false);
     }

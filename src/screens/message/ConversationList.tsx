@@ -60,10 +60,10 @@ const ConversationItem = ({ item }: { item: ConversationItemData }) => {
   );
 };
 
-const ConversationList = () => {
+const ConversationList = ({route}) => {
   const { conversations, loading, refetch } = useGetListConversation('0', '100');
   const [refreshing, setRefreshing] = useState(false);
-  const {receiveMessage} = useContext(SocketContext);
+  const {receiveMessage, sendMessage} = useContext(SocketContext);
   const navigation = useNavigation<any>();
 
   const onRefresh = React.useCallback(async () => {
@@ -74,9 +74,19 @@ const ConversationList = () => {
 
   useFocusEffect(
     useCallback(() => {
-      refetch();
-    }, [refetch])
+      const fetchData = async () => {
+        await refetch();
+      };
+  
+      if (route.params?.shouldRefetch) {
+        fetchData();
+      }
+    }, [route.params?.shouldRefetch])
   );
+
+  useEffect(() => {
+    refetch();
+  }, [sendMessage]);
 
   useEffect(() => {
     receiveMessage((message) => {

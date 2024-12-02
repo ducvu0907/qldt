@@ -3,6 +3,7 @@ import { AUTH_SERVER_URL } from '../types';
 import { useLogout } from '../hooks/useLogout';
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
+import { showToastError } from '../helpers';
 
 export const useGetMyInfo = () => {
   const { token } = useContext(AuthContext);
@@ -34,10 +35,7 @@ export const useGetMyInfo = () => {
 
     } catch (error: any) {
       logout();
-      Toast.show({
-        type: 'error',
-        text1: error.message,
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

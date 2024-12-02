@@ -6,6 +6,8 @@ import Toast from 'react-native-toast-message';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { AuthContext } from '../../contexts/AuthContext';
 import * as DocumentPicker from 'expo-document-picker';
+import { useNavigation } from '@react-navigation/native';
+import { showToastError } from '../../helpers';
 
 export interface SubmitAssignmentRequest {
   file: any;
@@ -14,8 +16,9 @@ export interface SubmitAssignmentRequest {
   textResponse: string;
 }
 
-const SubmitAssignment = ({ route, navigation }) => {
+const SubmitAssignment = ({ route }) => {
   const { token } = useContext(AuthContext);
+  const navigation = useNavigation<any>();
   const { assignment } = route.params;
   const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<SubmitAssignmentRequest>({
@@ -80,7 +83,7 @@ const SubmitAssignment = ({ route, navigation }) => {
       console.log(data);
 
       if (data.meta.code !== "1000") {
-        throw new Error(data.meta.message || "Error occurred while submitting assignment");
+        throw new Error(data.data || "Error occurred while submitting assignment");
       }
 
       Toast.show({
@@ -88,13 +91,10 @@ const SubmitAssignment = ({ route, navigation }) => {
         text1: "Assignment submitted successfully",
       });
 
-      navigation.goBack();
+      navigation.popTo("AssignmentTabs", {shouldRefetch: true});
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

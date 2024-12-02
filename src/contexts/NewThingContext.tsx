@@ -2,6 +2,7 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import { AuthContext } from "./AuthContext";
 import { RESOURCE_SERVER_URL } from "../types";
 import Toast from "react-native-toast-message";
+import { showToastError } from "../helpers";
 
 interface NewThingContextType {
   numNewMessages: number;
@@ -49,10 +50,7 @@ const NewThingContextProvider: React.FC<NewThingContextProviderProps> = ({childr
         setUnreadNotifications(data.data);
 
       } catch (error: any) {
-        Toast.show({
-          type: "error",
-          text1: error.message,
-        });
+        showToastError(error);
 
       } finally {
         setLoading(false);
@@ -84,11 +82,7 @@ const NewThingContextProvider: React.FC<NewThingContextProviderProps> = ({childr
         setNumNewMessages(data.data.num_new_message);
 
       } catch (error: any) {
-        Toast.show({
-          type: "error",
-          text1: error.message,
-        });
-
+        showToastError(error);
       } finally {
         setLoading(false);
       }

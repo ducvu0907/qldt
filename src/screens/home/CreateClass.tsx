@@ -3,7 +3,7 @@ import Logo from "../../components/Logo";
 import { useContext, useState } from 'react';
 import DropDownPicker from "react-native-dropdown-picker";
 import { useNavigation } from '@react-navigation/native';
-import { validateClassInputs } from '../../helpers';
+import { showToastError, validateClassInputs } from '../../helpers';
 import Toast from 'react-native-toast-message';
 import { RESOURCE_SERVER_URL } from '../../types';
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -110,13 +110,10 @@ const CreateClass = () => {
         text1: "Class created successfully",
       });
 
-      navigation.goBack();
+      navigation.popTo("Home", {shouldRefetch: true});
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
+      showToastError(error)
 
     } finally {
       setLoading(false);

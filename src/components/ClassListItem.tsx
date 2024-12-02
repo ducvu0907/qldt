@@ -74,9 +74,6 @@ const ClassListItem: React.FC<{ currentClass: ClassItemData }> = ({ currentClass
               {formatDate(currentClass.start_date)} - {formatDate(currentClass.end_date)}
             </Text>
             <View className="mx-2 w-1 h-1 bg-gray-300 rounded-full" />
-            <Text className="text-sm text-gray-500">
-              {currentClass.student_count} students
-            </Text>
           </View>
           
           <View className={`px-2 py-1 rounded-full ${getStatusColor(currentClass.status)}`}>

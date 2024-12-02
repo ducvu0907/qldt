@@ -173,3 +173,12 @@ export const isTodayValid = (start_date: string, end_date: string) => { // yyyy-
   end.setHours(0, 0, 0, 0);
   return today > start && today < end;
 };
+
+export const showToastError = (error: any) => {
+  if (error.message !== "Network request failed" && error.message !== "Network request timed out") {
+    Toast.show({
+      type: "error",
+      text1: error.rmessage,
+    });
+  }
+};

@@ -8,8 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from "../../contexts/AuthContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const AssignmentListStudent = ({route}) => {
-  const {type} = route.params;
+const AssignmentListStudent = ({type, shouldRefetch}) => {
   const { assignments, loading, refetch} = useGetStudentAssignments(type);
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation<any>();
@@ -21,12 +20,15 @@ const AssignmentListStudent = ({route}) => {
   }, [refetch]);
 
   useFocusEffect(
-   useCallback(() => {
-     const fetchData = async () => {
-       await refetch();
-     };
-     fetchData();
-   }, [])
+    useCallback(() => {
+      const fetchData = async () => {
+          await refetch();
+      };
+  
+      if (shouldRefetch) {
+        fetchData();
+      }
+    }, [shouldRefetch])
   );
 
   if (loading && !refreshing) {

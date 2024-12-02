@@ -9,6 +9,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import * as DocumentPicker from 'expo-document-picker';
 import Topbar from '../../components/Topbar';
 import { useGetAssignments } from '../../hooks/useGetAssignments';
+import { showToastError } from '../../helpers';
 
 export interface EditAssignmentRequest {
   file?: any;
@@ -105,14 +106,10 @@ const EditAssignment = ({ route }) => {
         position: "bottom",
       });
 
-      navigation.popTo("AssignmentList");
+      navigation.popTo("AssignmentList", { shouldRefetch: true });
 
     } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: error.message,
-        position: "bottom",
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

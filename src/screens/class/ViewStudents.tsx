@@ -9,7 +9,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Ionicons } from '@expo/vector-icons';
 import { AuthContext } from "../../contexts/AuthContext";
 
-const ViewStudents = () => {
+const ViewStudents = ({route}) => {
   const { role } = useContext(AuthContext);
   const navigation = useNavigation<any>();
   const [students, setStudents] = useState<StudentAccount[]>([]);
@@ -18,8 +18,14 @@ const ViewStudents = () => {
 
   useFocusEffect(
     useCallback(() => {
-      refetch();
-    }, [refetch])
+      const fetchData = async () => {
+        await refetch();
+      };
+  
+      if (route.params?.shouldRefetch) {
+        fetchData();
+      }
+    }, [route.params?.shouldRefetch])
   );
 
   useEffect(() => {

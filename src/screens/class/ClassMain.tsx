@@ -23,8 +23,8 @@ const ClassMain = () => {
     ...(role === "LECTURER" ? [
       { icon: "create", label: "Edit Class", screen: "EditClass" },
       { icon: "people", label: "Students", screen: "ViewStudents" },
-      { icon: "document-text", label: "Assignments", screen: "AssignmentStack" },
     ] : []),
+    { icon: "document-text", label: "Assignments", screen: "AssignmentStack" },
     { icon: "information-circle", label: "Class Information", screen: "ClassDetailsInfo" },
     { icon: "book", label: "Materials", screen: "MaterialStack" },
     { icon: "calendar", label: "Attendance", screen: "AttendanceStack" },

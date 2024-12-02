@@ -3,6 +3,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import * as SecureStore from "expo-secure-store";
 import Toast from "react-native-toast-message";
 import { AUTH_SERVER_URL } from "../types";
+import { showToastError } from "../helpers";
 
 export const useLogout = () => {
   const { token, setToken, setRole, setUserId, setEmail } = useContext(AuthContext);
@@ -26,10 +27,7 @@ export const useLogout = () => {
       setEmail(null);
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

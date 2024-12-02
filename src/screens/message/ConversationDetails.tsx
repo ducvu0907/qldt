@@ -6,7 +6,7 @@ import { useDeleteMessage, useGetConversation } from '../../hooks/useMessage';
 import { AuthContext } from '../../contexts/AuthContext';
 import { SocketContext } from '../../contexts/SocketContext';
 import Toast from 'react-native-toast-message';
-import { formatDate } from '../../helpers';
+import { formatDate, showToastError } from '../../helpers';
 import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import { NewThingContext } from '../../contexts/NewThingContext';
@@ -96,10 +96,8 @@ const ConversationDetails = ({ route }) => {
         text1: "Message deleted successfully"
       });
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: "Failed to delete message",
-      });
+      showToastError(error)
+      setNewMessage("");
     }
   };
 
@@ -134,10 +132,7 @@ const ConversationDetails = ({ route }) => {
           text1: 'Photo saved successfully'
         });
       } catch (error: any) {
-        Toast.show({
-          type: 'error',
-          text1: 'Failed to save photo',
-        });
+        showToastError(error)
       }
     }
   };
@@ -156,10 +151,7 @@ const ConversationDetails = ({ route }) => {
         flatListRef.current.scrollToEnd({ animated: true });
       }
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message
-      });
+      showToastError(error)
       setNewMessage(messageToSend); 
     }
   };

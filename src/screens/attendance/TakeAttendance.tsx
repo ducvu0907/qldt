@@ -5,7 +5,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { ClassContext } from "../../contexts/ClassContext";
 import { useGetClassInfo } from "../../hooks/useGetClassInfo";
 import Toast from "react-native-toast-message";
-import { formatDate } from "../../helpers";
+import { formatDate, showToastError } from "../../helpers";
 import { RESOURCE_SERVER_URL } from "../../types";
 import Topbar from "../../components/Topbar";
 import { useNavigation } from "@react-navigation/native";
@@ -90,10 +90,7 @@ const TakeAttendance = () => {
 
       navigation.goBack();
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message || "An error occurred while taking attendance.",
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

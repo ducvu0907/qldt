@@ -4,6 +4,7 @@ import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
 import { AssignmentItemData } from '../components/AssignmentItem';
 import { ClassContext } from '../contexts/ClassContext';
+import { showToastError } from '../helpers';
 
 export const useGetAssignments = () => {
   const { token } = useContext(AuthContext);
@@ -38,12 +39,8 @@ export const useGetAssignments = () => {
       setAssignments([...data.data]);
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
-
-    } finally {
+      showToastError(error)
+    } finally {;
       setLoading(false);
     }
   }, [token]);
@@ -87,11 +84,7 @@ export const useGetStudentAssignments = (type: string) => { // COMPLETED, PASS_D
       setAssignments([...data.data]);
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
-
+      showToastError(error);
     } finally {
       setLoading(false);
     }

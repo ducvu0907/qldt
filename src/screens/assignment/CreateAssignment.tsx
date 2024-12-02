@@ -9,7 +9,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Logo from "../../components/Logo";
 import { AuthContext } from '../../contexts/AuthContext';
 import { ClassContext } from '../../contexts/ClassContext';
-import { formatDateTime, validateAssignmentInputs } from '../../helpers';
+import { formatDateTime, showToastError, validateAssignmentInputs } from '../../helpers';
 import { RESOURCE_SERVER_URL } from '../../types';
 
 export interface CreateAssignmentRequest {
@@ -112,10 +112,10 @@ const CreateAssignment = () => {
       }
 
       Toast.show({ type: "success", text1: "Assignment created successfully" });
-      navigation.goBack();
+      navigation.popTo("AssignmentList", {shouldRefetch: true});
 
     } catch (error: any) {
-      Toast.show({ type: "error", text1: error.message });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

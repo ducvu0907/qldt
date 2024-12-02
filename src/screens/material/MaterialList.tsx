@@ -1,5 +1,5 @@
 import { FlatList, Text, View, ActivityIndicator, TouchableOpacity } from "react-native";
-import { useState, useCallback, useContext } from "react";
+import { useState, useCallback, useContext, useEffect } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useGetMaterials } from "../../hooks/useGetMaterials";
 import Topbar from "../../components/Topbar";
@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialListItem from "../../components/MaterialListItem";
 import { AuthContext } from "../../contexts/AuthContext";
 
-const MaterialList = () => {
+const MaterialList = ({route}) => {
   const { role } = useContext(AuthContext);
   const { materials, loading, refetch } = useGetMaterials();
   const [refreshing, setRefreshing] = useState(false);
@@ -20,12 +20,15 @@ const MaterialList = () => {
   }, [refetch]);
 
   useFocusEffect(
-   useCallback(() => {
-     const fetchData = async () => {
-       await refetch();
-     };
-     fetchData();
-   }, [])
+    useCallback(() => {
+      const fetchData = async () => {
+        await refetch();
+      };
+  
+      if (route.params?.shouldRefetch) {
+        fetchData();
+      }
+    }, [route.params?.shouldRefetch])
   );
 
   if (loading && !refreshing) {

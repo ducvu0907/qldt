@@ -9,6 +9,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import Topbar from '../../components/Topbar';
 import { useGetMaterialInfo } from '../../hooks/useGetMaterialInfo';
 import { useGetMaterials } from '../../hooks/useGetMaterials';
+import { showToastError } from '../../helpers';
 
 export interface EditMaterialRequest {
   file?: any;
@@ -117,13 +118,10 @@ const EditMaterial = ({ route }) => {
         text1: "Material updated successfully",
       });
 
-      navigation.popTo("MaterialList");
+      navigation.popTo("MaterialList", {shouldRefetch: true});
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

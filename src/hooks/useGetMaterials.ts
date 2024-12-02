@@ -4,6 +4,7 @@ import Toast from 'react-native-toast-message';
 import { AuthContext } from '../contexts/AuthContext';
 import { MaterialListItemData } from '../components/MaterialListItem';
 import { ClassContext } from '../contexts/ClassContext';
+import { showToastError } from '../helpers';
 
 export const useGetMaterials = () => {
   const { token } = useContext(AuthContext); 
@@ -43,10 +44,7 @@ export const useGetMaterials = () => {
       setMaterials(data.data);
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

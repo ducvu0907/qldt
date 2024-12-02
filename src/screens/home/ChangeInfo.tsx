@@ -8,6 +8,7 @@ import { AUTH_SERVER_URL } from '../../types';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { useGetMyInfo } from '../../hooks/useGetMyInfo';
+import { showToastError } from '../../helpers';
 
 const ChangeInfo = () => {
   const { token } = useContext(AuthContext);
@@ -83,13 +84,10 @@ const ChangeInfo = () => {
         text1: "Change user info successfully"
       });
 
-      navigation.goBack();
+      navigation.popTo("Setting", {shouldRefetch: true});
 
     } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: error.message,
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }
@@ -109,17 +107,6 @@ const ChangeInfo = () => {
 
         <View className="flex p-5">
           <View className="mb-5">
-            <Text className="text-white text-lg font-semibold mb-2">Name</Text>
-            <View className="flex-row bg-white/30 rounded-lg p-4">
-              <Icon name="user" size={20} color="white" />
-              <TextInput
-                value={name}
-                onChangeText={(val) => setName(val)}
-                placeholder="Enter your name"
-                placeholderTextColor="white"
-                className="w-full ml-3 text-white"
-              />
-            </View>
           </View>
 
           <View className="mb-5">

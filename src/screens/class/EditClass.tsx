@@ -8,7 +8,7 @@ import { RESOURCE_SERVER_URL } from '../../types';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { AuthContext } from '../../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { formatDate } from '../../helpers';
+import { formatDate, showToastError } from '../../helpers';
 import { ClassContext } from '../../contexts/ClassContext';
 import { useGetClassInfo } from '../../hooks/useGetClassInfo';
 import Topbar from '../../components/Topbar';
@@ -109,13 +109,10 @@ const EditClass = () => {
         text1: "Delete class successfully"
       });
 
-      navigation.popTo("Home");
+      navigation.popTo("Home", {shouldRefetch: true});
 
     } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: error.message,
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }
@@ -172,13 +169,10 @@ const EditClass = () => {
         text1: "Class updated successfully",
       });
 
-      navigation.goBack();
+      navigation.popTo("Home", {shouldRefetch: true});
 
     } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }
