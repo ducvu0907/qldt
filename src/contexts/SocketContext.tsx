@@ -1,9 +1,10 @@
 import React, { createContext, useState, useEffect, ReactNode, useContext } from "react";
 import SockJS from 'sockjs-client';
-import {Stomp} from '@stomp/stompjs';
+import { Stomp } from '@stomp/stompjs';
 import { AuthContext } from "./AuthContext";
 import { AUTH_SERVER_URL } from "../types";
 import { useGetConversation } from "../hooks/useMessage";
+import { showToastError } from "../helpers";
 
 interface SocketContextType {
   stompClient: any;
@@ -17,10 +18,10 @@ interface SocketContextType {
 const SocketContext = createContext<SocketContextType>({
   stompClient: null,
   isConnected: false,
-  connect: () => {},
-  disconnect: () => {},
-  sendMessage: () => {},
-  receiveMessage: () => {},
+  connect: () => { },
+  disconnect: () => { },
+  sendMessage: () => { },
+  receiveMessage: () => { },
 });
 
 interface SocketContextProviderProps {
@@ -47,17 +48,21 @@ const SocketProvider: React.FC<SocketContextProviderProps> = ({ children }) => {
   }, [token, userId]);
 
   const connect = () => {
-    const socket = new SockJS(`http://157.66.24.126:8080/ws`);
-    const client = Stomp.over(socket);
+    try {
+      const socket = new SockJS(`http://157.66.24.126:8080/ws`);
+      const client = Stomp.over(socket);
 
-    client.connect({}, () => {
-      setIsConnected(true);
-      client.subscribe(`/user/${userId}/inbox`, (message) => {
-        console.log('Received message:', JSON.parse(message.body));
+      client.connect({}, () => {
+        setIsConnected(true);
+        client.subscribe(`/user/${userId}/inbox`, (message) => {
+          console.log('Received message:', JSON.parse(message.body));
+        });
       });
-    });
 
-    setStompClient(client);
+      setStompClient(client);
+    } catch (error) {
+      showToastError(error);
+    }
   };
 
   const disconnect = () => {
@@ -78,14 +83,22 @@ const SocketProvider: React.FC<SocketContextProviderProps> = ({ children }) => {
       token,
     };
 
-    stompClient.send("/chat/message", {}, JSON.stringify(message));
+    try {
+      stompClient.send("/chat/message", {}, JSON.stringify(message));
+    } catch (error) {
+      showToastError(error)
+    }
   };
 
   const receiveMessage = (callback: (message: any) => void) => {
     if (!stompClient || !userId) return;
-    stompClient.subscribe(`/user/${userId}/inbox`, (message: any) => {
-      callback(JSON.parse(message.body));
-    });
+    try {
+      stompClient.subscribe(`/user/${userId}/inbox`, (message: any) => {
+        callback(JSON.parse(message.body));
+      });
+    } catch (error) {
+      showToastError(error);
+    }
   };
 
   return (

@@ -175,10 +175,10 @@ export const isTodayValid = (start_date: string, end_date: string) => { // yyyy-
 };
 
 export const showToastError = (error: any) => {
-  if (error.message !== "Network request failed" && error.message !== "Network request timed out") {
+  if (error.message !== "Network request failed" && error.message !== "Network request timed out" && error.message !== "parameter value is invalid") {
     Toast.show({
       type: "error",
-      text1: error.rmessage,
+      text1: error.message,
     });
   }
 };
