@@ -10,6 +10,7 @@ import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { AssignmentStudentStack } from "./AssignmentStudentStack";
 import { NewThingContext } from "../contexts/NewThingContext";
+import ViewOpenClasses from "../screens/class/ViewOpenClasses";
 
 const Tab = createBottomTabNavigator();
 
@@ -49,8 +50,8 @@ const MainTabs = () => {
   const {numNewMessages, unreadNotifications} = useContext(NewThingContext);
 
   return (
-    <Tab.Navigator 
-      screenOptions={{ 
+    <Tab.Navigator
+      screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: '#0066FF',
         tabBarInactiveTintColor: 'gray',
@@ -79,7 +80,7 @@ const MainTabs = () => {
         component={MessageStack}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MessageIcon size={size} color={color} numNewMessages={numNewMessages}/>
+            <MessageIcon size={size} color={color} numNewMessages={numNewMessages} />
           ),
         }}
       />
@@ -88,7 +89,7 @@ const MainTabs = () => {
         component={NotificationStack}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <NotificationIcon color={color} size={size} unreadNotifications={unreadNotifications}/>
+            <NotificationIcon color={color} size={size} unreadNotifications={unreadNotifications} />
           ),
         }}
       />
@@ -99,6 +100,17 @@ const MainTabs = () => {
           options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="document" size={size} color={color} />
+            ),
+          }}
+        />
+      }
+      {role === "STUDENT" &&
+        <Tab.Screen
+          name="OpenClasses"
+          component={ViewOpenClasses}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="school" size={size} color={color} />
             ),
           }}
         />

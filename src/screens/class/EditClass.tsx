@@ -161,10 +161,6 @@ const EditClass = () => {
         body: JSON.stringify(requestData),
       });
 
-      if (!res.ok) {
-        throw new Error("Server error");
-      }
-
       const data = await res.json();
 
       if (data.meta.code !== "1000") {

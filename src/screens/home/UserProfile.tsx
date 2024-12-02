@@ -59,11 +59,13 @@ const UserProfile = ({ route, navigation }) => {
         <View className="bg-white rounded-2xl shadow-sm mt-4 p-6">
           <View className="items-center mb-6">
             <Image
-              source={{
-                uri: user.avatar
-                  ? user.avatar
-                  : `https://avatar.iran.liara.run/username?username=${user.ho + user.ten}`,
-              }}
+              // FIXME: use avatar placeholder for demo
+              //source={{
+              //  uri: user.avatar
+              //    ? user.avatar
+              //    : `https://avatar.iran.liara.run/username?username=${user.ho + user.ten}`,
+              //}}
+              source={{ uri: `https://avatar.iran.liara.run/username?username=${user.ho + user.ten}`}}
               className="w-32 h-32 rounded-full border-4 border-white shadow-lg"
             />
             <Text className="text-2xl font-bold mt-4">

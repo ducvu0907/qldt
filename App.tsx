@@ -64,7 +64,7 @@ const App: React.FC = () => {
         <SocketProvider>
           <ClassContextProvider>
             <QueryClientProvider client={queryClient}>
-              <StatusBar />
+              <StatusBar backgroundColor={"black"} />
               <ApplicationNavigator fcmToken={fcmToken}/>
               <Toast />
             </QueryClientProvider>

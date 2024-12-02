@@ -76,7 +76,7 @@ const ConversationDetails = ({ route }) => {
   const inputRef = useRef(null);
 
   const {loading: loadingDeleteMessage, deleteMessage} = useDeleteMessage();
-  const { conversation, loading, refetch } = useGetConversation('0', '50', conversationId);
+  const { conversation, loading, refetch } = useGetConversation('0', '100', conversationId);
   const {receiveMessage} = useContext(SocketContext);
 
   useEffect(() => {
@@ -155,7 +155,7 @@ const ConversationDetails = ({ route }) => {
       if (flatListRef.current) {
         flatListRef.current.scrollToEnd({ animated: true });
       }
-    } catch (error) {
+    } catch (error: any) {
       Toast.show({
         type: "error",
         text1: error.message

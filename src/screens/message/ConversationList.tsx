@@ -26,7 +26,9 @@ const ConversationItem = ({ item }: { item: ConversationItemData }) => {
       onPress={() => navigation.navigate('ConversationDetails', { conversationId: item.id, partnerId: item.partner.id })}
     >
       <Image 
-        source={{ uri: item.partner.avatar || 'https://avatar.iran.liara.run/username' }}
+        // FIXME: use avatar placeholder for demo
+        //source={{ uri: item.partner.avatar || `https://avatar.iran.liara.run/username?username=${item.partner.name}` }}
+        source={{ uri: `https://avatar.iran.liara.run/username?username=${item.partner.name}` }}
         className="w-12 h-12 rounded-full"
       />
       

@@ -36,9 +36,9 @@ const Profile = () => {
         className="w-12 h-12 rounded-full object-cover"
       />
         <View className="items-start">
-          <Text className="text-xl font-semibold">Ten: {user.ho} {user.ten}</Text>
+          <Text className="text-xl font-semibold">{user.name}</Text>
           <Text className="text-lg text-gray-500">Email: {user.email}</Text>
-          <Text className="text-lg text-gray-500">Vai tro: {user.role}</Text>
+          <Text className="text-lg text-gray-500">Role: {user.role}</Text>
           <Text className="text-lg text-gray-500">Status: {user.status}</Text>
         </View>
     </View>
