@@ -5,7 +5,7 @@
 - Expo
 - React Navigation
 - Firebase Cloud Messaging
-- SockJs && StompJs
+- SockJs & StompJs
 - NativeWind
 
 ## Usage
