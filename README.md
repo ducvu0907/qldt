@@ -5,7 +5,7 @@
 - Expo
 - React Navigation
 - Firebase Cloud Messaging
-- SockJs & StompJs
+- SockJs, StompJs
 - NativeWind
 
 ## Usage
@@ -15,9 +15,11 @@ cd qldt && npm install
 
 # move /path/to/firebase-credential.json /path/to/qldt
 # move /path/to/google-services.json /path/to/qldt
-# setup eas and build
+# setup eas
+npm install -g eas-cli
 eas credentials
-eas build --platform android --profile development
 
+# build and run
+eas build --platform android --profile development
 npm start
 ```
