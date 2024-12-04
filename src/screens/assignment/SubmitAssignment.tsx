@@ -91,7 +91,7 @@ const SubmitAssignment = ({ route }) => {
         text1: "Assignment submitted successfully",
       });
 
-      navigation.popTo("AssignmentTabs", {shouldRefetch: true});
+      navigation.popTo("AssignmentTabs", { shouldRefetch: true });
 
     } catch (error: any) {
       showToastError(error)

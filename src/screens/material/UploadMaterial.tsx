@@ -8,6 +8,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { RESOURCE_SERVER_URL } from '../../types';
 import { ClassContext } from '../../contexts/ClassContext';
 import Topbar from '../../components/Topbar';
+import { showToastError } from '../../helpers';
 
 export interface UploadMaterialRequest {
   file: any;
@@ -95,10 +96,7 @@ const UploadMaterial = () => {
       navigation.popTo("MaterialList", {shouldRefetch: true});
 
     } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: error.message,
-      });
+      showToastError(error)
     } finally {
       setLoading(false);
     }

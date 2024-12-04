@@ -77,6 +77,7 @@ const EmptyState = () => (
 
 const AbsenceRequestList = ({type, shouldRefetch}) => {
   const { absenceRequests, loading, refetch } = useGetAbsenceRequests(type);
+  const navigation = useNavigation<any>();
 
   useFocusEffect(
     useCallback(() => {
@@ -87,6 +88,7 @@ const AbsenceRequestList = ({type, shouldRefetch}) => {
       if (shouldRefetch) {
         fetchData();
       }
+      navigation.setParams({shouldRefetch: false})
     }, [shouldRefetch])
   );
 

@@ -8,8 +8,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from "../../contexts/AuthContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const AssignmentListStudent = ({type, shouldRefetch}) => {
-  const { assignments, loading, refetch} = useGetStudentAssignments(type);
+const AssignmentListStudent = ({type, shouldRefetch, class_id}) => {
+  const { assignments, loading, refetch} = useGetStudentAssignments(type, class_id);
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation<any>();
 
@@ -28,6 +28,7 @@ const AssignmentListStudent = ({type, shouldRefetch}) => {
       if (shouldRefetch) {
         fetchData();
       }
+      navigation.setParams({shouldRefetch: false})
     }, [shouldRefetch])
   );
 

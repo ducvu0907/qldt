@@ -81,6 +81,7 @@ const ConversationList = ({route}) => {
       if (route.params?.shouldRefetch) {
         fetchData();
       }
+      navigation.setParams({shouldRefetch: false})
     }, [route.params?.shouldRefetch])
   );
 

@@ -35,7 +35,7 @@ const AssignmentItem: React.FC<Props> = ({ type, assignment }) => {
 
   const handleNavigation = () => {
     if (role === "STUDENT") {
-      navigation.navigate(type === "COMPLETED" ? "AssignmentStudentGrade" : "SubmitAssignment", {assignment});
+      navigation.navigate(type === "COMPLETED" ? "AssignmentStudentGrade" : "SubmitAssignment", {assignment, from: "outside"});
     } else {
       navigation.navigate("AssignmentMenu", {assignment});
     }

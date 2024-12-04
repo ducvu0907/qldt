@@ -54,7 +54,7 @@ const RegisterClass = () => {
 
       Toast.show({
         type: 'success',
-        text1: data.meta.message,
+        text1: "Register successfully"
       });
 
       navigation.popTo("Home", {shouldRefetch: true});

@@ -35,7 +35,7 @@ const Profile = ({ user, loading }) => {
         // FIXME: use avatar placeholder for demo
         //source={{ uri: user.avatar !== null ? user.avatar : `https://avatar.iran.liara.run/username?username=${user.ho + user.ten}` }}
         source={{ uri: `https://avatar.iran.liara.run/username?username=${user.name}` }}
-        className="w-28 h-28 object-cover"
+        className="w-28 h-28"
       />
         <View className="items-start">
           <Text className="text-xl font-semibold">{user.name}</Text>

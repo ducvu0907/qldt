@@ -52,7 +52,7 @@ export const useGetAssignments = () => {
   return { assignments, loading, refetch: fetchAssignments };
 };
 
-export const useGetStudentAssignments = (type: string) => { // COMPLETED, PASS_DUE, UPCOMING, null
+export const useGetStudentAssignments = (type: string, class_id?: string | null) => { // COMPLETED, PASS_DUE, UPCOMING, null
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [assignments, setAssignments] = useState<AssignmentItemData[] | null>(null);
@@ -69,7 +69,8 @@ export const useGetStudentAssignments = (type: string) => { // COMPLETED, PASS_D
         },
         body: JSON.stringify({
           token,
-          type
+          type, 
+          class_id: class_id || null
         }),
       });
 
