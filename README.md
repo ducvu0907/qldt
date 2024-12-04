@@ -13,8 +13,8 @@
 git clone github.com/ducvu0907/qldt
 cd qldt && npm install
 
-# move /path/to/firebase-credential.json /path/to/qldt
-# move /path/to/google-services.json /path/to/qldt
+# mv /path/to/firebase-credential.json /path/to/qldt
+# mv /path/to/google-services.json /path/to/qldt
 # setup eas
 npm install -g eas-cli
 eas credentials
