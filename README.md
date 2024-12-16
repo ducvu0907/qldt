@@ -1,4 +1,4 @@
-# QLDT App
+# Class Management App
 
 ## Stack
 - React Native
